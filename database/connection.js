@@ -1,12 +1,13 @@
-const mysqli = require('mysql2/promise');
+const mysql = require('mysql2/promise'); 
 
 const bd_usuario = 'root'; //usuario
 const bd_senha = ''; // senha
-const bd_servidor = '127.0.0.1'; // servidor
+const bd_servidor = 'localhost'; // servidor
 const bd_porta = '3306'; // porta
 const bd_banco = 'urban'; // nome do banco
+let connection;
 
-let connection = {
+const config = {
     host: bd_servidor,
     port: bd_porta, //Default: 3306
     user: bd_usuario,

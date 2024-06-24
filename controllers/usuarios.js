@@ -14,8 +14,8 @@ module.exports = {
                 usu_observ, 
                 usu_acesso 
                 FROM usuarios 
-                WHERE usu_acesso = 1;`;
-            
+                WHERE usu_acesso = 0;`;
+
             const [usuarios] = await db.query(sql);
             const nItens = usuarios.length;
 
@@ -35,35 +35,35 @@ module.exports = {
     },
     async cadastrarUsuarios(request, response) {
         try {
-            const { 
-                usu_nome, 
-                usu_cpf, 
-                usu_data_nasc, 
-                usu_sexo, 
-                usu_telefone, 
-                usu_email, 
-                usu_observ, 
-                usu_acesso, 
-                usu_senha 
+            const {
+                usu_nome,
+                usu_cpf,
+                usu_data_nasc,
+                usu_sexo,
+                usu_telefone,
+                usu_email,
+                usu_observ,
+                usu_acesso,
+                usu_senha
             } = request.body;
-            
+
             const sql = `INSERT INTO usuarios 
                 (usu_nome, usu_cpf, usu_data_nasc, usu_sexo, usu_telefone, 
                 usu_email, usu_observ, usu_acesso, usu_senha) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-            
+
             const values = [
-                usu_nome, 
-                usu_cpf, 
-                usu_data_nasc, 
-                usu_sexo, 
-                usu_telefone, 
-                usu_email, 
-                usu_observ, 
-                usu_acesso, 
+                usu_nome,
+                usu_cpf,
+                usu_data_nasc,
+                usu_sexo,
+                usu_telefone,
+                usu_email,
+                usu_observ,
+                usu_acesso,
                 usu_senha
             ];
-            
+
             const [execSql] = await db.query(sql, values);
             const usu_id = execSql.insertId;
 
@@ -82,20 +82,20 @@ module.exports = {
     },
     async editarUsuarios(request, response) {
         try {
-            const { 
-                usu_nome, 
-                usu_cpf, 
-                usu_data_nasc, 
-                usu_sexo, 
-                usu_telefone, 
-                usu_email, 
-                usu_observ, 
-                usu_acesso, 
-                usu_senha 
+            const {
+                usu_nome,
+                usu_cpf,
+                usu_data_nasc,
+                usu_sexo,
+                usu_telefone,
+                usu_email,
+                usu_observ,
+                usu_acesso,
+                usu_senha
             } = request.body;
-            
+
             const { usu_id } = request.params;
-            
+
             const sql = `UPDATE usuarios SET 
                 usu_nome = ?, 
                 usu_cpf = ?, 
@@ -107,20 +107,20 @@ module.exports = {
                 usu_acesso = ?, 
                 usu_senha = ? 
                 WHERE usu_id = ?;`;
-            
+
             const values = [
-                usu_nome, 
-                usu_cpf, 
-                usu_data_nasc, 
-                usu_sexo, 
-                usu_telefone, 
-                usu_email, 
-                usu_observ, 
-                usu_acesso, 
-                usu_senha, 
+                usu_nome,
+                usu_cpf,
+                usu_data_nasc,
+                usu_sexo,
+                usu_telefone,
+                usu_email,
+                usu_observ,
+                usu_acesso,
+                usu_senha,
                 usu_id
             ];
-            
+
             const [atualizaDados] = await db.query(sql, values);
 
             return response.status(200).json({
@@ -155,15 +155,15 @@ module.exports = {
                 dados: error.message
             });
         }
-    }, 
+    },
     async ocultarUsuario(request, response) {
         try {
-            const usu_acesso = 0; 
-            const { usu_id } = request.params; 
+            const usu_acesso = 0;
+            const { usu_id } = request.params;
             const sql = `UPDATE usuarios SET usu_acesso = ? WHERE usu_id = ?;`;
-            const values = [usu_acesso, usu_id]; 
-            const [atualizacao] = await db.query(sql, values); 
-            
+            const values = [usu_acesso, usu_id];
+            const [atualizacao] = await db.query(sql, values);
+
             return response.status(200).json({
                 sucesso: true,
                 mensagem: `Usuário ${usu_id} ocultado com sucesso`,
@@ -176,7 +176,7 @@ module.exports = {
                 dados: error.message
             });
         }
-    }, 
+    },
     async login(request, response) {
         try {
             const { usu_email, usu_senha } = request.body;
@@ -184,7 +184,7 @@ module.exports = {
                 WHERE usu_email = ? AND usu_senha = ? AND usu_acesso = 1;`;
             const values = [usu_email, usu_senha];
             const [usuarios] = await db.query(sql, values);
-            const nItens = usuarios.length; 
+            const nItens = usuarios.length;
 
             if (nItens < 1) {
                 return response.status(403).json({

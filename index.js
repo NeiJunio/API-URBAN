@@ -1,11 +1,12 @@
-const express = require('express');
+const express = require('express'); 
+const cors = require('cors'); 
 
-const app = express();
+const router = require('./routes/routes');
 
-const usuarioRoutes = require('./routes/usuarioRoutes');
-
-app.use(express.json()); // Para parsear JSON no corpo das requisições
-app.use('/api', usuarioRoutes);
+const app = express(); 
+app.use(cors()); 
+app.use(express.json()); 
+app.use(router);
 
 // const porta = process.env.PORT || 3333;
 const porta = 3333;
