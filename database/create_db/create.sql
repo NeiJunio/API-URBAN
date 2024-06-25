@@ -94,18 +94,18 @@ CREATE TABLE IF NOT EXISTS `agendamentos` (
 
 -- Tabela Agenda_serviços
 CREATE TABLE IF NOT EXISTS `agenda_servicos` (
-	`agend_serv_id` int AUTO_INCREMENT NOT NULL UNIQUE,
+	`agend_serv_id` int AUTO_INCREMENT NOT NULL UNIQUE, -- Identificador único do serviço agendado
 	`agend_id` int NOT NULL,
-	 `serv_id` INT NOT NULL,
+	`serv_id` INT NOT NULL,
 	`agend_serv_situ_id` INT NOT NULL,
-	 PRIMARY KEY (`agend_serv_id`),
+	 PRIMARY KEY (`agend_serv_id`),  -- Chave primária
 	 FOREIGN KEY (`agend_serv_situ_id`) REFERENCES agenda_servicos_situacao (`agend_serv_situ_id`)
 );
 
 CREATE TABLE IF NOT EXISTS `agenda_servicos_situacao` (
-	`agend_serv_situ_id` int AUTO_INCREMENT NOT NULL,
-	`agend_serv_situ_nome` varchar(50) NOT NULL,
-	PRIMARY KEY (`agend_serv_situ_id`)
+	`agend_serv_situ_id` int AUTO_INCREMENT NOT NULL, -- Identificador único da situação do serviço agendado
+	`agend_serv_situ_nome` varchar(50) NOT NULL, -- Nome da situação
+	PRIMARY KEY (`agend_serv_situ_id`)  -- Chave primária
 );
 
 -- Tabela de Categorias de Serviços
