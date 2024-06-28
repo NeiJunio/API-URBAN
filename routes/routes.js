@@ -30,7 +30,7 @@ router.get('/servicos', servicosController.listarServicos); // GET para listar t
 router.post('/servicos', servicosController.cadastrarServico); // POST para cadastrar um novo serviço
 router.patch('/servicos/:serv_id', servicosController.editarServico); // PUT para editar um serviço específico
 router.delete('/servicos/:serv_id', servicosController.apagarServico); // DELETE para apagar um serviço específico
-// router.put('/servicos/:serv_id', servicosController.editarServico); // PUT para editar um serviço específico
+router.put('/servicos/:serv_id', servicosController.editarServico); // PUT para editar um serviço específico
 // router.patch('/servicos/ocultar/:serv_id', servicosController.ocultarServico); // PATCH para ocultar um serviço específico
 
 
