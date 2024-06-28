@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
 	`usu_observ` varchar(120) NOT NULL, -- Observações sobre o usuário
 	`usu_acesso` boolean NOT NULL, -- Indicador de acesso (ativo/inativo)
 	`usu_senha` varchar(256) NOT NULL, -- Senha do usuário
+	`usu_status` bit(1) NULL; -- Status de usuário
 	PRIMARY KEY (`usu_id`) -- Chave primária
 );
 
