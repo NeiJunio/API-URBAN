@@ -136,7 +136,7 @@ module.exports = {
             });
         }
     },
-    async apagarUsuarios(request, response) {
+    async excluirUsuarios(request, response) {
         try {
             const { usu_id } = request.params;
             const sql = `DELETE FROM usuarios WHERE usu_id = ?`;

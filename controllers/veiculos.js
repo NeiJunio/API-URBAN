@@ -117,7 +117,7 @@ module.exports = {
             });
         }
     },
-    async apagarVeiculo(request, response) {
+    async excluirVeiculo(request, response) {
         try {
             const { veic_id } = request.params;
             const sql = `DELETE FROM veiculos WHERE veic_id = ?`;

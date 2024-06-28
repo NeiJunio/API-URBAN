@@ -6,4 +6,5 @@ INSERT INTO veiculos (mod_id, veic_placa, veic_ano, veic_cor, veic_combustivel, 
                      (934, 'MNO7890', '2021', 'Azul', 'Flex', 'Observacoes sobre o veiculo MNO7890 - carro'),
                      (504, 'PQR1234', '2017', 'Prata', 'Flex', 'Observacoes sobre o veiculo PQR1234 - carro'),
                      (1582, 'STU5678', '2013', 'Preto', 'Gasolina', 'Observacoes sobre o veiculo STU5678 - moto'),
-                     (1586, 'VWX9012', '2023', 'Branco', 'Flex', 'Observacoes sobre o veiculo VWX9012 - moto');
+                     (1586, 'VWX9012', '2023', 'Branco', 'Flex', 'Observacoes sobre o veiculo VWX9012 - moto'),
+                     (20, 'JHY6222', '2013', 'Branco', 'Diesel', 'Observacoes sobre o veiculo JHY6222 - caminhao');
