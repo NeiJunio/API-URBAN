@@ -11,7 +11,7 @@ module.exports = {
                 serv_preco, 
                 serv_descricao, 
                 serv_situacao 
-                FROM servicos `;
+                FROM servicos WHERE serv_situacao = '1'`;
 
             const [servicos] = await db.query(sql);
             const nItens = servicos.length;
@@ -139,7 +139,11 @@ module.exports = {
     },
     async ocultarServico(request, response) {
         try {
-            const serv_situacao = 0;
+
+            const {
+                serv_situacao
+            } = request.body;
+
             const { serv_id } = request.params;
             const sql = `UPDATE servicos SET serv_situacao = ? WHERE serv_id = ?;`;
             const values = [serv_situacao, serv_id];
@@ -147,7 +151,8 @@ module.exports = {
 
             return response.status(200).json({
                 sucesso: true,
-                mensagem: `Serviço ${serv_id} ocultado com sucesso`,
+                // mensagem: `Serviço ${serv_id} ${serv_situacao == 1 ? 'reativado' : 'desativado'} com sucesso`,
+                mensagem: serv_situacao == 1 ? 1 : 0, // 1 pra reativado e 0 pra desativado
                 dados: atualizacao.affectedRows
             });
         } catch (error) {
