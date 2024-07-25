@@ -151,8 +151,8 @@ module.exports = {
 
             return response.status(200).json({
                 sucesso: true,
-                // mensagem: `Serviço ${serv_id} ${serv_situacao == 1 ? 'reativado' : 'desativado'} com sucesso`,
-                mensagem: serv_situacao == 1 ? 1 : 0, // 1 pra reativado e 0 pra desativado
+                mensagem: `Serviço ${serv_id} ${serv_situacao == 1 ? 'reativado' : 'desativado'} com sucesso`,
+                // mensagem: serv_situacao == 1 ? 1 : 0, // 1 pra reativado e 0 pra desativado
                 dados: atualizacao.affectedRows
             });
         } catch (error) {
