@@ -50,7 +50,7 @@ module.exports = {
 
             const sql = `INSERT INTO usuarios 
                 (usu_nome, usu_cpf, usu_data_nasc, usu_sexo, usu_telefone, 
-                usu_email, usu_observ, usu_acesso, usu_senha, usu_status) 
+                usu_email, usu_observ, usu_acesso, usu_senha, usu_situacao) 
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
             const values = [
@@ -63,7 +63,7 @@ module.exports = {
                 usu_observ,
                 usu_acesso,
                 usu_senha,
-                usu_status
+                usu_situacao
             ];
 
             const [execSql] = await db.query(sql, values);
