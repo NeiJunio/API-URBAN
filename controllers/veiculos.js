@@ -38,12 +38,13 @@ module.exports = {
                 veic_ano, 
                 veic_cor, 
                 veic_combustivel, 
-                veic_observ 
+                veic_observ,
+                veic_situacao 
             } = request.body;
             
             const sql = `INSERT INTO veiculos 
-                (mod_id, veic_placa, veic_ano, veic_cor, veic_combustivel, veic_observ) 
-                VALUES (?, ?, ?, ?, ?, ?)`;
+                (mod_id, veic_placa, veic_ano, veic_cor, veic_combustivel, veic_observ, veic_situacao) 
+                VALUES (?, ?, ?, ?, ?, ?, ?)`;
             
             const values = [
                 mod_id, 
@@ -51,7 +52,8 @@ module.exports = {
                 veic_ano, 
                 veic_cor, 
                 veic_combustivel, 
-                veic_observ
+                veic_observ,
+                veic_situacao
             ];
             
             const [execSql] = await db.query(sql, values);
@@ -78,7 +80,7 @@ module.exports = {
                 veic_ano, 
                 veic_cor, 
                 veic_combustivel, 
-                veic_observ 
+                veic_observ
             } = request.body;
             
             const { veic_id } = request.params;
@@ -139,11 +141,18 @@ module.exports = {
     },
     async ocultarVeiculo(request, response) {
         try {
+
+            const {
+                veic_situacao
+            } = request.body;
+
             const veic_ativo = 0;
             const { veic_id } = request.params;
             const sql = `UPDATE veiculos SET veic_ativo = ? WHERE veic_id = ?;`;
             const values = [veic_ativo, veic_id];
             const [atualizacao] = await db.query(sql, values);
+
+
 
             return response.status(200).json({
                 sucesso: true,

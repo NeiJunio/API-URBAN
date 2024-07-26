@@ -12,9 +12,9 @@ module.exports = {
                 usu_telefone, 
                 usu_email, 
                 usu_observ, 
-                usu_acesso 
-                FROM usuarios 
-                WHERE usu_acesso = 0;`;
+                usu_acesso,
+                usu_situacao
+                FROM usuarios`;
 
             const [usuarios] = await db.query(sql);
             const nItens = usuarios.length;
@@ -44,13 +44,14 @@ module.exports = {
                 usu_email,
                 usu_observ,
                 usu_acesso,
-                usu_senha
+                usu_senha,
+                usu_situacao
             } = request.body;
 
             const sql = `INSERT INTO usuarios 
                 (usu_nome, usu_cpf, usu_data_nasc, usu_sexo, usu_telefone, 
-                usu_email, usu_observ, usu_acesso, usu_senha) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+                usu_email, usu_observ, usu_acesso, usu_senha, usu_status) 
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
             const values = [
                 usu_nome,
@@ -61,7 +62,8 @@ module.exports = {
                 usu_email,
                 usu_observ,
                 usu_acesso,
-                usu_senha
+                usu_senha,
+                usu_status
             ];
 
             const [execSql] = await db.query(sql, values);
@@ -158,15 +160,20 @@ module.exports = {
     },
     async ocultarUsuario(request, response) {
         try {
-            const usu_acesso = 0;
+
+            const {
+                usu_situacao
+            } = request.body;
+
+
             const { usu_id } = request.params;
-            const sql = `UPDATE usuarios SET usu_acesso = ? WHERE usu_id = ?;`;
-            const values = [usu_acesso, usu_id];
+            const sql = `UPDATE usuarios SET usu_status = ? WHERE usu_id = ?;`;
+            const values = [usu_situacao, usu_id];
             const [atualizacao] = await db.query(sql, values);
 
             return response.status(200).json({
                 sucesso: true,
-                mensagem: `Usuário ${usu_id} ocultado com sucesso`,
+                mensagem: `Usuário ${usu_id} ${usu_status == 1 ? 'reativado' : 'desativado'} com sucesso`,
                 dados: atualizacao.affectedRows
             });
         } catch (error) {
@@ -179,9 +186,14 @@ module.exports = {
     },
     async login(request, response) {
         try {
-            const { usu_email, usu_senha } = request.body;
+            const {
+                usu_email,
+                usu_senha
+            } = request.body;
+
             const sql = `SELECT usu_id, usu_nome FROM usuarios 
-                WHERE usu_email = ? AND usu_senha = ? AND usu_acesso = 1;`;
+                WHERE usu_email = ? AND usu_senha = ? AND usu_status = 1;`;
+                
             const values = [usu_email, usu_senha];
             const [usuarios] = await db.query(sql, values);
             const nItens = usuarios.length;

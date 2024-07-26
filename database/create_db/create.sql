@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
 	`usu_observ` varchar(120) NOT NULL, -- Observações sobre o usuário
 	`usu_acesso` boolean NOT NULL, -- Indicador de acesso (ativo/inativo)
 	`usu_senha` varchar(256) NOT NULL, -- Senha do usuário
-	`usu_status` bit(1) NULL; -- Status de usuário
+	`usu_situacao` bit(1) NULL; -- Status de usuário
 	PRIMARY KEY (`usu_id`) -- Chave primária
 );
 
@@ -68,6 +68,7 @@ CREATE TABLE IF NOT EXISTS `veiculos` (
 	`veic_cor` varchar(15) NOT NULL, -- Cor do veículo
 	`veic_combustivel` varchar(20) NOT NULL, -- Tipo de combustível do veículo
 	`veic_observ` varchar(200) NOT NULL, -- Observações sobre o veículo
+	`veic_situacao` bit(1) NOT NULL, -- Status do veiculo
 	PRIMARY KEY (`veic_id`) -- Chave primária
 );
 
@@ -155,3 +156,16 @@ ALTER TABLE `agenda_servicos` ADD CONSTRAINT `fk_agenda_servicos_agendamentos` F
 
 -- Adicionando chave estrangeira na tabela agenda_servicos para servicos
 ALTER TABLE `agenda_servicos` ADD CONSTRAINT `fk_agenda_servicos_servicos` FOREIGN KEY (`serv_id`) REFERENCES `servicos`(`serv_id`);
+
+
+
+alter table `usuarios` add `usu_situacao` bit(1) NOT NULL;
+UPDATE `usuarios` SET `usu_situacao` = 1 WHERE `usu_situacao` = 0;
+
+
+alter table `veiculos` add `veic_situacao` bit(1) NOT NULL;
+UPDATE `veiculos` SET `veic_situacao` = 1 WHERE `veic_situacao` = 0;
+
+
+ALTER TABLE `usuarios`
+CHANGE COLUMN `usu_status` `usu_situacao` bit(1);

@@ -12,7 +12,7 @@ router.post('/usuarios', UsuariosController.cadastrarUsuarios); // POST para cad
 router.patch('/usuarios/:usu_id', UsuariosController.editarUsuarios); // PUT para editar um usuário específico
 router.delete('/usuarios/:usu_id', UsuariosController.excluirUsuarios); // DELETE para apagar um usuário específico
 // router.put('/usuarios/:usu_id', UsuariosController.editarUsuarios); // PUT para editar um usuário específico
-// router.patch('/usuarios/oculta/:usu_id', UsuariosController.ocultarUsuario); // PATCH para ocultar um usuário específico
+router.patch('/usuarios/ocultar/:usu_id', UsuariosController.ocultarUsuario); // PATCH para ocultar um usuário específico
 
 // Rota para operação de login de usuário
 router.post('/login', UsuariosController.login); // POST para realizar o login de um usuário
