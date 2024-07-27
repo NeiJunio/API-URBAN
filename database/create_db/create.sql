@@ -159,13 +159,12 @@ ALTER TABLE `agenda_servicos` ADD CONSTRAINT `fk_agenda_servicos_servicos` FOREI
 
 
 
-alter table `usuarios` add `usu_situacao` bit(1) NOT NULL;
-UPDATE `usuarios` SET `usu_situacao` = 1 WHERE `usu_situacao` = 0;
+ALTER TABLE `usuarios` ADD `usu_situacao` BIT(1) NOT NULL; -- Adiciona uma nova coluna 'usu_situacao' do tipo BIT(1) na tabela 'usuarios'
+UPDATE `usuarios` SET `usu_situacao` = 1 WHERE `usu_situacao` = 0; -- Atualiza a coluna 'usu_situacao' para 1 onde atualmente é 0
 
 
-alter table `veiculos` add `veic_situacao` bit(1) NOT NULL;
-UPDATE `veiculos` SET `veic_situacao` = 1 WHERE `veic_situacao` = 0;
+ALTER TABLE `veiculos` ADD `veic_situacao` BIT(1) NOT NULL; -- Adiciona uma nova coluna 'veic_situacao' do tipo BIT(1) na tabela 'veiculos'
+UPDATE `veiculos` SET `veic_situacao` = 1 WHERE `veic_situacao` = 0; -- Atualiza a coluna 'veic_situacao' para 1 onde atualmente é 0
 
 
-ALTER TABLE `usuarios`
-CHANGE COLUMN `usu_status` `usu_situacao` bit(1);
+ALTER TABLE `usuarios` CHANGE COLUMN `usu_status` `usu_situacao` BIT(1); -- Renomeia a coluna 'usu_status' para 'usu_situacao' e altera seu tipo de dados para BIT(1)
