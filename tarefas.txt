@@ -1,0 +1,34 @@
+Instalado:
+• npm install express
+• npm install mysql2
+• npm install cors
+• npm install nodemon
+
+ja foi configurado devDependecies
+ja foi configurado scripts start e devDependecies
+
+arquivos de criação do banco adicionados a pasta create_db
+
+configuração do arquivo connection do banco (os dados é com base na conexão do banco criado no XAMPP)
+----------------------------------------------------------------
+
+criação do arquvio controller usuario.js, com definição de rotas
+criação do arquvio controller veiculos.js, com definição de rotas
+criação do arquvio controller serviços.js, com definição de rotas
+criação do arquvio controller disponibilidade.js, com definição de rotas
+criação do arquvio controller indisponibilidade.js, com definição de rotas
+
+----------------------------------------------------------------
+
+criação da pasta Thunder
+
+adição do arquivo usuarios
+adição do arquivo veiculos
+adição do arquivo serviços
+adição do arquivo disponibilidade
+adição do arquivo indisponibilidade
+
+----------------------------------------------------------------
+
+adicionar campo no front end para ativar e desativar usuarios
+adicionar campo no front end para ativar e desativar veiculos
