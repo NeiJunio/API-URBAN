@@ -1,0 +1,59 @@
+{
+    "clientName": "Thunder Client",
+    "collectionName": "VeículoUsuario",
+    "collectionId": "7e133956-f16b-4f92-9507-af84e17255cd",
+    "dateExported": "2024-07-28T20:30:45.217Z",
+    "version": "1.2",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "9ba02eb1-860b-4b77-bfdc-2307bb936ccc",
+            "colId": "7e133956-f16b-4f92-9507-af84e17255cd",
+            "containerId": "",
+            "name": "listarVeiculoUsuario",
+            "url": "http://localhost:3306/veiculoUsuario",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2024-07-28T20:23:09.882Z",
+            "modified": "2024-07-28T20:23:15.478Z",
+            "headers": []
+        },
+        {
+            "_id": "52fb1789-4753-4b09-b1a2-cbaf4ed5be63",
+            "colId": "7e133956-f16b-4f92-9507-af84e17255cd",
+            "containerId": "",
+            "name": "cadastrarVeiculoUsuario",
+            "url": "http://localhost:3306/veiculoUsuario",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2024-07-28T20:23:54.631Z",
+            "modified": "2024-07-28T20:24:05.008Z",
+            "headers": []
+        },
+        {
+            "_id": "aa537cfe-6d12-4d61-9e09-2e6a8dc99c13",
+            "colId": "7e133956-f16b-4f92-9507-af84e17255cd",
+            "containerId": "",
+            "name": "editarVeiculoUsuario",
+            "url": "http://localhost:3306/veiculoUsuario/id",
+            "method": "PATCH",
+            "sortNum": 30000,
+            "created": "2024-07-28T20:29:24.224Z",
+            "modified": "2024-07-28T20:29:34.447Z",
+            "headers": []
+        },
+        {
+            "_id": "85f92e75-2e5f-4ea0-88f4-59aae1bcb068",
+            "colId": "7e133956-f16b-4f92-9507-af84e17255cd",
+            "containerId": "",
+            "name": "excluirVeiculoUsuario",
+            "url": "http://localhost:3306/veiculoUsuario/id",
+            "method": "DELETE",
+            "sortNum": 40000,
+            "created": "2024-07-28T20:30:30.371Z",
+            "modified": "2024-07-28T20:30:39.507Z",
+            "headers": []
+        }
+    ],
+    "ref": "GsYFx4wBjQ9NdGSQRkFI_QzAJBkLnrWxmx57ViHf2mO-M0_Z_565gigp2GAI00HK9af2Vtckjh4MV0VDpUoakg"
+}

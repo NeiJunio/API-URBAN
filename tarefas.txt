@@ -17,6 +17,7 @@ criação do arquvio controller veiculos.js, com definição de rotas
 criação do arquvio controller serviços.js, com definição de rotas
 criação do arquvio controller disponibilidade.js, com definição de rotas
 criação do arquvio controller indisponibilidade.js, com definição de rotas
+criação do arquvio controller veiculoUsuario.js, com definição de rotas
 
 ----------------------------------------------------------------
 
@@ -27,6 +28,7 @@ adição do arquivo veiculos
 adição do arquivo serviços
 adição do arquivo disponibilidade
 adição do arquivo indisponibilidade
+adição do arquivo veiculoUsuario
 
 ----------------------------------------------------------------
 

@@ -6,7 +6,7 @@ const veiculosController = require('../controllers/veiculos');
 const servicosController = require('../controllers/servicos');
 const disponibilidadeController = require('../controllers/disponibilidade'); // Importa o controlador de disponibilidade
 const indisponibilidadeController = require('../controllers/indisponibilidade'); // Importa o controlador de indisponibilidade
-const veiculoUsuarioController = require('../controllers/veiculo_usuario'); // Importa o controlador de veiculo_usuario
+const veiculoUsuarioController = require('../controllers/veiculoUsuario'); // Importa o controlador de veiculoUsuario/veiculoUsuario
 
 // Rotas para operações relacionadas a usuários
 router.get('/usuarios', usuariosController.listarUsuarios); // GET para listar todos os usuários
@@ -51,10 +51,10 @@ router.delete('/indisponibilidade/:indisp_id', indisponibilidadeController.exclu
 router.patch('/indisponibilidade/desabilitar/:indisp_id', indisponibilidadeController.desabilitarIndisponibilidade); // PATCH para desabilitar indisponibilidades
 // router.put('/indisponibilidade/:indisp_id', indisponibilidadeController.editarIndisponibilidade); // PUT para editar uma indisponibilidade específica
 
-// Rotas para operações relacionadas a veiculo_usuario
-router.get('/veiculo_usuario', veiculoUsuarioController.listarVeiculoUsuario); // GET para listar todas as relações veiculo_usuario
-router.post('/veiculo_usuario', veiculoUsuarioController.cadastrarVeiculoUsuario); // POST para cadastrar uma nova relação veiculo_usuario
-router.patch('/veiculo_usuario/:veic_usu_id', veiculoUsuarioController.editarVeiculoUsuario); // PATCH para editar uma relação veiculo_usuario específica
-router.delete('/veiculo_usuario/:veic_usu_id', veiculoUsuarioController.excluirVeiculoUsuario); // DELETE para apagar uma relação veiculo_usuario específica
+// Rotas para operações relacionadas a veiculoUsuario/veiculoUsuario
+router.get('/veiculoUsuario', veiculoUsuarioController.listarVeiculosUsuario); // GET para listar todas as relações veiculoUsuario/veiculoUsuario
+router.post('/veiculoUsuario', veiculoUsuarioController.cadastrarVeiculoUsuario); // POST para cadastrar uma nova relação veiculoUsuario/veiculoUsuario
+router.patch('/veiculoUsuario/:veic_usu_id', veiculoUsuarioController.editarVeiculoUsuario); // PATCH para editar uma relação veiculoUsuario/veiculoUsuario específica
+router.delete('/veiculoUsuario/:veic_usu_id', veiculoUsuarioController.excluirVeiculoUsuario); // DELETE para apagar uma relação veiculoUsuario/veiculoUsuario específica
 
 module.exports = router;
