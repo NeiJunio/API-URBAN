@@ -11,7 +11,7 @@ module.exports = {
                 serv_preco, 
                 serv_descricao, 
                 serv_situacao 
-                FROM servicos WHERE serv_situacao = '1'`;
+                FROM servicos`;
 
             const [servicos] = await db.query(sql);
             const nItens = servicos.length;
@@ -30,6 +30,7 @@ module.exports = {
             });
         }
     },
+
     async cadastrarServico(request, response) {
         try {
             const {
@@ -70,6 +71,7 @@ module.exports = {
             });
         }
     },
+
     async editarServico(request, response) {
         try {
             const {
@@ -117,6 +119,7 @@ module.exports = {
             });
         }
     },
+
     async apagarServico(request, response) {
         try {
             const { serv_id } = request.params;
@@ -137,9 +140,9 @@ module.exports = {
             });
         }
     },
+    
     async ocultarServico(request, response) {
         try {
-
             const {
                 serv_situacao
             } = request.body;
@@ -152,7 +155,6 @@ module.exports = {
             return response.status(200).json({
                 sucesso: true,
                 mensagem: `Serviço ${serv_id} ${serv_situacao == 1 ? 'reativado' : 'desativado'} com sucesso`,
-                // mensagem: serv_situacao == 1 ? 1 : 0, // 1 pra reativado e 0 pra desativado
                 dados: atualizacao.affectedRows
             });
         } catch (error) {

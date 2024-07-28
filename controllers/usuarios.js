@@ -160,20 +160,18 @@ module.exports = {
     },
     async ocultarUsuario(request, response) {
         try {
-
             const {
                 usu_situacao
             } = request.body;
 
-
             const { usu_id } = request.params;
-            const sql = `UPDATE usuarios SET usu_status = ? WHERE usu_id = ?;`;
+            const sql = `UPDATE usuarios SET usu_situacao = ? WHERE usu_id = ?;`;
             const values = [usu_situacao, usu_id];
             const [atualizacao] = await db.query(sql, values);
 
             return response.status(200).json({
                 sucesso: true,
-                mensagem: `Usuário ${usu_id} ${usu_status == 1 ? 'reativado' : 'desativado'} com sucesso`,
+                mensagem: `Usuário ${usu_id} ${usu_situacao == 1 ? 'reativado' : 'desativado'} com sucesso`,
                 dados: atualizacao.affectedRows
             });
         } catch (error) {
@@ -192,7 +190,7 @@ module.exports = {
             } = request.body;
 
             const sql = `SELECT usu_id, usu_nome FROM usuarios 
-                WHERE usu_email = ? AND usu_senha = ? AND usu_status = 1;`;
+                WHERE usu_email = ? AND usu_senha = ? AND usu_situacao = 1;`;
                 
             const values = [usu_email, usu_senha];
             const [usuarios] = await db.query(sql, values);

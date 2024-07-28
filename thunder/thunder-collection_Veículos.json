@@ -1,0 +1,71 @@
+{
+    "clientName": "Thunder Client",
+    "collectionName": "Veículos",
+    "collectionId": "ef5a06cb-2b50-4ab2-9ef1-0bc8af655d69",
+    "dateExported": "2024-07-28T00:57:35.267Z",
+    "version": "1.2",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "9f3603f5-90db-4dab-8cc1-22af73d60390",
+            "colId": "ef5a06cb-2b50-4ab2-9ef1-0bc8af655d69",
+            "containerId": "",
+            "name": "listarVeiculos",
+            "url": "http://localhost:3306/veiculos",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2024-07-28T00:42:47.195Z",
+            "modified": "2024-07-28T00:42:58.655Z",
+            "headers": []
+        },
+        {
+            "_id": "1820d1d9-690d-4706-94f5-41afee753f80",
+            "colId": "ef5a06cb-2b50-4ab2-9ef1-0bc8af655d69",
+            "containerId": "",
+            "name": "cadastrarVeiculo",
+            "url": "http://localhost:3306/veiculos",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2024-07-28T00:46:38.508Z",
+            "modified": "2024-07-28T00:48:18.215Z",
+            "headers": []
+        },
+        {
+            "_id": "f03d1a27-a0f8-4029-8203-689598ff5423",
+            "colId": "ef5a06cb-2b50-4ab2-9ef1-0bc8af655d69",
+            "containerId": "",
+            "name": "editarVeiculo",
+            "url": "http://localhost:3306/veiculos/id",
+            "method": "PATCH",
+            "sortNum": 30000,
+            "created": "2024-07-28T00:49:41.723Z",
+            "modified": "2024-07-28T00:50:19.298Z",
+            "headers": []
+        },
+        {
+            "_id": "80b5424c-175b-4110-9429-5bad08e20d11",
+            "colId": "ef5a06cb-2b50-4ab2-9ef1-0bc8af655d69",
+            "containerId": "",
+            "name": "excluirVeiculo",
+            "url": "http://localhost:3306/veiculos/id",
+            "method": "DELETE",
+            "sortNum": 40000,
+            "created": "2024-07-28T00:50:36.447Z",
+            "modified": "2024-07-28T00:50:45.269Z",
+            "headers": []
+        },
+        {
+            "_id": "340b8f26-1452-4dde-be76-dc3f9cf07cfc",
+            "colId": "ef5a06cb-2b50-4ab2-9ef1-0bc8af655d69",
+            "containerId": "",
+            "name": "ocultarVeiculo",
+            "url": "http://localhost:3306/veiculos/ocultar/id",
+            "method": "PATCH",
+            "sortNum": 50000,
+            "created": "2024-07-28T00:51:02.463Z",
+            "modified": "2024-07-28T00:51:27.857Z",
+            "headers": []
+        }
+    ],
+    "ref": "_ZSJh98nDK3yrmXQY8V39T4I1Ao96Rqt8OsXOBatycrvZwacZISEFckzIDxsy-ZQxmYqLgD6G6mXXu9txPTWWw"
+}

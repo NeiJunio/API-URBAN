@@ -1,0 +1,71 @@
+{
+    "clientName": "Thunder Client",
+    "collectionName": "Disponibilidade",
+    "collectionId": "32e74ad7-62e5-4103-a4fc-1c3c835f7bcd",
+    "dateExported": "2024-07-28T02:32:10.679Z",
+    "version": "1.2",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "2fd38d4f-9747-44c9-aaae-b2a5f61b8fb5",
+            "colId": "32e74ad7-62e5-4103-a4fc-1c3c835f7bcd",
+            "containerId": "",
+            "name": "listarDisponibilidade",
+            "url": "http://localhost:3306/disponibilidade",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2024-07-28T01:58:48.872Z",
+            "modified": "2024-07-28T01:58:56.409Z",
+            "headers": []
+        },
+        {
+            "_id": "b6ac774a-ea1c-4c57-adba-71bda36ca371",
+            "colId": "32e74ad7-62e5-4103-a4fc-1c3c835f7bcd",
+            "containerId": "",
+            "name": "cadastrarDisponibilidade",
+            "url": "http://localhost:3306/disponibilidade",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2024-07-28T02:03:43.763Z",
+            "modified": "2024-07-28T02:03:50.021Z",
+            "headers": []
+        },
+        {
+            "_id": "f4a9e44e-df9b-4354-846a-e6c7dc69bdf9",
+            "colId": "32e74ad7-62e5-4103-a4fc-1c3c835f7bcd",
+            "containerId": "",
+            "name": "editarDisponibilidade",
+            "url": "http://localhost:3306/disponibilidade/id",
+            "method": "PATCH",
+            "sortNum": 30000,
+            "created": "2024-07-28T02:05:44.140Z",
+            "modified": "2024-07-28T02:06:04.268Z",
+            "headers": []
+        },
+        {
+            "_id": "17a92322-6c52-4ca4-9393-b1d10f0a43fc",
+            "colId": "32e74ad7-62e5-4103-a4fc-1c3c835f7bcd",
+            "containerId": "",
+            "name": "excluirDisponibilidade",
+            "url": "http://localhost:3306/disponibilidade/id",
+            "method": "DELETE",
+            "sortNum": 40000,
+            "created": "2024-07-28T02:07:23.845Z",
+            "modified": "2024-07-28T02:07:34.335Z",
+            "headers": []
+        },
+        {
+            "_id": "2333480a-1974-4220-a76d-57e092f4fa58",
+            "colId": "32e74ad7-62e5-4103-a4fc-1c3c835f7bcd",
+            "containerId": "",
+            "name": "desabilitarDisponibilidade",
+            "url": "http://localhost:3306/disponibilidade/desabilitar/id",
+            "method": "PATCH",
+            "sortNum": 50000,
+            "created": "2024-07-28T02:31:26.216Z",
+            "modified": "2024-07-28T02:31:35.289Z",
+            "headers": []
+        }
+    ],
+    "ref": "LbVKcyi3AZq-tDmT_o7Z1J5882QJkH5QvLEqheLz-M1SRPeLbdnoXDAZhGh0hjxeRkGa3m_ZVuPbAgg7mip9og"
+}

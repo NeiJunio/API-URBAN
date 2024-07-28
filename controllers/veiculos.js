@@ -10,7 +10,8 @@ module.exports = {
                 veic_ano, 
                 veic_cor, 
                 veic_combustivel, 
-                veic_observ 
+                veic_observ,
+                veic_situacao 
                 FROM veiculos;`;
             
             const [veiculos] = await db.query(sql);
@@ -148,15 +149,13 @@ module.exports = {
 
             const veic_ativo = 0;
             const { veic_id } = request.params;
-            const sql = `UPDATE veiculos SET veic_ativo = ? WHERE veic_id = ?;`;
-            const values = [veic_ativo, veic_id];
+            const sql = `UPDATE veiculos SET veic_situacao = ? WHERE veic_id = ?;`;
+            const values = [veic_situacao, veic_id];
             const [atualizacao] = await db.query(sql, values);
-
-
 
             return response.status(200).json({
                 sucesso: true,
-                mensagem: `Veículo ${veic_id} ocultado com sucesso`,
+                mensagem: `Veículo ${veic_id} ${veic_situacao == 1 ? 'reativado' : 'desativado'} com sucesso`,
                 dados: atualizacao.affectedRows
             });
         } catch (error) {

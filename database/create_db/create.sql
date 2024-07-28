@@ -168,3 +168,12 @@ UPDATE `veiculos` SET `veic_situacao` = 1 WHERE `veic_situacao` = 0; -- Atualiza
 
 
 ALTER TABLE `usuarios` CHANGE COLUMN `usu_status` `usu_situacao` BIT(1); -- Renomeia a coluna 'usu_status' para 'usu_situacao' e altera seu tipo de dados para BIT(1)
+
+
+
+ALTER TABLE `disponibilidade` ADD `disp_situacao` BIT(1) NOT NULL;
+UPDATE `disponibilidade` SET `disp_situacao` = 1 WHERE `disp_situacao` = 0;
+
+
+ALTER TABLE `indisponibilidade` ADD `indisp_situacao` BIT(1) NOT NULL;
+UPDATE `indisponibilidade` SET `indisp_situacao` = 1 WHERE `indisp_situacao` = 0;
