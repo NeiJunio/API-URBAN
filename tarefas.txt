@@ -18,6 +18,8 @@ criação do arquvio controller serviços.js, com definição de rotas
 criação do arquvio controller disponibilidade.js, com definição de rotas
 criação do arquvio controller indisponibilidade.js, com definição de rotas
 criação do arquvio controller veiculoUsuario.js, com definição de rotas
+criação do arquvio controller agendaServiços.js, com definição de rotas
+criação do arquvio controller agendaServiçosSituação.js, com definição de rotas
 
 ----------------------------------------------------------------
 
@@ -29,8 +31,12 @@ adição do arquivo serviços
 adição do arquivo disponibilidade
 adição do arquivo indisponibilidade
 adição do arquivo veiculoUsuario
+adição do arquivo agendaServiços
+adição do arquivo agendaServiçosSituação
 
 ----------------------------------------------------------------
 
 adicionar campo no front end para ativar e desativar usuarios
 adicionar campo no front end para ativar e desativar veiculos
+
+rever os inserts da tabela agendaServiços (acho que inseriu os mesmos inserts varias vezes)
