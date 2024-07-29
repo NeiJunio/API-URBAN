@@ -1,17 +1,17 @@
 const mysql = require('mysql2/promise');
 
-// const bd_usuario = 'us_tecdes_223_g7'; //usuario
-// const bd_senha = 'ej5213'; // senha
-// const bd_servidor = '10.67.22.216'; // servidor
-// const bd_porta = '3306'; // porta
-// const bd_banco = 'bd_tcc_tecdes_223_g7'; // nome do banco
-
-
-const bd_usuario = 'root'; //usuario
-const bd_senha = ''; // senha
-const bd_servidor = 'localhost'; // servidor
+const bd_usuario = 'us_tecdes_223_g7'; //usuario
+const bd_senha = 'ej5213'; // senha
+const bd_servidor = '10.67.22.216'; // servidor
 const bd_porta = '3306'; // porta
-const bd_banco = 'urban'; // nome do banco
+const bd_banco = 'bd_tcc_tecdes_223_g7'; // nome do banco
+
+
+// const bd_usuario = 'root'; //usuario
+// const bd_senha = ''; // senha
+// const bd_servidor = 'localhost'; // servidor
+// const bd_porta = '3306'; // porta
+// const bd_banco = 'urban'; // nome do banco
 
 
 let connection;
