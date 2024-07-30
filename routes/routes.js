@@ -9,6 +9,7 @@ const indisponibilidadeController = require('../controllers/indisponibilidade');
 const veiculoUsuarioController = require('../controllers/veiculoUsuario'); // Importa o controlador de veiculoUsuario
 const agendaServicosController = require('../controllers/agendaServicos'); // Importa o controlador de agendaServicos
 const agendaServicosSituacaoController = require('../controllers/agendaServicosSituacao'); // Importa o controlador de agendaServicosSituacao
+const agendamentosController = require('../controllers/agendamentos'); // Importa o controlador de agendamentos
 
 // Rotas para operações relacionadas a usuários
 router.get('/usuarios', usuariosController.listarUsuarios); // GET para listar todos os usuários
@@ -70,5 +71,11 @@ router.get('/agendaServicosSituacao', agendaServicosSituacaoController.listarSit
 router.post('/agendaServicosSituacao', agendaServicosSituacaoController.cadastrarSituacao); // POST para cadastrar uma nova situação de serviço agendado
 router.patch('/agendaServicosSituacao/:agend_serv_situ_id', agendaServicosSituacaoController.editarSituacao); // PATCH para editar uma situação de serviço agendado específica
 router.delete('/agendaServicosSituacao/:agend_serv_situ_id', agendaServicosSituacaoController.excluirSituacao); // DELETE para apagar uma situação de serviço agendado específica
+
+// Rotas para operações relacionadas a agendamentos
+router.get('/agendamentos', agendamentosController.listarAgendamentos); // GET para listar todos os agendamentos
+router.post('/agendamentos', agendamentosController.cadastrarAgendamento); // POST para cadastrar um novo agendamento
+router.patch('/agendamentos/:agend_id', agendamentosController.editarAgendamento); // PATCH para editar um agendamento específico
+router.delete('/agendamentos/:agend_id', agendamentosController.excluirAgendamento); // DELETE para apagar um agendamento específico
 
 module.exports = router;
