@@ -39,4 +39,6 @@ adição do arquivo agendaServiçosSituação
 adicionar campo no front end para ativar e desativar usuarios
 adicionar campo no front end para ativar e desativar veiculos
 
+atualizar controler veiculo (adição de colunas cat_id e mar_id)
+
 rever os inserts da tabela agendaServiços (acho que inseriu os mesmos inserts varias vezes)

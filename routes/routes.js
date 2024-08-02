@@ -12,6 +12,7 @@ const agendaServicosSituacaoController = require('../controllers/agendaServicosS
 const agendamentosController = require('../controllers/agendamentos'); // Importa o controlador de agendamentos
 const categoriasServicosController = require('../controllers/categoriasServicos'); // Importa o controlador de categoriasServicos
 const categoriasController = require('../controllers/categorias'); // Importa o controlador de categorias
+const marcasController = require('../controllers/marcas'); // Importa o controlador de marcas
 
 // Rotas para operações relacionadas a usuários
 router.get('/usuarios', usuariosController.listarUsuarios); // GET para listar todos os usuários
@@ -91,5 +92,11 @@ router.get('/categorias', categoriasController.listarCategorias); // GET para li
 router.post('/categorias', categoriasController.cadastrarCategoria); // POST para cadastrar uma nova categoria
 router.patch('/categorias/:cat_id', categoriasController.editarCategoria); // PATCH para editar uma categoria específica
 router.delete('/categorias/:cat_id', categoriasController.excluirCategoria); // DELETE para apagar uma categoria específica
+
+// Rotas para operações relacionadas a marcas
+router.get('/marcas', marcasController.listarMarcas); // GET para listar todas as marcas
+router.post('/marcas', marcasController.cadastrarMarca); // POST para cadastrar uma nova marca
+router.patch('/marcas/:mar_id', marcasController.editarMarca); // PATCH para editar uma marca específica
+router.delete('/marcas/:mar_id', marcasController.excluirMarca); // DELETE para apagar uma marca específica
 
 module.exports = router;
