@@ -10,6 +10,8 @@ const veiculoUsuarioController = require('../controllers/veiculoUsuario'); // Im
 const agendaServicosController = require('../controllers/agendaServicos'); // Importa o controlador de agendaServicos
 const agendaServicosSituacaoController = require('../controllers/agendaServicosSituacao'); // Importa o controlador de agendaServicosSituacao
 const agendamentosController = require('../controllers/agendamentos'); // Importa o controlador de agendamentos
+const categoriasServicosController = require('../controllers/categoriasServicos'); // Importa o controlador de categoriasServicos
+const categoriasController = require('../controllers/categorias'); // Importa o controlador de categorias
 
 // Rotas para operações relacionadas a usuários
 router.get('/usuarios', usuariosController.listarUsuarios); // GET para listar todos os usuários
@@ -33,7 +35,7 @@ router.patch('/veiculos/ocultar/:veic_id', veiculosController.ocultarVeiculo); /
 // Rotas para operações relacionadas a serviços
 router.get('/servicos', servicosController.listarServicos); // GET para listar todos os serviços
 router.post('/servicos', servicosController.cadastrarServico); // POST para cadastrar um novo serviço
-router.patch('/servicos/:serv_id', servicosController.editarServico); // PUT para editar um serviço específico
+router.patch('/servicos/:serv_id', servicosController.editarServico); // PATCH para editar um serviço específico
 router.delete('/servicos/:serv_id', servicosController.apagarServico); // DELETE para apagar um serviço específico
 router.patch('/servicos/ocultar/:serv_id', servicosController.ocultarServico); // PATCH para ocultar um serviço específico
 // router.put('/servicos/:serv_id', servicosController.editarServico); // PUT para editar um serviço específico
@@ -54,11 +56,11 @@ router.delete('/indisponibilidade/:indisp_id', indisponibilidadeController.exclu
 router.patch('/indisponibilidade/desabilitar/:indisp_id', indisponibilidadeController.desabilitarIndisponibilidade); // PATCH para desabilitar indisponibilidades
 // router.put('/indisponibilidade/:indisp_id', indisponibilidadeController.editarIndisponibilidade); // PUT para editar uma indisponibilidade específica
 
-// Rotas para operações relacionadas a veiculoUsuario/veiculoUsuario
-router.get('/veiculoUsuario', veiculoUsuarioController.listarVeiculosUsuario); // GET para listar todas as relações veiculoUsuario/veiculoUsuario
-router.post('/veiculoUsuario', veiculoUsuarioController.cadastrarVeiculoUsuario); // POST para cadastrar uma nova relação veiculoUsuario/veiculoUsuario
-router.patch('/veiculoUsuario/:veic_usu_id', veiculoUsuarioController.editarVeiculoUsuario); // PATCH para editar uma relação veiculoUsuario/veiculoUsuario específica
-router.delete('/veiculoUsuario/:veic_usu_id', veiculoUsuarioController.excluirVeiculoUsuario); // DELETE para apagar uma relação veiculoUsuario/veiculoUsuario específica
+// Rotas para operações relacionadas a veiculoUsuario
+router.get('/veiculoUsuario', veiculoUsuarioController.listarVeiculosUsuario); // GET para listar todas as relações veiculoUsuario
+router.post('/veiculoUsuario', veiculoUsuarioController.cadastrarVeiculoUsuario); // POST para cadastrar uma nova relação veiculoUsuario
+router.patch('/veiculoUsuario/:veic_usu_id', veiculoUsuarioController.editarVeiculoUsuario); // PATCH para editar uma relação veiculoUsuario específica
+router.delete('/veiculoUsuario/:veic_usu_id', veiculoUsuarioController.excluirVeiculoUsuario); // DELETE para apagar uma relação veiculoUsuario específica
 
 // Rotas para operações relacionadas a agendaServicos
 router.get('/agendaServicos', agendaServicosController.listarAgendaServicos); // GET para listar todos os serviços agendados
@@ -77,5 +79,17 @@ router.get('/agendamentos', agendamentosController.listarAgendamentos); // GET p
 router.post('/agendamentos', agendamentosController.cadastrarAgendamento); // POST para cadastrar um novo agendamento
 router.patch('/agendamentos/:agend_id', agendamentosController.editarAgendamento); // PATCH para editar um agendamento específico
 router.delete('/agendamentos/:agend_id', agendamentosController.excluirAgendamento); // DELETE para apagar um agendamento específico
+
+// Rotas para operações relacionadas a categoriasServicos
+router.get('/categoriasServicos', categoriasServicosController.listarCategorias); // GET para listar todas as categorias de serviços
+router.post('/categoriasServicos', categoriasServicosController.cadastrarCategoria); // POST para cadastrar uma nova categoria de serviço
+router.patch('/categoriasServicos/:cat_serv_id', categoriasServicosController.editarCategoria); // PATCH para editar uma categoria de serviço específica
+router.delete('/categoriasServicos/:cat_serv_id', categoriasServicosController.excluirCategoria); // DELETE para apagar uma categoria de serviço específica
+
+// Rotas para operações relacionadas a categorias
+router.get('/categorias', categoriasController.listarCategorias); // GET para listar todas as categorias
+router.post('/categorias', categoriasController.cadastrarCategoria); // POST para cadastrar uma nova categoria
+router.patch('/categorias/:cat_id', categoriasController.editarCategoria); // PATCH para editar uma categoria específica
+router.delete('/categorias/:cat_id', categoriasController.excluirCategoria); // DELETE para apagar uma categoria específica
 
 module.exports = router;
