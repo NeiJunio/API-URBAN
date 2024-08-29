@@ -28,6 +28,40 @@ module.exports = {
             });
         }
     },
+
+    async listarMarcaPorCategoria(request, response) {
+        try {
+            const { cat_id } = request.params;
+
+            const sql = `SELECT 
+                mar_id, 
+                mar_nome, 
+                mar_cod, 
+                mar_icone, 
+                cat_id
+                FROM marcas
+                WHERE cat_id = ?`;
+
+                const [marcas] = await db.query(sql, [cat_id]);
+                const nItens = marcas.length;
+
+                return response.status(200).json({
+                    sucesso: true,
+                    mensagem: 'Lista de marcas por categoria.',
+                    dados: marcas,
+                    nItens
+                });
+
+        } catch (error) {
+            return response.status(500).json({
+                sucesso: false,
+                mensagem: 'Erro na requisição.',
+                dados: error.message
+            });
+        }
+    },
+
+
     async cadastrarMarca(request, response) {
         try {
             const {
