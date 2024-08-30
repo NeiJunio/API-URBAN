@@ -14,6 +14,8 @@ const categoriasServicosController = require('../controllers/categoriasServicos'
 const categoriasController = require('../controllers/categorias');
 const marcasController = require('../controllers/marcas');
 const modelosController = require('../controllers/modelos');
+const agendamentoController = require('../controllers/agendamentos');
+
 
 router.get('/usuarios', usuariosController.listarUsuarios);
 router.post('/usuarios', usuariosController.cadastrarUsuarios);
@@ -65,7 +67,10 @@ router.delete('/agendaServicosSituacao/:agend_serv_situ_id', agendaServicosSitua
 router.get('/agendamentos', agendamentosController.listarAgendamentos);
 router.post('/agendamentos', agendamentosController.cadastrarAgendamento);
 router.patch('/agendamentos/:agend_id', agendamentosController.editarAgendamento);
+router.patch('/agendamentos/situacao/:agend_id', agendamentoController.editarSituacaoAgendamento);
 router.delete('/agendamentos/:agend_id', agendamentosController.excluirAgendamento);
+router.get('/agendamentos/situacao/:agend_situacao', agendamentoController.listarAgendamentosPorSituacao);
+
 
 router.get('/categoriasServicos', categoriasServicosController.listarCategorias);
 router.post('/categoriasServicos', categoriasServicosController.cadastrarCategoria);
@@ -87,7 +92,7 @@ router.get('/modelos', modelosController.listarModelos);
 router.get('/modelos/marca/:mar_id', modelosController.listarModelosPorMarca);
 router.get('/modelos/categoria/:cat_id/marca/:mar_id', modelosController.listarModelosPorCategoriaEMarca);
 router.post('/modelos', modelosController.cadastrarModelo);
-router.put('/modelos/:mod_id', modelosController.editarModelo);
+router.patch('/modelos/:mod_id', modelosController.editarModelo);
 router.delete('/modelos/:mod_id', modelosController.excluirModelo);
 
 module.exports = router;
