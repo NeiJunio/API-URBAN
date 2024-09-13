@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `bd_tcc_tecdes_223_g7` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `bd_tcc_tecdes_223_g7`;
 -- MySQL dump 10.13  Distrib 8.0.36, for Win64 (x86_64)
 --
 -- Host: 10.67.22.216    Database: bd_tcc_tecdes_223_g7
@@ -16,27 +18,27 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `categorias_servicos`
+-- Table structure for table `agenda_servicos_situacao`
 --
 
-DROP TABLE IF EXISTS `categorias_servicos`;
+DROP TABLE IF EXISTS `agenda_servicos_situacao`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `categorias_servicos` (
-  `cat_serv_id` int(11) NOT NULL AUTO_INCREMENT,
-  `cat_serv_nome` varchar(60) NOT NULL,
-  PRIMARY KEY (`cat_serv_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+CREATE TABLE `agenda_servicos_situacao` (
+  `agend_serv_situ_id` int(11) NOT NULL AUTO_INCREMENT,
+  `agend_serv_situ_nome` varchar(50) NOT NULL,
+  PRIMARY KEY (`agend_serv_situ_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `categorias_servicos`
+-- Dumping data for table `agenda_servicos_situacao`
 --
 
-LOCK TABLES `categorias_servicos` WRITE;
-/*!40000 ALTER TABLE `categorias_servicos` DISABLE KEYS */;
-INSERT INTO `categorias_servicos` VALUES (1,'Lavagem e Higienizacao'),(2,'Polimento e Protecao da Pintura'),(3,'Cuidados com Vidros e Farois'),(4,'Cuidados com Rodas e Pneus'),(5,'Detalhamento Interno (tailing)'),(6,'Remocao de Odores'),(7,'Correcao de Pintura'),(8,'Customizacao'),(9,'Reparos Esteticos'),(10,'Servicos Adicionais');
-/*!40000 ALTER TABLE `categorias_servicos` ENABLE KEYS */;
+LOCK TABLES `agenda_servicos_situacao` WRITE;
+/*!40000 ALTER TABLE `agenda_servicos_situacao` DISABLE KEYS */;
+INSERT INTO `agenda_servicos_situacao` VALUES (1,'Pendente'),(2,'Em Andamento'),(3,'Concluído'),(4,'Cancelado');
+/*!40000 ALTER TABLE `agenda_servicos_situacao` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -48,4 +50,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-06-21 20:43:37
+-- Dump completed on 2024-09-12 22:39:22
