@@ -186,10 +186,10 @@ module.exports = {
         try {
             const {
                 usu_email,
-                usu_senha
+                usu_senha,
             } = request.body;
 
-            const sql = `SELECT usu_id, usu_nome FROM usuarios 
+            const sql = `SELECT usu_id, usu_nome, usu_acesso FROM usuarios 
                 WHERE usu_email = ? AND usu_senha = ? AND usu_situacao = 1;`;
                 
             const values = [usu_email, usu_senha];

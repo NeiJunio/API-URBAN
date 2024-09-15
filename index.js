@@ -10,7 +10,8 @@ app.use(router);
 
 // const porta = process.env.PORT || 3333;
 // const porta = 3333;
-const porta = 3306;
+const porta = 3333;
+// const porta = 3306;  //XAMPP
 
 app.listen(porta, ()=>{
     console.log('Servidor iniciado na porta '+ porta);
