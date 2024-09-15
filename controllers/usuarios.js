@@ -194,6 +194,7 @@ module.exports = {
                 
             const values = [usu_email, usu_senha];
             const [usuarios] = await db.query(sql, values);
+
             const nItens = usuarios.length;
 
             if (nItens < 1) {
