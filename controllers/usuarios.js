@@ -13,7 +13,7 @@ module.exports = {
                 usu_email, 
                 usu_observ, 
                 usu_acesso,
-                usu_situacao
+                usu_situacao = 1 AS usu_situacao
                 FROM usuarios`;
 
             const [usuarios] = await db.query(sql);
