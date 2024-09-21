@@ -93,7 +93,6 @@ module.exports = {
                 usu_email,
                 usu_observ,
                 usu_acesso,
-                usu_senha
             } = request.body;
 
             const { usu_id } = request.params;
@@ -106,8 +105,8 @@ module.exports = {
                 usu_telefone = ?, 
                 usu_email = ?, 
                 usu_observ = ?, 
-                usu_acesso = ?, 
-                usu_senha = ? 
+                usu_acesso = ?
+                
                 WHERE usu_id = ?;`;
 
             const values = [
@@ -119,7 +118,7 @@ module.exports = {
                 usu_email,
                 usu_observ,
                 usu_acesso,
-                usu_senha,
+             
                 usu_id
             ];
 
