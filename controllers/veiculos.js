@@ -1,22 +1,150 @@
 const db = require('../database/connection');
 
 module.exports = {
+    // async listarVeiculos(request, response) {
+    //     try {
+    //         const sql = `SELECT 
+    //             veic_id, 
+    //             mod_id, 
+    //             veic_placa, 
+    //             veic_ano, 
+    //             veic_cor, 
+    //             veic_combustivel, 
+    //             veic_observ,
+    //             veic_situacao 
+    //             FROM veiculos;`;
+            
+    //         const [veiculos] = await db.query(sql);
+    //         const nItens = veiculos.length;
+
+    //         return response.status(200).json({
+    //             sucesso: true,
+    //             mensagem: 'Lista de veículos.',
+    //             dados: veiculos,
+    //             nItens
+    //         });
+    //     } catch (error) {
+    //         return response.status(500).json({
+    //             sucesso: false,
+    //             mensagem: 'Erro na requisição.',
+    //             dados: error.message
+    //         });
+    //     }
+    // },
+    // async listarVeiculos(request, response) {
+    //     try {
+    //         const sql = `SELECT 
+    //             v.veic_id, 
+    //             v.mod_id, 
+    //             m.mod_nome, -- Nome do modelo
+    //             mar.mar_nome, -- Nome da marca
+    //             v.veic_placa, 
+    //             v.veic_ano, 
+    //             v.veic_cor, 
+    //             v.veic_combustivel, 
+    //             v.veic_observ,
+    //             v.veic_situacao,
+    //             u.usu_nome AS proprietario -- Nome do proprietário
+    //         FROM veiculos v
+    //         LEFT JOIN veiculo_usuario vu ON v.veic_id = vu.veic_id
+    //         LEFT JOIN usuarios u ON vu.usu_id = u.usu_id
+    //         LEFT JOIN modelos m ON v.mod_id = m.mod_id
+    //         LEFT JOIN marcas mar ON m.mar_id = mar.mar_id
+    //         WHERE vu.ehproprietario = 1;`;
+            
+    //         const [veiculos] = await db.query(sql);
+    //         const nItens = veiculos.length;
+    
+    //         return response.status(200).json({
+    //             sucesso: true,
+    //             mensagem: 'Lista de veículos com proprietários, modelos e marcas.',
+    //             dados: veiculos,
+    //             nItens
+    //         });
+    //     } catch (error) {
+    //         return response.status(500).json({
+    //             sucesso: false,
+    //             mensagem: 'Erro na requisição.',
+    //             dados: error.message
+    //         });
+    //     }
+    // },
+    // 
+    // async listarVeiculos(request, response) {
+    //     try {
+    //         const sql = `
+    //             SELECT 
+    //                 v.veic_id, 
+    //                 mo.mod_nome AS modelo,  -- Puxando o nome do modelo
+    //                 v.veic_placa, 
+    //                 v.veic_ano, 
+    //                 v.veic_cor, 
+    //                 v.veic_combustivel, 
+    //                 v.veic_observ, 
+    //                 v.veic_situacao,
+    //                 m.mar_nome AS marca,
+    //                 u.usu_nome AS proprietario
+    //             FROM 
+    //                 veiculos v
+    //             JOIN 
+    //                 modelos mo ON v.mod_id = mo.mod_id
+    //             JOIN 
+    //                 marcas m ON mo.mar_id = m.mar_id
+    //             JOIN 
+    //                 veiculo_usuario vu ON v.veic_id = vu.veic_id
+    //             JOIN 
+    //                 usuarios u ON vu.usu_id = u.usu_id
+    //         `;
+    
+    //         const [veiculos] = await db.query(sql);
+    //         const nItens = veiculos.length;
+    
+    //         return response.status(200).json({
+    //             sucesso: true,
+    //             mensagem: 'Lista de veículos.',
+    //             dados: veiculos,
+    //             nItens
+    //         });
+    //     } catch (error) {
+    //         return response.status(500).json({
+    //             sucesso: false,
+    //             mensagem: 'Erro na requisição.',
+    //             dados: error.message
+    //         });
+    //     }
+    // },    
     async listarVeiculos(request, response) {
         try {
-            const sql = `SELECT 
-                veic_id, 
-                mod_id, 
-                veic_placa, 
-                veic_ano, 
-                veic_cor, 
-                veic_combustivel, 
-                veic_observ,
-                veic_situacao 
-                FROM veiculos;`;
-            
+            const sql = `
+                SELECT 
+                    v.veic_id, 
+                    mo.mod_nome AS modelo,  -- Puxando o nome do modelo
+                    v.veic_placa, 
+                    v.veic_ano, 
+                    v.veic_cor, 
+                    v.veic_combustivel, 
+                    v.veic_observ, 
+                    v.veic_situacao,
+                    m.mar_nome AS marca,
+                    GROUP_CONCAT(DISTINCT u.usu_nome SEPARATOR ', ') AS proprietarios,
+                    COUNT(DISTINCT vu.usu_id) AS num_proprietarios
+                FROM 
+                    veiculos v
+                JOIN 
+                    modelos mo ON v.mod_id = mo.mod_id
+                JOIN 
+                    marcas m ON mo.mar_id = m.mar_id
+                LEFT JOIN 
+                    veiculo_usuario vu ON v.veic_id = vu.veic_id
+                LEFT JOIN 
+                    usuarios u ON vu.usu_id = u.usu_id
+                GROUP BY 
+                    v.veic_id, mo.mod_nome, m.mar_nome, v.veic_placa, v.veic_ano, v.veic_cor, v.veic_combustivel, v.veic_observ, v.veic_situacao
+            `;
+    
             const [veiculos] = await db.query(sql);
             const nItens = veiculos.length;
-
+    
             return response.status(200).json({
                 sucesso: true,
                 mensagem: 'Lista de veículos.',
@@ -31,6 +159,9 @@ module.exports = {
             });
         }
     },
+    
+    
+    
     async cadastrarVeiculo(request, response) {
         try {
             const { 
