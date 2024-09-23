@@ -297,4 +297,67 @@ module.exports = {
             });
         }
     },
+
+    async visualizarVeiculo(request, response) {
+        try {
+            const { veic_id } = request.params;
+            const sql = `
+                SELECT 
+                    v.veic_id, 
+                    mo.mod_nome AS mod_nome, 
+                    v.veic_placa, 
+                    v.veic_ano, 
+                    v.veic_cor, 
+                    v.veic_combustivel, 
+                    v.veic_observ, 
+                    v.veic_situacao = 1 AS veic_situacao, -- Lógica para veic_situacao
+                    m.mar_nome AS mar_nome,
+                    c.cat_nome AS cat_nome,
+                    GROUP_CONCAT(DISTINCT u.usu_nome SEPARATOR ', ') AS proprietarios,
+                    COUNT(DISTINCT vu.usu_id) AS num_proprietarios
+                    
+                FROM 
+                    veiculos v
+                JOIN 
+                    modelos mo ON v.mod_id = mo.mod_id
+                JOIN 
+                    marcas m ON mo.mar_id = m.mar_id
+                LEFT JOIN 
+                    veiculo_usuario vu ON v.veic_id = vu.veic_id
+                LEFT JOIN 
+                    usuarios u ON vu.usu_id = u.usu_id
+                LEFT JOIN 
+                    categorias c ON m.cat_id = c.cat_id
+                WHERE 
+                    v.veic_id = ? 
+                GROUP BY 
+                    v.veic_id
+            `;
+    
+            const [veiculo] = await db.query(sql, [veic_id]);
+    
+            if (veiculo.length === 0) {
+                return response.status(404).json({
+                    sucesso: false,
+                    mensagem: 'Veículo não encontrado.',
+                });
+            }
+    
+            return response.status(200).json({
+                sucesso: true,
+                mensagem: 'Veículo encontrado.',
+                dados: veiculo[0],
+            });
+        } catch (error) {
+            return response.status(500).json({
+                sucesso: false,
+                mensagem: 'Erro na requisição.',
+                dados: error.message
+            });
+        }
+    }
+    
+    
+    
 }
+

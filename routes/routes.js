@@ -26,6 +26,7 @@ router.patch('/usuarios/ocultar/:usu_id', usuariosController.ocultarUsuario);
 router.post('/login', usuariosController.login);
 
 router.get('/veiculos', veiculosController.listarVeiculos);
+router.get('/veiculos/:veic_id', veiculosController.visualizarVeiculo);
 router.post('/veiculos', veiculosController.cadastrarVeiculo);
 router.patch('/veiculos/:veic_id', veiculosController.editarVeiculo);
 router.delete('/veiculos/:veic_id', veiculosController.excluirVeiculo);
