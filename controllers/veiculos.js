@@ -124,7 +124,7 @@ module.exports = {
                     v.veic_cor, 
                     v.veic_combustivel, 
                     v.veic_observ, 
-                    v.veic_situacao,
+                    v.veic_situacao = 1 AS veic_situacao,
                     m.mar_nome AS marca,
                     GROUP_CONCAT(DISTINCT u.usu_nome SEPARATOR ', ') AS proprietarios,
                     COUNT(DISTINCT vu.usu_id) AS num_proprietarios
