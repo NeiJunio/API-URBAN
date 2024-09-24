@@ -33,10 +33,12 @@ router.delete('/veiculos/:veic_id', veiculosController.excluirVeiculo);
 router.patch('/veiculos/ocultar/:veic_id', veiculosController.ocultarVeiculo);
 
 router.get('/servicos', servicosController.listarServicos);
+router.get('/servicos/:serv_id', servicosController.visualizarServico);
 router.post('/servicos', servicosController.cadastrarServico);
 router.patch('/servicos/:serv_id', servicosController.editarServico);
 router.delete('/servicos/:serv_id', servicosController.apagarServico);
 router.patch('/servicos/ocultar/:serv_id', servicosController.ocultarServico);
+
 
 router.get('/disponibilidade', disponibilidadeController.listarDisponibilidade);
 router.post('/disponibilidade', disponibilidadeController.cadastrarDisponibilidade);
