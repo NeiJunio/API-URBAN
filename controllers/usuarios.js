@@ -1,4 +1,11 @@
 const db = require('../database/connection');
+const moment = require('moment');
+
+const dataInput = (data) => {
+    // Converte para o formato americano (aaaa-mm-dd)
+    const dataInput = moment(data, 'YYYY/MM/DD').format('YYYY-MM-DD'); 
+    return dataInput;
+}
 
 module.exports = {
     async listarUsuarios(request, response) {
@@ -19,10 +26,16 @@ module.exports = {
             const [usuarios] = await db.query(sql);
             const nItens = usuarios.length;
 
+             // Itera sobre os usuários e formata o CPF
+             const usuariosFormatados = usuarios.map(usuario => ({
+                ...usuario,
+                usu_data_nasc: dataInput(usuario.usu_data_nasc)
+            }));
+
             return response.status(200).json({
                 sucesso: true,
                 mensagem: 'Lista de usuários.',
-                dados: usuarios,
+                dados: usuariosFormatados,
                 nItens
             });
         } catch (error) {
