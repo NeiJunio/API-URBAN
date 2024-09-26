@@ -112,39 +112,87 @@ module.exports = {
     //             dados: error.message
     //         });
     //     }
-    // },    
+    // },   
+    // async listarVeiculos(request, response) {
+    //     try {
+
+    //         const values = [usu_acesso, usu_acesso, usu_id];
+    //         const sql = `
+    //              SELECT v.veic_id, 
+    //                  mo.mod_nome AS modelo,  -- Puxando o nome do modelo
+    //                  v.veic_placa, 
+    //                  v.veic_ano, 
+    //                  v.veic_cor, 
+    //                  v.veic_combustivel, 
+    //                  v.veic_observ, 
+    //                  v.veic_situacao = 1 AS veic_situacao,
+    //                  m.mar_nome AS marca,
+    //                  GROUP_CONCAT(DISTINCT u.usu_nome SEPARATOR ', ') AS proprietarios,
+    //                  COUNT(DISTINCT vu.usu_id) AS num_proprietarios
+    //             FROM veiculos         v
+    //             JOIN modelos         mo ON v.mod_id  = mo.mod_id
+    //             JOIN marcas           m ON mo.mar_id = m.mar_id
+    //        LEFT JOIN veiculo_usuario vu ON v.veic_id = vu.veic_id
+    //        LEFT JOIN usuarios         u ON vu.usu_id = u.usu_id
+    //            WHERE ((? = 1 AND u.usu_id = u.usu_id) /*PRIMEIRO PARÂMETRO É O TIPO DO USUÁRIO*/
+    //               OR  (? = 0 AND u.usu_id = ?))		  /*PRIMEIRO PARÂMETRO É O TIPO DO USUÁRIO, SEGUNDO PARÂMETRO É O USU_ID*/
+    //         GROUP BY v.veic_id, 
+    //                  mo.mod_nome, 
+    //                  m.mar_nome, 
+    //                  v.veic_placa, 
+    //                  v.veic_ano, 
+    //                  v.veic_cor, 
+    //                  v.veic_combustivel, 
+    //                  v.veic_observ, 
+    //                  v.veic_situacao
+    //         `;
+    
+    //         const [veiculos] = await db.query(sql, values);
+    //         const nItens = veiculos.length;
+    
+    //         return response.status(200).json({
+    //             sucesso: true,
+    //             mensagem: 'Lista de veículos.',
+    //             dados: veiculos,
+    //             nItens
+    //         });
+    //     } catch (error) {
+    //         return response.status(500).json({
+    //             sucesso: false,
+    //             mensagem: 'Erro na requisição.',
+    //             dados: error.message
+    //         });
+    //     }
+    // },
+    
+
     async listarVeiculos(request, response) {
         try {
-
-            const values = [usu_acesso, usu_acesso, usu_id];
             const sql = `
-                 SELECT v.veic_id, 
-                     mo.mod_nome AS modelo,  -- Puxando o nome do modelo
-                     v.veic_placa, 
-                     v.veic_ano, 
-                     v.veic_cor, 
-                     v.veic_combustivel, 
-                     v.veic_observ, 
-                     v.veic_situacao = 1 AS veic_situacao,
-                     m.mar_nome AS marca,
-                     GROUP_CONCAT(DISTINCT u.usu_nome SEPARATOR ', ') AS proprietarios,
-                     COUNT(DISTINCT vu.usu_id) AS num_proprietarios
-                FROM veiculos         v
-                JOIN modelos         mo ON v.mod_id  = mo.mod_id
-                JOIN marcas           m ON mo.mar_id = m.mar_id
-           LEFT JOIN veiculo_usuario vu ON v.veic_id = vu.veic_id
-           LEFT JOIN usuarios         u ON vu.usu_id = u.usu_id
-               WHERE ((? = 1 AND u.usu_id = u.usu_id) /*PRIMEIRO PARÂMETRO É O TIPO DO USUÁRIO*/
-                  OR  (? = 0 AND u.usu_id = ?))		  /*PRIMEIRO PARÂMETRO É O TIPO DO USUÁRIO, SEGUNDO PARÂMETRO É O USU_ID*/
-            GROUP BY v.veic_id, 
-                     mo.mod_nome, 
-                     m.mar_nome, 
-                     v.veic_placa, 
-                     v.veic_ano, 
-                     v.veic_cor, 
-                     v.veic_combustivel, 
-                     v.veic_observ, 
-                     v.veic_situacao
+                SELECT 
+                    v.veic_id, 
+                    mo.mod_nome AS modelo,  -- Puxando o nome do modelo
+                    v.veic_placa, 
+                    v.veic_ano, 
+                    v.veic_cor, 
+                    v.veic_combustivel, 
+                    v.veic_observ, 
+                    v.veic_situacao = 1 AS veic_situacao,
+                    m.mar_nome AS marca,
+                    GROUP_CONCAT(DISTINCT u.usu_nome SEPARATOR ', ') AS proprietarios,
+                    COUNT(DISTINCT vu.usu_id) AS num_proprietarios
+                FROM 
+                    veiculos v
+                JOIN 
+                    modelos mo ON v.mod_id = mo.mod_id
+                JOIN 
+                    marcas m ON mo.mar_id = m.mar_id
+                LEFT JOIN 
+                    veiculo_usuario vu ON v.veic_id = vu.veic_id
+                LEFT JOIN 
+                    usuarios u ON vu.usu_id = u.usu_id
+                GROUP BY 
+                    v.veic_id, mo.mod_nome, m.mar_nome, v.veic_placa, v.veic_ano, v.veic_cor, v.veic_combustivel, v.veic_observ, v.veic_situacao
             `;
     
             const [veiculos] = await db.query(sql);
