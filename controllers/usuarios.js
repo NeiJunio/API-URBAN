@@ -2,7 +2,6 @@ const db = require('../database/connection');
 const moment = require('moment');
 
 const dataInput = (data) => {
-    // Converte para o formato americano (aaaa-mm-dd)
     const dataInput = moment(data, 'YYYY/MM/DD').format('YYYY-MM-DD'); 
     return dataInput;
 }
@@ -27,7 +26,6 @@ module.exports = {
             const [usuarios] = await db.query(sql);
             const nItens = usuarios.length;
 
-             // Itera sobre os usuários e formata o CPF
              const usuariosFormatados = usuarios.map(usuario => ({
                 ...usuario,
                 usu_data_nasc: dataInput(usuario.usu_data_nasc)
@@ -47,6 +45,36 @@ module.exports = {
             });
         }
     },
+
+    async verificarCpf(request, response) {
+        try {
+            const { usu_cpf } = request.body;
+
+            const sql = `SELECT usu_id FROM usuarios WHERE usu_cpf = ?`;
+            const [result] = await db.query(sql, [usu_cpf]);
+
+            if (result.length > 0) {
+                return response.status(200).json({
+                    sucesso: true,
+                    mensagem: 'CPF já cadastrado.',
+                    dados: result[0]
+                });
+            } else {
+                return response.status(200).json({
+                    sucesso: false,
+                    mensagem: 'CPF não encontrado.',
+                    dados: null
+                });
+            }
+        } catch (error) {
+            return response.status(500).json({
+                sucesso: false,
+                mensagem: 'Erro na verificação do CPF.',
+                dados: error.message
+            });
+        }
+    },
+
     async cadastrarUsuarios(request, response) {
         try {
             const {
@@ -61,6 +89,17 @@ module.exports = {
                 usu_senha,
                 usu_situacao
             } = request.body;
+
+            // Verifica se o CPF já existe
+            const sqlVerificaCpf = `SELECT usu_id FROM usuarios WHERE usu_cpf = ?`;
+            const [cpfExistente] = await db.query(sqlVerificaCpf, [usu_cpf]);
+
+            if (cpfExistente.length > 0) {
+                return response.status(400).json({
+                    sucesso: false,
+                    mensagem: 'CPF já cadastrado. Não é possível cadastrar novamente.',
+                });
+            }
 
             const sql = `INSERT INTO usuarios 
                 (usu_nome, usu_cpf, usu_data_nasc, usu_sexo, usu_telefone, 
