@@ -171,6 +171,7 @@ module.exports = {
             const sql = `
                 SELECT 
                     v.veic_id, 
+                     
                     mo.mod_nome AS modelo,  -- Puxando o nome do modelo
                     v.veic_placa, 
                     v.veic_ano, 
@@ -265,7 +266,8 @@ module.exports = {
                 veic_ano, 
                 veic_cor, 
                 veic_combustivel, 
-                veic_observ
+                veic_observ,
+                veic_situacao
             } = request.body;
             
             const { veic_id } = request.params;
@@ -276,7 +278,8 @@ module.exports = {
                 veic_ano = ?, 
                 veic_cor = ?, 
                 veic_combustivel = ?, 
-                veic_observ = ? 
+                veic_observ = ?,
+                veic_situacao = ?
                 WHERE veic_id = ?;`;
             
             const values = [
@@ -285,7 +288,8 @@ module.exports = {
                 veic_ano, 
                 veic_cor, 
                 veic_combustivel, 
-                veic_observ, 
+                veic_observ,
+                veic_situacao, 
                 veic_id
             ];
             
@@ -357,6 +361,7 @@ module.exports = {
             const sql = `
                 SELECT 
                     v.veic_id, 
+                    mo.mod_id AS mod_id,
                     mo.mod_nome AS mod_nome, 
                     v.veic_placa, 
                     v.veic_ano, 

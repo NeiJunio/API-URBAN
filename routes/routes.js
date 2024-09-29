@@ -94,7 +94,7 @@ router.delete('/marcas/:mar_id', marcasController.excluirMarca);
 
 router.get('/modelos', modelosController.listarModelos);
 router.get('/modelos/marca/:mar_id', modelosController.listarModelosPorMarca);
-router.get('/modelos/categoria/:cat_id/marca/:mar_id', modelosController.listarModelosPorCategoriaEMarca);
+router.get('/modelos/cat/:cat_id/mar/:mar_id', modelosController.listarModelosPorCategoriaEMarca);
 router.post('/modelos', modelosController.cadastrarModelo);
 router.patch('/modelos/:mod_id', modelosController.editarModelo);
 router.delete('/modelos/:mod_id', modelosController.excluirModelo);

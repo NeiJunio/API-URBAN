@@ -23,17 +23,6 @@ criação do arquvio controller agendaServiçosSituação.js, com definição de
 
 ----------------------------------------------------------------
 
-criação da pasta Thunder
-
-adição do arquivo usuarios
-adição do arquivo veiculos
-adição do arquivo serviços
-adição do arquivo disponibilidade
-adição do arquivo indisponibilidade
-adição do arquivo veiculoUsuario
-adição do arquivo agendaServiços
-adição do arquivo agendaServiçosSituação
-
 ----------------------------------------------------------------
 
 adicionar campo no front end para ativar e desativar usuarios
