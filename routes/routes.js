@@ -77,6 +77,7 @@ router.get('/agendamentos/situacao/:agend_situacao', agendamentoController.lista
 
 
 router.get('/categoriasServicos', categoriasServicosController.listarCategorias);
+router.get('/servicos/categoria/:cat_serv_id', servicosController.listarServicosPorCategoria);
 router.post('/categoriasServicos', categoriasServicosController.cadastrarCategoria);
 router.patch('/categoriasServicos/:cat_serv_id', categoriasServicosController.editarCategoria);
 router.delete('/categoriasServicos/:cat_serv_id', categoriasServicosController.excluirCategoria);
