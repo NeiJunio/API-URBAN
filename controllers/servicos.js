@@ -1,35 +1,7 @@
 const db = require('../database/connection');
 
 module.exports = {
-    // async listarServicos(request, response) {
-    //     try {
-    //         const sql = `SELECT 
-    //             serv_id, 
-    //             cat_serv_id, 
-    //             serv_nome, 
-    //             serv_duracao, 
-    //             serv_preco, 
-    //             serv_descricao, 
-    //             serv_situacao = 1 AS serv_situacao
-    //             FROM servicos`;
 
-    //         const [servicos] = await db.query(sql);
-    //         const nItens = servicos.length;
-
-    //         return response.status(200).json({
-    //             sucesso: true,
-    //             mensagem: 'Lista de serviços.',
-    //             dados: servicos,
-    //             nItens
-    //         });
-    //     } catch (error) {
-    //         return response.status(500).json({
-    //             sucesso: false,
-    //             mensagem: 'Erro na requisição.',
-    //             dados: error.message
-    //         });
-    //     }
-    // },
     async listarServicos(request, response) {
         try {
             const sql = `

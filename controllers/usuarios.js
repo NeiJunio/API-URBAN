@@ -20,7 +20,7 @@ module.exports = {
                 usu_observ, 
                 usu_acesso,
                 usu_senha,
-                usu_situacao
+                usu_situacao = 1 AS usu_situacao
                 FROM usuarios`;
 
             const [usuarios] = await db.query(sql);
@@ -178,6 +178,7 @@ module.exports = {
                 usu_email,
                 usu_observ,
                 usu_acesso,
+                usu_situacao
             } = request.body;
 
             const { usu_id } = request.params;
@@ -201,7 +202,8 @@ module.exports = {
                 usu_telefone = ?, 
                 usu_email = ?, 
                 usu_observ = ?, 
-                usu_acesso = ?                
+                usu_acesso = ?,
+                usu_situacao = ?                
                 WHERE usu_id = ?;`;
 
             const values = [
@@ -213,6 +215,7 @@ module.exports = {
                 usu_email,
                 usu_observ || null, // Allow observ to be null if not provided
                 usu_acesso,
+                usu_situacao,
                 usu_id
             ];
 
