@@ -23,6 +23,7 @@ router.patch('/usuarios/:usu_id', usuariosController.editarUsuarios);
 router.delete('/usuarios/:usu_id', usuariosController.excluirUsuarios);
 router.patch('/usuarios/ocultar/:usu_id', usuariosController.ocultarUsuario);
 router.post('/usuarios/verificarCpf', usuariosController.verificarCpf);
+router.post('/usuarios/verificarEmail', usuariosController.verificarEmail);
 
 router.post('/login', usuariosController.login);
 

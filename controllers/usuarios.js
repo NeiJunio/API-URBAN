@@ -2,7 +2,7 @@ const db = require('../database/connection');
 const moment = require('moment');
 
 const dataInput = (data) => {
-    const dataInput = moment(data, 'YYYY-MM-DD').format('YYYY-MM-DD'); 
+    const dataInput = moment(data, 'YYYY-MM-DD').format('YYYY-MM-DD');
     return dataInput;
 }
 
@@ -50,7 +50,7 @@ module.exports = {
     async verificarCpf(request, response) {
         try {
             const { usu_cpf } = request.body;
-            console.log("Recebido verificarCpf:", request.body); // Log dos dados recebidos
+            // console.log("Recebido verificarCpf:", request.body); // Log dos dados recebidos
 
             if (!usu_cpf) {
                 return response.status(400).json({
@@ -62,7 +62,7 @@ module.exports = {
 
             const sql = `SELECT usu_id FROM usuarios WHERE usu_cpf = ?`;
             const [result] = await db.query(sql, [usu_cpf]);
-            console.log("Resultado da consulta verificarCpf:", result); // Log do resultado da consulta
+            // console.log("Resultado da consulta verificarCpf:", result); // Log do resultado da consulta
 
             if (result.length > 0) {
                 return response.status(200).json({
@@ -87,6 +87,46 @@ module.exports = {
         }
     },
 
+    async verificarEmail(request, response) {
+        try {
+            const { usu_email } = request.body;
+            // console.log("Recebido verificarEmail:", request.body); // Log dos dados recebidos
+
+            if (!usu_email) {
+                return response.status(400).json({
+                    sucesso: false,
+                    mensagem: 'Email é obrigatório.',
+                    dados: null
+                });
+            }
+
+            const sql = `SELECT usu_id FROM usuarios WHERE usu_email = ?`;
+            const [result] = await db.query(sql, [usu_email]);
+            // console.log("Resultado da consulta verificarEmail:", result); // Log do resultado da consulta
+
+            if (result.length > 0) {
+                return response.status(200).json({
+                    sucesso: true,
+                    mensagem: 'Email já cadastrado.',
+                    dados: result[0]
+                });
+            } else {
+                return response.status(200).json({
+                    sucesso: false,
+                    mensagem: 'Email disponível.',
+                    dados: null
+                });
+            }
+        } catch (error) {
+            console.error('Erro em verificarEmail:', error);
+            return response.status(500).json({
+                sucesso: false,
+                mensagem: 'Erro na verificação do email.',
+                dados: error.message
+            });
+        }
+    },
+
     async cadastrarUsuarios(request, response) {
         try {
             const {
@@ -101,7 +141,7 @@ module.exports = {
                 usu_senha,
                 usu_situacao
             } = request.body;
-    
+
             // Verifica se o CPF foi fornecido
             if (!usu_cpf) {
                 return response.status(400).json({
@@ -110,26 +150,48 @@ module.exports = {
                     dados: null
                 });
             }
-    
+
+            // Verifica se o email foi fornecido
+            if (!usu_email) {
+                return response.status(400).json({
+                    sucesso: false,
+                    mensagem: 'Email é obrigatório.',
+                    dados: null
+                });
+            }
+
             // Verifica se o CPF já está cadastrado
             const sqlVerificaCpf = `SELECT usu_id FROM usuarios WHERE usu_cpf = ?`;
             const [cpfExistente] = await db.query(sqlVerificaCpf, [usu_cpf]);
-    
-            console.log("Resultado da verificação do CPF:", cpfExistente); // Log do resultado da verificação
-    
+
+            // console.log("Resultado da verificação do CPF:", cpfExistente); // Log do resultado da verificação
+
             if (cpfExistente.length > 0) {
                 return response.status(400).json({
                     sucesso: false,
                     mensagem: 'CPF já cadastrado. Não é possível cadastrar novamente.',
                 });
             }
-    
-            // Se o CPF não está cadastrado, prossegue com o cadastro
+
+            // Verifica se o email já está cadastrado
+            const sqlVerificaEmail = `SELECT usu_id FROM usuarios WHERE usu_email = ?`;
+            const [emailExistente] = await db.query(sqlVerificaEmail, [usu_email]);
+
+            // console.log("Resultado da verificação do Email:", emailExistente); // Log do resultado da verificação
+
+            if (emailExistente.length > 0) {
+                return response.status(400).json({
+                    sucesso: false,
+                    mensagem: 'Email já cadastrado. Não é possível cadastrar novamente.',
+                });
+            }
+
+            // Se o CPF e o Email não estão cadastrados, prossegue com o cadastro
             const sql = `INSERT INTO usuarios 
-                (usu_nome, usu_cpf, usu_data_nasc, usu_sexo, usu_telefone, 
-                usu_email, usu_observ, usu_acesso, usu_senha, usu_situacao) 
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
-    
+            (usu_nome, usu_cpf, usu_data_nasc, usu_sexo, usu_telefone, 
+            usu_email, usu_observ, usu_acesso, usu_senha, usu_situacao) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+
             const values = [
                 usu_nome,
                 usu_cpf,
@@ -142,14 +204,14 @@ module.exports = {
                 usu_senha,
                 usu_situacao
             ];
-    
-            console.log("Valores a serem inseridos:", values); // Log dos valores que serão inseridos
-    
+
+            // console.log("Valores a serem inseridos:", values); // Log dos valores que serão inseridos
+
             const [execSql] = await db.query(sql, values);
             const usu_id = execSql.insertId;
-    
-            console.log("Usuário cadastrado com ID:", usu_id); // Log do ID do novo usuário
-    
+
+            // console.log("Usuário cadastrado com ID:", usu_id); // Log do ID do novo usuário
+
             return response.status(201).json({
                 sucesso: true,
                 mensagem: 'Cadastro de usuário efetuado com sucesso.',
@@ -163,9 +225,8 @@ module.exports = {
                 dados: error.message
             });
         }
-    }
-,    
-    
+    },
+
 
     async editarUsuarios(request, response) {
         try {
@@ -180,12 +241,12 @@ module.exports = {
                 usu_acesso,
                 usu_situacao
             } = request.body;
-
+    
             const { usu_id } = request.params;
-
+    
             // Logging received data for debugging
-            console.log(`Recebido editarUsuarios para usu_id ${usu_id}:`, request.body);
-
+            // console.log(`Recebido editarUsuarios para usu_id ${usu_id}:`, request.body);
+    
             // Validate required fields
             if (!usu_nome || !usu_cpf || !usu_data_nasc || !usu_sexo || !usu_telefone || !usu_email) {
                 return response.status(400).json({
@@ -193,7 +254,29 @@ module.exports = {
                     mensagem: 'Campos obrigatórios não preenchidos.',
                 });
             }
-
+    
+            // Verifica se o CPF já está cadastrado por outro usuário
+            const sqlVerificaCpf = `SELECT usu_id FROM usuarios WHERE usu_cpf = ? AND usu_id != ?`;
+            const [cpfExistente] = await db.query(sqlVerificaCpf, [usu_cpf, usu_id]);
+    
+            if (cpfExistente.length > 0) {
+                return response.status(400).json({
+                    sucesso: false,
+                    mensagem: 'CPF já cadastrado por outro usuário.',
+                });
+            }
+    
+            // Verifica se o Email já está cadastrado por outro usuário
+            const sqlVerificaEmail = `SELECT usu_id FROM usuarios WHERE usu_email = ? AND usu_id != ?`;
+            const [emailExistente] = await db.query(sqlVerificaEmail, [usu_email, usu_id]);
+    
+            if (emailExistente.length > 0) {
+                return response.status(400).json({
+                    sucesso: false,
+                    mensagem: 'Email já cadastrado por outro usuário.',
+                });
+            }
+    
             const sql = `UPDATE usuarios SET 
                 usu_nome = ?, 
                 usu_cpf = ?, 
@@ -205,7 +288,7 @@ module.exports = {
                 usu_acesso = ?,
                 usu_situacao = ?                
                 WHERE usu_id = ?;`;
-
+    
             const values = [
                 usu_nome,
                 usu_cpf,
@@ -218,9 +301,9 @@ module.exports = {
                 usu_situacao,
                 usu_id
             ];
-
+    
             const [atualizaDados] = await db.query(sql, values);
-
+    
             return response.status(200).json({
                 sucesso: true,
                 mensagem: `Usuário ${usu_id} atualizado com sucesso!`,
@@ -288,7 +371,7 @@ module.exports = {
 
             const sql = `SELECT usu_id, usu_nome, usu_acesso FROM usuarios 
                 WHERE usu_email = ? AND usu_senha = ? AND usu_situacao = 1;`;
-                
+
             const values = [usu_email, usu_senha];
             const [usuarios] = await db.query(sql, values);
 
