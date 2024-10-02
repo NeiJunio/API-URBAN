@@ -73,7 +73,7 @@ module.exports = {
             } else {
                 return response.status(200).json({
                     sucesso: false,
-                    mensagem: 'CPF não encontrado.',
+                    mensagem: 'CPF Válido',
                     dados: null
                 });
             }
