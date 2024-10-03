@@ -30,6 +30,9 @@ router.post('/login', usuariosController.login);
 router.get('/veiculos', veiculosController.listarVeiculos);
 router.get('/veiculos/:veic_id', veiculosController.visualizarVeiculo);
 router.post('/veiculos', veiculosController.cadastrarVeiculo);
+
+router.post('/verificarplaca', veiculosController.verificarPlaca);
+
 router.get('/veiculos/placa/:veic_placa', veiculosController.listarVeiculoPorPlaca);
 router.patch('/veiculos/:veic_id', veiculosController.editarVeiculo);
 router.delete('/veiculos/:veic_id', veiculosController.excluirVeiculo);
