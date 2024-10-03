@@ -13,7 +13,7 @@ module.exports = {
     //             veic_observ,
     //             veic_situacao 
     //             FROM veiculos;`;
-            
+
     //         const [veiculos] = await db.query(sql);
     //         const nItens = veiculos.length;
 
@@ -51,10 +51,10 @@ module.exports = {
     //         LEFT JOIN modelos m ON v.mod_id = m.mod_id
     //         LEFT JOIN marcas mar ON m.mar_id = mar.mar_id
     //         WHERE vu.ehproprietario = 1;`;
-            
+
     //         const [veiculos] = await db.query(sql);
     //         const nItens = veiculos.length;
-    
+
     //         return response.status(200).json({
     //             sucesso: true,
     //             mensagem: 'Lista de veículos com proprietários, modelos e marcas.',
@@ -95,10 +95,10 @@ module.exports = {
     //             JOIN 
     //                 usuarios u ON vu.usu_id = u.usu_id
     //         `;
-    
+
     //         const [veiculos] = await db.query(sql);
     //         const nItens = veiculos.length;
-    
+
     //         return response.status(200).json({
     //             sucesso: true,
     //             mensagem: 'Lista de veículos.',
@@ -146,10 +146,10 @@ module.exports = {
     //                  v.veic_observ, 
     //                  v.veic_situacao
     //         `;
-    
+
     //         const [veiculos] = await db.query(sql, values);
     //         const nItens = veiculos.length;
-    
+
     //         return response.status(200).json({
     //             sucesso: true,
     //             mensagem: 'Lista de veículos.',
@@ -164,7 +164,7 @@ module.exports = {
     //         });
     //     }
     // },
-    
+
 
     async listarVeiculos(request, response) {
         try {
@@ -195,8 +195,43 @@ module.exports = {
                 GROUP BY 
                     v.veic_id, mo.mod_nome, m.mar_nome, v.veic_placa, v.veic_ano, v.veic_cor, v.veic_combustivel, v.veic_observ, v.veic_situacao
             `;
-    
+
             const [veiculos] = await db.query(sql);
+            const nItens = veiculos.length;
+
+            return response.status(200).json({
+                sucesso: true,
+                mensagem: 'Lista de veículos.',
+                dados: veiculos,
+                nItens
+            });
+        } catch (error) {
+            return response.status(500).json({
+                sucesso: false,
+                mensagem: 'Erro na requisição.',
+                dados: error.message
+            });
+        }
+    },
+
+
+    async listarVeiculoPorPlaca(request, response) {
+        try {
+            const { veic_placa } = request.params;
+    
+            const sql = `
+                SELECT 
+                    v.veic_id,
+                    m.mod_nome,
+                    v.veic_placa
+                FROM veiculos v
+                JOIN modelos m ON v.mod_id = m.mod_id
+                WHERE v.veic_placa LIKE ?
+            `;
+    
+            const values = [`%${veic_placa}%`]; // Usar o operador LIKE para buscar por partes do nome
+    
+            const [veiculos] = await db.query(sql, values);
             const nItens = veiculos.length;
     
             return response.status(200).json({
@@ -214,34 +249,38 @@ module.exports = {
         }
     },
     
-    
-    
+
+
+
+
+
+
     async cadastrarVeiculo(request, response) {
         try {
-            const { 
-                mod_id, 
-                veic_placa, 
-                veic_ano, 
-                veic_cor, 
-                veic_combustivel, 
+            const {
+                mod_id,
+                veic_placa,
+                veic_ano,
+                veic_cor,
+                veic_combustivel,
                 veic_observ,
-                veic_situacao 
+                veic_situacao
             } = request.body;
-            
+
             const sql = `INSERT INTO veiculos 
                 (mod_id, veic_placa, veic_ano, veic_cor, veic_combustivel, veic_observ, veic_situacao) 
                 VALUES (?, ?, ?, ?, ?, ?, ?)`;
-            
+
             const values = [
-                mod_id, 
-                veic_placa, 
-                veic_ano, 
-                veic_cor, 
-                veic_combustivel, 
+                mod_id,
+                veic_placa,
+                veic_ano,
+                veic_cor,
+                veic_combustivel,
                 veic_observ,
                 veic_situacao
             ];
-            
+
             const [execSql] = await db.query(sql, values);
             const veic_id = execSql.insertId;
 
@@ -260,18 +299,18 @@ module.exports = {
     },
     async editarVeiculo(request, response) {
         try {
-            const { 
-                mod_id, 
-                veic_placa, 
-                veic_ano, 
-                veic_cor, 
-                veic_combustivel, 
+            const {
+                mod_id,
+                veic_placa,
+                veic_ano,
+                veic_cor,
+                veic_combustivel,
                 veic_observ,
                 veic_situacao
             } = request.body;
-            
+
             const { veic_id } = request.params;
-            
+
             const sql = `UPDATE veiculos SET 
                 mod_id = ?, 
                 veic_placa = ?, 
@@ -281,18 +320,18 @@ module.exports = {
                 veic_observ = ?,
                 veic_situacao = ?
                 WHERE veic_id = ?;`;
-            
+
             const values = [
-                mod_id, 
-                veic_placa, 
-                veic_ano, 
-                veic_cor, 
-                veic_combustivel, 
+                mod_id,
+                veic_placa,
+                veic_ano,
+                veic_cor,
+                veic_combustivel,
                 veic_observ,
-                veic_situacao, 
+                veic_situacao,
                 veic_id
             ];
-            
+
             const [atualizaDados] = await db.query(sql, values);
 
             return response.status(200).json({
@@ -391,16 +430,16 @@ module.exports = {
                 GROUP BY 
                     v.veic_id
             `;
-    
+
             const [veiculo] = await db.query(sql, [veic_id]);
-    
+
             if (veiculo.length === 0) {
                 return response.status(404).json({
                     sucesso: false,
                     mensagem: 'Veículo não encontrado.',
                 });
             }
-    
+
             return response.status(200).json({
                 sucesso: true,
                 mensagem: 'Veículo encontrado.',
@@ -414,8 +453,8 @@ module.exports = {
             });
         }
     }
-    
-    
-    
+
+
+
 }
 
