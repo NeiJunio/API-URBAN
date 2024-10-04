@@ -47,6 +47,50 @@ module.exports = {
         }
     },
 
+    async listarUsuarioPorCpf(request, response) {
+        try {
+            const { usu_cpf } = request.body; // Obtém o CPF do corpo da requisição
+    
+            // Verifica se o CPF foi fornecido
+            if (!usu_cpf) {
+                return response.status(400).json({
+                    sucesso: false,
+                    mensagem: 'CPF do usuário é obrigatório.',
+                });
+            }
+    
+            const sql = `
+                SELECT 
+                    u.usu_id,
+                    u.usu_nome,
+                    u.usu_cpf,
+                    u.usu_email
+                FROM usuarios u
+                WHERE u.usu_cpf LIKE ?
+            `;
+    
+            const values = [`%${usu_cpf}%`]; // Usar o operador LIKE para permitir busca parcial pelo CPF
+    
+            const [usuarios] = await db.query(sql, values);
+            const nItens = usuarios.length;
+    
+            return response.status(200).json({
+                sucesso: true,
+                mensagem: 'Lista de usuários.',
+                dados: usuarios,
+                nItens
+            });
+        } catch (error) {
+            return response.status(500).json({
+                sucesso: false,
+                mensagem: 'Erro na requisição.',
+                dados: error.message
+            });
+        }
+    },
+    
+
+
     async verificarCpf(request, response) {
         try {
             const { usu_cpf } = request.body;

@@ -19,6 +19,7 @@ const agendamentoController = require('../controllers/agendamentos');
 
 router.get('/usuarios', usuariosController.listarUsuarios);
 router.post('/usuarios', usuariosController.cadastrarUsuarios);
+router.post('/usuarios/cpf', usuariosController.listarUsuarioPorCpf);
 router.patch('/usuarios/:usu_id', usuariosController.editarUsuarios);
 router.delete('/usuarios/:usu_id', usuariosController.excluirUsuarios);
 router.patch('/usuarios/ocultar/:usu_id', usuariosController.ocultarUsuario);
@@ -30,9 +31,7 @@ router.post('/login', usuariosController.login);
 router.get('/veiculos', veiculosController.listarVeiculos);
 router.get('/veiculos/:veic_id', veiculosController.visualizarVeiculo);
 router.post('/veiculos', veiculosController.cadastrarVeiculo);
-
 router.post('/verificarplaca', veiculosController.verificarPlaca);
-
 router.post('/veiculos/placa', veiculosController.listarVeiculoPorPlaca);
 router.patch('/veiculos/:veic_id', veiculosController.editarVeiculo);
 router.delete('/veiculos/:veic_id', veiculosController.excluirVeiculo);
@@ -44,7 +43,6 @@ router.post('/servicos', servicosController.cadastrarServico);
 router.patch('/servicos/:serv_id', servicosController.editarServico);
 router.delete('/servicos/:serv_id', servicosController.apagarServico);
 router.patch('/servicos/ocultar/:serv_id', servicosController.ocultarServico);
-
 
 router.get('/disponibilidade', disponibilidadeController.listarDisponibilidade);
 router.post('/disponibilidade', disponibilidadeController.cadastrarDisponibilidade);
