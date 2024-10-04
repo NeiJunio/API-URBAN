@@ -33,7 +33,7 @@ router.post('/veiculos', veiculosController.cadastrarVeiculo);
 
 router.post('/verificarplaca', veiculosController.verificarPlaca);
 
-router.get('/veiculos/placa/:veic_placa', veiculosController.listarVeiculoPorPlaca);
+router.post('/veiculos/placa', veiculosController.listarVeiculoPorPlaca);
 router.patch('/veiculos/:veic_id', veiculosController.editarVeiculo);
 router.delete('/veiculos/:veic_id', veiculosController.excluirVeiculo);
 router.patch('/veiculos/ocultar/:veic_id', veiculosController.ocultarVeiculo);

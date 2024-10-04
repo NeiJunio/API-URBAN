@@ -215,9 +215,52 @@ module.exports = {
     },
 
 
+    // async listarVeiculoPorPlaca(request, response) {
+    //     try {
+    //         const { veic_placa } = request.params;
+    
+    //         const sql = `
+    //             SELECT 
+    //                 v.veic_id,
+    //                 m.mod_nome,
+    //                 v.veic_placa
+    //             FROM veiculos v
+    //             JOIN modelos m ON v.mod_id = m.mod_id
+    //             WHERE v.veic_placa LIKE ?
+    //         `;
+    
+    //         const values = [`%${veic_placa}%`]; // Usar o operador LIKE para buscar por partes do nome
+    
+    //         const [veiculos] = await db.query(sql, values);
+    //         const nItens = veiculos.length;
+    
+    //         return response.status(200).json({
+    //             sucesso: true,
+    //             mensagem: 'Lista de veículos.',
+    //             dados: veiculos,
+    //             nItens
+    //         });
+    //     } catch (error) {
+    //         return response.status(500).json({
+    //             sucesso: false,
+    //             mensagem: 'Erro na requisição.',
+    //             dados: error.message
+    //         });
+    //     }
+    // },
+    
+
     async listarVeiculoPorPlaca(request, response) {
         try {
-            const { veic_placa } = request.params;
+            const { veic_placa } = request.body; // Alterado para obter do corpo da requisição
+    
+            // Verifica se a placa foi fornecida
+            if (!veic_placa) {
+                return response.status(400).json({
+                    sucesso: false,
+                    mensagem: 'Placa do veículo é obrigatória.',
+                });
+            }
     
             const sql = `
                 SELECT 
@@ -249,8 +292,6 @@ module.exports = {
         }
     },
     
-
-
 
 
 

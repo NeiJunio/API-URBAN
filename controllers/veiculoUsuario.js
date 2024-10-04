@@ -42,47 +42,54 @@ module.exports = {
             const {
                 veic_id,
                 usu_id,
-                data_inicial,
-                data_final
+                data_inicial
             } = request.body;
-
-            // Determinando o valor de ehproprietario com base na data_final
-            const ehproprietario = (data_final === null || data_final === '0' || data_final === 0) ? 1 : 0;
-
+    
+            // Validação dos campos necessários
+            if (!veic_id || !usu_id || !data_inicial) {
+                return response.status(400).json({
+                    sucesso: false,
+                    mensagem: 'Veículo ID, Usuário ID e Data Inicial são obrigatórios.'
+                });
+            }
+    
+            // Definindo o valor de ehproprietario como 1, já que não há mais o campo data_final
+            const ehproprietario = 1;
+    
             // Definindo a consulta SQL para inserir os novos dados
             const sql = `INSERT INTO veiculo_usuario 
-                (veic_id, usu_id, ehproprietario, data_inicial, data_final) 
-                VALUES (?, ?, ?, ?, ?)`;
-
-            // Definindo os valores para a consulta, garantindo que data_final seja null se não fornecida
+                (veic_id, usu_id, ehproprietario, data_inicial) 
+                VALUES (?, ?, ?, ?)`;
+    
+            // Definindo os valores para a consulta
             const values = [
                 veic_id,
                 usu_id,
                 ehproprietario,
-                data_inicial,
-                data_final ? data_final : null
+                data_inicial
             ];
-
+    
             // Executando a consulta e armazenando o ID do novo registro
             const [execSql] = await db.query(sql, values);
             const veic_usu_id = execSql.insertId;
-
+    
             // Retornando uma resposta JSON confirmando o sucesso do cadastro
-            return response.status(200).json({
+            return response.status(201).json({
                 sucesso: true,
                 mensagem: 'Cadastro de veículo e usuário efetuado com sucesso.',
                 dados: veic_usu_id
             });
         } catch (error) {
             // Tratamento de erro
+            console.error("Erro ao cadastrar veículo e usuário:", error); // Log do erro
             return response.status(500).json({
                 sucesso: false,
                 mensagem: 'Erro na requisição.',
-                dados: error.message
+                dados: error.message // Pode ser útil, mas em produção, evite expor detalhes do erro
             });
         }
     },
-
+    
     // Função para editar uma relação existente entre veículo e usuário
     async editarVeiculoUsuario(request, response) {
         try {
