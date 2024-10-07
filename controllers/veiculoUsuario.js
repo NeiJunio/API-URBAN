@@ -35,6 +35,41 @@ module.exports = {
         }
     },
 
+    async listarVeiculoUsuarioPorId(request, response) {
+        try {
+            const { VeiculoId } = request.params;
+
+
+            const sql = `SELECT 
+                        vu.veic_usu_id, 
+                        vu.veic_id, 
+                        vu.usu_id, 
+                        vu.ehproprietario = 1 AS ehproprietario, 
+                        vu.data_inicial,
+                        vu.data_final, u.usu_nome
+                     FROM veiculo_usuario vu
+                     JOIN usuarios u ON vu.usu_id = u.usu_id
+                     WHERE vu.veic_id = ?`;
+
+            const [veiculosUsuariosPorId] = await db.query(sql, [VeiculoId]);
+            const nItens = veiculosUsuariosPorId.length;
+
+            return response.status(200).json({
+                sucesso: true,
+                mensagem: 'Lista de Veiculos com seus respectivos usuários.',
+                dados: veiculosUsuariosPorId,
+                nItens
+            });
+        }
+        catch (error) {
+            return response.status(500).json({
+                sucesso: false,
+                mensagem: 'Erro na requisição.',
+                dados: error.message
+            });
+        }
+    },
+
     // Função para cadastrar uma nova relação entre veículo e usuário
     async cadastrarVeiculoUsuario(request, response) {
         try {
@@ -44,7 +79,7 @@ module.exports = {
                 usu_id,
                 data_inicial
             } = request.body;
-    
+
             // Validação dos campos necessários
             if (!veic_id || !usu_id || !data_inicial) {
                 return response.status(400).json({
@@ -52,15 +87,15 @@ module.exports = {
                     mensagem: 'Veículo ID, Usuário ID e Data Inicial são obrigatórios.'
                 });
             }
-    
+
             // Definindo o valor de ehproprietario como 1, já que não há mais o campo data_final
             const ehproprietario = 1;
-    
+
             // Definindo a consulta SQL para inserir os novos dados
             const sql = `INSERT INTO veiculo_usuario 
                 (veic_id, usu_id, ehproprietario, data_inicial) 
                 VALUES (?, ?, ?, ?)`;
-    
+
             // Definindo os valores para a consulta
             const values = [
                 veic_id,
@@ -68,11 +103,11 @@ module.exports = {
                 ehproprietario,
                 data_inicial
             ];
-    
+
             // Executando a consulta e armazenando o ID do novo registro
             const [execSql] = await db.query(sql, values);
             const veic_usu_id = execSql.insertId;
-    
+
             // Retornando uma resposta JSON confirmando o sucesso do cadastro
             return response.status(201).json({
                 sucesso: true,
@@ -89,7 +124,7 @@ module.exports = {
             });
         }
     },
-    
+
     // Função para editar uma relação existente entre veículo e usuário
     async editarVeiculoUsuario(request, response) {
         try {
