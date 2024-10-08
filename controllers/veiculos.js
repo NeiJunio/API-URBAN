@@ -570,7 +570,7 @@ module.exports = {
             }
     
             const sql = `SELECT veic_id FROM veiculos WHERE veic_placa = ? LIMIT 1`;
-            const values = [veic_placa.toUpperCase()]; // Garantir que a busca seja case-insensitive
+            const values = [veic_placa]; // Garantir que a busca seja case-insensitive
     
             const [result] = await db.query(sql, values);
     

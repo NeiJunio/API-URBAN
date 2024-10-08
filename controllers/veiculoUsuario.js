@@ -46,7 +46,9 @@ module.exports = {
                         vu.usu_id, 
                         vu.ehproprietario = 1 AS ehproprietario, 
                         vu.data_inicial,
-                        vu.data_final, u.usu_nome
+                        vu.data_final, 
+                        u.usu_nome,
+                        u.usu_cpf   
                      FROM veiculo_usuario vu
                      JOIN usuarios u ON vu.usu_id = u.usu_id
                      WHERE vu.veic_id = ?`;
