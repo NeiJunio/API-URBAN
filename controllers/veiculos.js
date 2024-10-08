@@ -557,7 +557,6 @@ module.exports = {
         }
     }, 
     
-    
     async verificarPlaca(request, response) {
         try {
             const { veic_placa } = request.body;
@@ -576,7 +575,7 @@ module.exports = {
     
             if (result.length > 0) {
                 // Placa já existe
-                return response.status(400).json({
+                return response.status(409).json({  // Alterado para 409
                     sucesso: false,
                     mensagem: 'Placa já cadastrada.',
                 });
@@ -595,8 +594,6 @@ module.exports = {
             });
         }
     }
-
-
 
 }
 
