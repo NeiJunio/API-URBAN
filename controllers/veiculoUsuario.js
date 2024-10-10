@@ -127,60 +127,101 @@ module.exports = {
         }
     },
 
-    // Função para editar uma relação existente entre veículo e usuário
+    // // Função para editar uma relação existente entre veículo e usuário
+    // async editarVeiculoUsuario(request, response) {
+    //     try {
+    //         // Extraindo os dados do corpo da requisição
+    //         const {
+    //             veic_id,
+    //             usu_id,
+    //             data_inicial,
+    //             data_final
+    //         } = request.body;
+
+    //         // Pegando o veic_usu_id dos parâmetros da URL
+    //         const { veic_usu_id } = request.params;
+
+    //         // Determinando o valor de ehproprietario com base na data_final
+    //         const ehproprietario = (data_final === null || data_final === '0' || data_final === 0) ? 1 : 0;
+
+    //         // Definindo a consulta SQL para atualizar os dados existentes
+    //         const sql = `UPDATE veiculo_usuario SET 
+    //             veic_id = ?, 
+    //             usu_id = ?, 
+    //             ehproprietario = ?, 
+    //             data_inicial = ?, 
+    //             data_final = ? 
+    //             WHERE veic_usu_id = ?`;
+
+    //         // Definindo os valores para a consulta, garantindo que data_final seja null se não fornecida
+    //         const values = [
+    //             veic_id,
+    //             usu_id,
+    //             ehproprietario,
+    //             data_inicial,
+    //             data_final ? data_final : null,
+    //             veic_usu_id
+    //         ];
+
+    //         // Executando a consulta e armazenando o número de linhas afetadas
+    //         const [atualizaDados] = await db.query(sql, values);
+
+    //         // Retornando uma resposta JSON confirmando o sucesso da atualização
+    //         return response.status(200).json({
+    //             sucesso: true,
+    //             mensagem: `Veículo e usuário ${veic_usu_id} atualizado com sucesso!`,
+    //             dados: atualizaDados.affectedRows
+    //         });
+    //     } catch (error) {
+    //         // Tratamento de erro
+    //         return response.status(500).json({
+    //             sucesso: false,
+    //             mensagem: 'Erro na requisição.',
+    //             dados: error.message
+    //         });
+    //     }
+    // },
+
     async editarVeiculoUsuario(request, response) {
+        const { veic_usu_id } = request.params; // Obtendo o ID do veículo-usuário da URL
+        const { data_inicial, data_final } = request.body; // Obtendo os dados a serem atualizados do corpo da requisição
+    
+        console.log('URL da requisição:', request.originalUrl);
+        console.log('ID do veículo-usuário:', veic_usu_id);
+        console.log('Data inicial:', data_inicial, 'Data final:', data_final);
+    
         try {
-            // Extraindo os dados do corpo da requisição
-            const {
-                veic_id,
-                usu_id,
-                data_inicial,
-                data_final
-            } = request.body;
-
-            // Pegando o veic_usu_id dos parâmetros da URL
-            const { veic_usu_id } = request.params;
-
-            // Determinando o valor de ehproprietario com base na data_final
-            const ehproprietario = (data_final === null || data_final === '0' || data_final === 0) ? 1 : 0;
-
-            // Definindo a consulta SQL para atualizar os dados existentes
+            // Definindo a consulta SQL para atualizar o registro na tabela veiculo_usuario
             const sql = `UPDATE veiculo_usuario SET 
-                veic_id = ?, 
-                usu_id = ?, 
-                ehproprietario = ?, 
-                data_inicial = ?, 
-                data_final = ? 
-                WHERE veic_usu_id = ?`;
-
-            // Definindo os valores para a consulta, garantindo que data_final seja null se não fornecida
-            const values = [
-                veic_id,
-                usu_id,
-                ehproprietario,
-                data_inicial,
-                data_final ? data_final : null,
-                veic_usu_id
-            ];
-
-            // Executando a consulta e armazenando o número de linhas afetadas
-            const [atualizaDados] = await db.query(sql, values);
-
-            // Retornando uma resposta JSON confirmando o sucesso da atualização
-            return response.status(200).json({
-                sucesso: true,
-                mensagem: `Veículo e usuário ${veic_usu_id} atualizado com sucesso!`,
-                dados: atualizaDados.affectedRows
-            });
+                            data_inicial = ?, 
+                            data_final = ? 
+                        WHERE veic_usu_id = ?`;
+    
+            // Executando a consulta, passando os dados para atualização
+            const [result] = await db.query(sql, [data_inicial, data_final, veic_usu_id]);
+            console.log('Resultado da consulta:', result);
+    
+            // Verificando se a atualização foi bem-sucedida
+            if (result.affectedRows > 0) {
+                return response.status(200).json({
+                    sucesso: true,
+                    mensagem: 'Veículo-usuário atualizado com sucesso.'
+                });
+            } else {
+                return response.status(404).json({
+                    sucesso: false,
+                    mensagem: 'Veículo-usuário não encontrado.'
+                });
+            }
         } catch (error) {
             // Tratamento de erro
             return response.status(500).json({
                 sucesso: false,
-                mensagem: 'Erro na requisição.',
+                mensagem: 'Erro na atualização do veículo-usuário.',
                 dados: error.message
             });
         }
-    },
+    },    
 
     // Função para excluir uma relação existente entre veículo e usuário
     async excluirVeiculoUsuario(request, response) {

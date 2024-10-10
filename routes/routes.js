@@ -61,7 +61,9 @@ router.patch('/indisponibilidade/desabilitar/:indisp_id', indisponibilidadeContr
 router.get('/veiculoUsuario', veiculoUsuarioController.listarVeiculosUsuario);
 router.post('/veiculoUsuario', veiculoUsuarioController.cadastrarVeiculoUsuario);
 router.get('/veiculoUsuario/proprietarios/:VeiculoId', veiculoUsuarioController.listarVeiculoUsuarioPorId);
+
 router.patch('/veiculoUsuario/:veic_usu_id', veiculoUsuarioController.editarVeiculoUsuario);
+
 router.delete('/veiculoUsuario/:veic_usu_id', veiculoUsuarioController.excluirVeiculoUsuario);
 
 router.get('/agendaServicos', agendaServicosController.listarAgendaServicos);
