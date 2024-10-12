@@ -292,7 +292,7 @@ module.exports = {
             // console.log(`Recebido editarUsuarios para usu_id ${usu_id}:`, request.body);
     
             // Validate required fields
-            if (!usu_nome || !usu_cpf || !usu_data_nasc || !usu_sexo || !usu_telefone || !usu_email) {
+            if (!usu_nome || !usu_cpf || !usu_data_nasc || usu_sexo === undefined || !usu_telefone || !usu_email) {
                 return response.status(400).json({
                     sucesso: false,
                     mensagem: 'Campos obrigatórios não preenchidos.',
@@ -340,7 +340,7 @@ module.exports = {
                 usu_sexo,
                 usu_telefone,
                 usu_email,
-                usu_observ || null, // Allow observ to be null if not provided
+                usu_observ || null,
                 usu_acesso,
                 usu_situacao,
                 usu_id

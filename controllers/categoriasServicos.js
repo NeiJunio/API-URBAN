@@ -5,7 +5,8 @@ module.exports = {
         try {
             const sql = `SELECT 
                 cat_serv_id, 
-                cat_serv_nome
+                cat_serv_nome,
+                cat_serv_visibilidade
                 FROM categorias_servicos`;
 
             const [categorias] = await db.query(sql);
@@ -87,6 +88,29 @@ module.exports = {
                 sucesso: true,
                 mensagem: `Categoria ${cat_serv_id} excluída com sucesso`,
                 dados: excluir.affectedRows
+            });
+        } catch (error) {
+            return response.status(500).json({
+                sucesso: false,
+                mensagem: 'Erro na requisição.',
+                dados: error.message
+            });
+        }
+    },
+    async alterarVisibilidadeCategoria(request, response) {
+        try {
+            const { cat_serv_id } = request.params;
+            const { cat_serv_visibilidade } = request.body;
+
+            const sql = `UPDATE categorias_servicos SET cat_serv_visibilidade = ? WHERE cat_serv_id = ?`;
+            const values = [cat_serv_visibilidade, cat_serv_id];
+
+            const [atualizaDados] = await db.query(sql, values);
+
+            return response.status(200).json({
+                sucesso: true,
+                mensagem: `Categoria ${cat_serv_id} atualizada com sucesso!`,
+                dados: atualizaDados.affectedRows
             });
         } catch (error) {
             return response.status(500).json({

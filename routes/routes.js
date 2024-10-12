@@ -89,6 +89,7 @@ router.get('/servicos/categoria/:cat_serv_id', servicosController.listarServicos
 router.post('/categoriasServicos', categoriasServicosController.cadastrarCategoria);
 router.patch('/categoriasServicos/:cat_serv_id', categoriasServicosController.editarCategoria);
 router.delete('/categoriasServicos/:cat_serv_id', categoriasServicosController.excluirCategoria);
+router.patch('/categoriasServicos/:cat_serv_id/visibilidade', categoriasServicosController.alterarVisibilidadeCategoria);
 
 router.get('/categorias', categoriasController.listarCategorias);
 router.post('/categorias', categoriasController.cadastrarCategoria);
