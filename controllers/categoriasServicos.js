@@ -7,7 +7,8 @@ module.exports = {
                 cat_serv_id, 
                 cat_serv_nome,
                 cat_serv_visibilidade
-                FROM categorias_servicos`;
+                FROM categorias_servicos
+                 `;
 
             const [categorias] = await db.query(sql);
             const nItens = categorias.length;
@@ -26,6 +27,35 @@ module.exports = {
             });
         }
     },
+
+    async listarCategoriasAtivas(request, response) {
+        try {
+            const sql = `SELECT 
+                cat_serv_id, 
+                cat_serv_nome,
+                cat_serv_visibilidade
+                FROM categorias_servicos
+                WHERE cat_serv_visibilidade = 1
+                 `;
+
+            const [categorias] = await db.query(sql);
+            const nItens = categorias.length;
+
+            return response.status(200).json({
+                sucesso: true,
+                mensagem: 'Lista de categorias de serviços.',
+                dados: categorias,
+                nItens
+            });
+        } catch (error) {
+            return response.status(500).json({
+                sucesso: false,
+                mensagem: 'Erro na requisição.',
+                dados: error.message
+            });
+        }
+    },
+
     async cadastrarCategoria(request, response) {
         try {
             const { cat_serv_nome } = request.body;
