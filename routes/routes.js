@@ -19,6 +19,8 @@ const agendamentoController = require('../controllers/agendamentos');
 
 router.get('/usuarios', usuariosController.listarUsuarios);
 router.post('/usuarios', usuariosController.cadastrarUsuarios);
+// router.post('/usuarios/dados', usuariosController.listarDados);
+router.get('/usuarios/dadosUsuario/:usu_id', usuariosController.listarDadosUsuario);
 router.post('/usuarios/cpf', usuariosController.listarUsuarioPorCpf);
 router.patch('/usuarios/:usu_id', usuariosController.editarUsuarios);
 router.delete('/usuarios/:usu_id', usuariosController.excluirUsuarios);
