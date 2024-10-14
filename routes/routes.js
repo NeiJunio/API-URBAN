@@ -38,6 +38,7 @@ router.post('/veiculos', veiculosController.cadastrarVeiculo);
 router.post('/verificarPlaca', veiculosController.verificarPlaca);
 router.post('/veiculos/placa', veiculosController.listarVeiculoPorPlaca);
 router.patch('/veiculos/:veic_id', veiculosController.editarVeiculo);
+router.patch('/veiculos/usuario/:veic_id', veiculosController.usuarioEditandoVeiculo);
 router.delete('/veiculos/:veic_id', veiculosController.excluirVeiculo);
 router.patch('/veiculos/ocultar/:veic_id', veiculosController.ocultarVeiculo);
 
@@ -63,7 +64,7 @@ router.patch('/indisponibilidade/desabilitar/:indisp_id', indisponibilidadeContr
 router.get('/veiculoUsuario', veiculoUsuarioController.listarVeiculosUsuario);
 router.post('/veiculoUsuario', veiculoUsuarioController.cadastrarVeiculoUsuario);
 router.get('/veiculoUsuario/proprietarios/:VeiculoId', veiculoUsuarioController.listarVeiculoUsuarioPorId);
-
+router.get('/veiculoUsuario/usuario/:UsuarioId', veiculoUsuarioController.listarVeicUsuarioPorId);
 router.patch('/veiculoUsuario/:veic_usu_id', veiculoUsuarioController.editarVeiculoUsuario);
 
 router.delete('/veiculoUsuario/:veic_usu_id', veiculoUsuarioController.excluirVeiculoUsuario);

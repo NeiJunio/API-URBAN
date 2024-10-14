@@ -1,4 +1,10 @@
 const db = require('../database/connection');
+const moment = require('moment');
+
+const dataInput = (data) => {
+    const dataInput = moment(data, 'YYYY-MM-DD').format('YYYY-MM-DD');
+    return dataInput;
+}
 
 module.exports = {
     // async listarVeiculos(request, response) {
@@ -450,6 +456,55 @@ module.exports = {
             });
         }
     },
+
+    async usuarioEditandoVeiculo(request, response) {
+        try {
+            const {
+                mod_id,
+                veic_placa,
+                veic_ano,
+                veic_cor,
+                veic_combustivel,
+                veic_observ
+            } = request.body;
+
+            const { veic_id } = request.params;
+
+            const sql = `UPDATE veiculos SET 
+                mod_id = ?, 
+                veic_placa = ?, 
+                veic_ano = ?, 
+                veic_cor = ?, 
+                veic_combustivel = ?, 
+                veic_observ = ?
+                WHERE veic_id = ?;`;
+
+            const values = [
+                mod_id,
+                veic_placa,
+                veic_ano,
+                veic_cor,
+                veic_combustivel,
+                veic_observ,
+                veic_id
+            ];
+
+            const [atualizaDados] = await db.query(sql, values);
+
+            return response.status(200).json({
+                sucesso: true,
+                mensagem: `Veículo ${veic_id} atualizado com sucesso!`,
+                dados: atualizaDados.affectedRows
+            });
+        } catch (error) {
+            return response.status(500).json({
+                sucesso: false,
+                mensagem: 'Erro na requisição.',
+                dados: error.message
+            });
+        }
+    },
+
     async excluirVeiculo(request, response) {
         try {
             const { veic_id } = request.params;

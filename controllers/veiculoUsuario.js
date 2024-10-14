@@ -1,4 +1,10 @@
 const db = require('../database/connection');
+const moment = require('moment');
+
+const dataInput = (data) => {
+    const dataInput = moment(data, 'YYYY-MM-DD').format('YYYY-MM-DD');
+    return dataInput;
+}
 
 module.exports = {
     // Função para listar todas as relações entre veículos e usuários
@@ -72,6 +78,58 @@ module.exports = {
         }
     },
 
+    async listarVeicUsuarioPorId(request, response) {
+        try {
+            const { UsuarioId } = request.params;
+    
+            const sql = `SELECT 
+                            vu.veic_usu_id, 
+                            vu.veic_id, 
+                            vu.usu_id, 
+                            vu.ehproprietario = 1 AS ehproprietario, 
+                            vu.data_inicial,
+                            vu.data_final,
+                            v.veic_placa,
+                            v.veic_ano,
+                            v.veic_cor,
+                            v.veic_combustivel,
+                            v.veic_observ,
+                            m.mod_id AS mod_id,
+                            m.mod_nome AS mod_nome,
+                            ma.mar_nome AS mar_nome,
+                            c.cat_nome AS cat_nome
+                         FROM veiculo_usuario vu
+                         JOIN veiculos v ON vu.veic_id = v.veic_id
+                         JOIN modelos m ON v.mod_id = m.mod_id
+                         JOIN marcas ma ON m.mar_id = ma.mar_id
+                         LEFT JOIN categorias c ON ma.cat_id = c.cat_id
+                         WHERE vu.usu_id = ?`;
+    
+            const [veiculosPorUsuarioId] = await db.query(sql, [UsuarioId]);
+            const nItens = veiculosPorUsuarioId.length;
+    
+            const veiculosFormatados = veiculosPorUsuarioId.map(veiculo => ({
+                ...veiculo,
+                data_inicial: dataInput(veiculo.data_inicial),
+                data_final: veiculo.data_final ? dataInput(veiculo.data_final) : null // Caso data_final seja null
+            }));
+
+            return response.status(200).json({
+                sucesso: true,
+                mensagem: 'Lista de Veículos do Usuário.',
+                dados: veiculosFormatados,
+                nItens
+            });
+        }
+        catch (error) {
+            return response.status(500).json({
+                sucesso: false,
+                mensagem: 'Erro na requisição.',
+                dados: error.message
+            });
+        }
+    },
+    
     // Função para cadastrar uma nova relação entre veículo e usuário
     async cadastrarVeiculoUsuario(request, response) {
         try {
