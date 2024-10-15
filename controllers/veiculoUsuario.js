@@ -129,6 +129,7 @@ module.exports = {
             const {
                 veic_id,
                 usu_id,
+                ehproprietario,
                 data_inicial
             } = request.body;
 
@@ -139,7 +140,7 @@ module.exports = {
                 });
             }
 
-            const ehproprietario = 1;
+            // const ehproprietario = 1;
 
             const sql = `INSERT INTO veiculo_usuario 
                 (veic_id, usu_id, ehproprietario, data_inicial) 
