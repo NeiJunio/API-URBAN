@@ -41,7 +41,7 @@ module.exports = {
     
     async listarServicosPorCategoria(request, response) {
         try {
-            const { cat_serv_id } = request.params; // ID da categoria passado na rota
+            const { cat_serv_id } = request.params;
 
             const sql = `
                 SELECT 
@@ -63,7 +63,7 @@ module.exports = {
                 WHERE 
                     s.cat_serv_id = ?;`;
 
-            const [servicos] = await db.query(sql, [cat_serv_id]); // Passa o ID da categoria
+            const [servicos] = await db.query(sql, [cat_serv_id]);
 
             const nItens = servicos.length;
 
@@ -91,7 +91,7 @@ module.exports = {
 
     async listarServicosPorCategoria(request, response) {
         try {
-            const { cat_serv_id } = request.params; // ID da categoria passado na rota
+            const { cat_serv_id } = request.params;
 
             const sql = `
                 SELECT 
@@ -111,7 +111,7 @@ module.exports = {
                 ON servicos.cat_serv_id = categorias_servicos.cat_serv_id
                 WHERE servicos.cat_serv_id = ?`;
 
-            const [servicos] = await db.query(sql, [cat_serv_id]); // Passa o ID da categoria na query
+            const [servicos] = await db.query(sql, [cat_serv_id]);
             const nItens = servicos.length;
 
             if (nItens === 0) {
@@ -138,7 +138,7 @@ module.exports = {
 
     async visualizarServico(request, response) {
         try {
-            const { serv_id } = request.params; // ID do serviço passado na rota
+            const { serv_id } = request.params;
             const sql = `
                 SELECT 
                     s.serv_id,
@@ -157,7 +157,7 @@ module.exports = {
                     s.serv_id = ? 
             `;
     
-            const [servico] = await db.query(sql, [serv_id]); // Executa a query passando o ID do serviço
+            const [servico] = await db.query(sql, [serv_id]);
     
             if (servico.length === 0) {
                 return response.status(404).json({
@@ -180,7 +180,6 @@ module.exports = {
         }
     },    
     
-
     async cadastrarServico(request, response) {
         try {
             const {

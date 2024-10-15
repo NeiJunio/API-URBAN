@@ -26,6 +26,7 @@ module.exports = {
             });
         }
     },
+
     async cadastrarIndisponibilidade(request, response) {
         try {
             const { indisp_data, indisp_situacao } = request.body;
@@ -52,6 +53,7 @@ module.exports = {
             });
         }
     },
+
     async editarIndisponibilidade(request, response) {
         try {
             const { indisp_data } = request.body;
@@ -79,6 +81,7 @@ module.exports = {
             });
         }
     },
+
     async excluirIndisponibilidade(request, response) {
         try {
             const { indisp_id } = request.params;
@@ -99,13 +102,14 @@ module.exports = {
             });
         }
     },
+
     async desabilitarIndisponibilidade(request, response) {
         try {
             const {
                 indisp_situacao
-            } = request.body; // Obtém indisp_situacao do corpo da requisição
+            } = request.body;
 
-            const { indisp_id } = request.params; // Obtém o indisp_id da URL
+            const { indisp_id } = request.params;
 
             const sql = `UPDATE indisponibilidade SET indisp_situacao = ? WHERE indisp_id = ?`;
             const values = [indisp_situacao, indisp_id];

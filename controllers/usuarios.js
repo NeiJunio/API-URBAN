@@ -47,57 +47,9 @@ module.exports = {
         }
     },
 
-    // async listarDados(request, response) {
-    //     try {
-    //         const { usu_acesso, usu_id  } = request.body; // Obtém o CPF do corpo da requisição
-    
-    //         // Verifica se o CPF foi fornecido
-           
-    
-    //         const sql = `
-    //                 SELECT 
-    //                     usu_id, 
-    //                     usu_nome, 
-    //                     usu_cpf, 
-    //                     usu_data_nasc, 
-    //                     usu_sexo, 
-    //                     usu_telefone, 
-    //                     usu_email, 
-    //                     usu_observ, 
-    //                     usu_acesso,
-    //                     usu_senha
-    //                 FROM usuarios AS Usu
-    //              WHERE ((?= 1
-    //                     AND Usu.usu_id = Usu.usu_id)
-    //                     OR 
-    //                     (? = 0
-    //                     AND ? = Usu.usu_id))
-    //         `;
-    
-    //         const values = [usu_acesso, usu_acesso, usu_id]; // Usar o operador LIKE para permitir busca parcial pelo CPF
-    //        // const values = [`%${usu_cpf}%`]; // Usar o operador LIKE para permitir busca parcial pelo CPF
-    
-    //         const [usuarios] = await db.query(sql, values);
-    //         const nItens = usuarios.length;
-    
-    //         return response.status(200).json({
-    //             sucesso: true,
-    //             mensagem: 'Lista de usuários.',
-    //             dados: usuarios,
-    //             nItens
-    //         });
-    //     } catch (error) {
-    //         return response.status(500).json({
-    //             sucesso: false,
-    //             mensagem: 'Erro na requisição.',
-    //             dados: error.message
-    //         });
-    //     }
-    // },
-
     async listarDadosUsuario(request, response) {
         try {
-            const { usu_id } = request.params; // Obtém o ID do usuário
+            const { usu_id } = request.params;
     
             const sql = `
                 SELECT 
@@ -118,12 +70,11 @@ module.exports = {
     
             const [usuarios] = await db.query(sql, [usu_id]);
     
-            // Se houver um usuário, retorne como objeto
             if (usuarios.length > 0) {
                 return response.status(200).json({
                     sucesso: true,
                     mensagem: 'Dados do usuário.',
-                    dados: usuarios[0] // Retorne o primeiro usuário como objeto
+                    dados: usuarios[0]
                 });
             } else {
                 return response.status(404).json({
@@ -141,13 +92,10 @@ module.exports = {
         }
     },
     
-    
-
     async listarUsuarioPorCpf(request, response) {
         try {
-            const { usu_cpf } = request.body; // Obtém o CPF do corpo da requisição
-    
-            // Verifica se o CPF foi fornecido
+            const { usu_cpf } = request.body;
+
             if (!usu_cpf) {
                 return response.status(400).json({
                     sucesso: false,
@@ -165,7 +113,7 @@ module.exports = {
                 WHERE u.usu_cpf LIKE ?
             `;
     
-            const values = [`%${usu_cpf}%`]; // Usar o operador LIKE para permitir busca parcial pelo CPF
+            const values = [`%${usu_cpf}%`];
     
             const [usuarios] = await db.query(sql, values);
             const nItens = usuarios.length;
@@ -184,13 +132,10 @@ module.exports = {
             });
         }
     },
-    
-
 
     async verificarCpf(request, response) {
         try {
             const { usu_cpf } = request.body;
-            // console.log("Recebido verificarCpf:", request.body); // Log dos dados recebidos
 
             if (!usu_cpf) {
                 return response.status(400).json({
@@ -202,7 +147,6 @@ module.exports = {
 
             const sql = `SELECT usu_id FROM usuarios WHERE usu_cpf = ?`;
             const [result] = await db.query(sql, [usu_cpf]);
-            // console.log("Resultado da consulta verificarCpf:", result); // Log do resultado da consulta
 
             if (result.length > 0) {
                 return response.status(200).json({
@@ -230,7 +174,6 @@ module.exports = {
     async verificarEmail(request, response) {
         try {
             const { usu_email } = request.body;
-            // console.log("Recebido verificarEmail:", request.body); // Log dos dados recebidos
 
             if (!usu_email) {
                 return response.status(400).json({
@@ -242,7 +185,6 @@ module.exports = {
 
             const sql = `SELECT usu_id FROM usuarios WHERE usu_email = ?`;
             const [result] = await db.query(sql, [usu_email]);
-            // console.log("Resultado da consulta verificarEmail:", result); // Log do resultado da consulta
 
             if (result.length > 0) {
                 return response.status(200).json({
@@ -282,7 +224,6 @@ module.exports = {
                 usu_situacao
             } = request.body;
 
-            // Verifica se o CPF foi fornecido
             if (!usu_cpf) {
                 return response.status(400).json({
                     sucesso: false,
@@ -291,7 +232,6 @@ module.exports = {
                 });
             }
 
-            // Verifica se o email foi fornecido
             if (!usu_email) {
                 return response.status(400).json({
                     sucesso: false,
@@ -300,11 +240,8 @@ module.exports = {
                 });
             }
 
-            // Verifica se o CPF já está cadastrado
             const sqlVerificaCpf = `SELECT usu_id FROM usuarios WHERE usu_cpf = ?`;
             const [cpfExistente] = await db.query(sqlVerificaCpf, [usu_cpf]);
-
-            // console.log("Resultado da verificação do CPF:", cpfExistente); // Log do resultado da verificação
 
             if (cpfExistente.length > 0) {
                 return response.status(400).json({
@@ -313,11 +250,8 @@ module.exports = {
                 });
             }
 
-            // Verifica se o email já está cadastrado
             const sqlVerificaEmail = `SELECT usu_id FROM usuarios WHERE usu_email = ?`;
             const [emailExistente] = await db.query(sqlVerificaEmail, [usu_email]);
-
-            // console.log("Resultado da verificação do Email:", emailExistente); // Log do resultado da verificação
 
             if (emailExistente.length > 0) {
                 return response.status(400).json({
@@ -326,7 +260,6 @@ module.exports = {
                 });
             }
 
-            // Se o CPF e o Email não estão cadastrados, prossegue com o cadastro
             const sql = `INSERT INTO usuarios 
             (usu_nome, usu_cpf, usu_data_nasc, usu_sexo, usu_telefone, 
             usu_email, usu_observ, usu_acesso, usu_senha, usu_situacao) 
@@ -335,7 +268,7 @@ module.exports = {
             const values = [
                 usu_nome,
                 usu_cpf,
-                dataInput(usu_data_nasc), // Verifique se a data está no formato correto
+                dataInput(usu_data_nasc),
                 usu_sexo,
                 usu_telefone,
                 usu_email,
@@ -345,20 +278,16 @@ module.exports = {
                 usu_situacao
             ];
 
-            // console.log("Valores a serem inseridos:", values); // Log dos valores que serão inseridos
-
             const [execSql] = await db.query(sql, values);
             const usu_id = execSql.insertId;
-
-            // console.log("Usuário cadastrado com ID:", usu_id); // Log do ID do novo usuário
 
             return response.status(201).json({
                 sucesso: true,
                 mensagem: 'Cadastro de usuário efetuado com sucesso.',
-                dados: { usu_id } // Retornando o ID do novo usuário
+                dados: { usu_id }
             });
         } catch (error) {
-            console.error('Erro ao cadastrar usuário:', error); // Log do erro
+            console.error('Erro ao cadastrar usuário:', error);
             return response.status(500).json({
                 sucesso: false,
                 mensagem: 'Erro na requisição.',
@@ -366,7 +295,6 @@ module.exports = {
             });
         }
     },
-
 
     async editarUsuarios(request, response) {
         try {
@@ -383,11 +311,7 @@ module.exports = {
             } = request.body;
     
             const { usu_id } = request.params;
-    
-            // Logging received data for debugging
-            // console.log(`Recebido editarUsuarios para usu_id ${usu_id}:`, request.body);
-    
-            // Validate required fields
+
             if (!usu_nome || !usu_cpf || !usu_data_nasc || usu_sexo === undefined || !usu_telefone || !usu_email) {
                 return response.status(400).json({
                     sucesso: false,
@@ -395,7 +319,6 @@ module.exports = {
                 });
             }
     
-            // Verifica se o CPF já está cadastrado por outro usuário
             const sqlVerificaCpf = `SELECT usu_id FROM usuarios WHERE usu_cpf = ? AND usu_id != ?`;
             const [cpfExistente] = await db.query(sqlVerificaCpf, [usu_cpf, usu_id]);
     
@@ -406,7 +329,6 @@ module.exports = {
                 });
             }
     
-            // Verifica se o Email já está cadastrado por outro usuário
             const sqlVerificaEmail = `SELECT usu_id FROM usuarios WHERE usu_email = ? AND usu_id != ?`;
             const [emailExistente] = await db.query(sqlVerificaEmail, [usu_email, usu_id]);
     

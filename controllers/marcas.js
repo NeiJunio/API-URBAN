@@ -61,7 +61,6 @@ module.exports = {
         }
     },
 
-
     async cadastrarMarca(request, response) {
         try {
             const {
@@ -98,6 +97,7 @@ module.exports = {
             });
         }
     },
+
     async editarMarca(request, response) {
         try {
             const {
@@ -139,6 +139,7 @@ module.exports = {
             });
         }
     },
+
     async excluirMarca(request, response) {
         try {
             const { mar_id } = request.params;

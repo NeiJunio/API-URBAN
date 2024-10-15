@@ -1,6 +1,7 @@
 const db = require('../database/connection');
 
 module.exports = {
+
     async listarCategorias(request, response) {
         try {
             const sql = `SELECT 
@@ -26,6 +27,7 @@ module.exports = {
             });
         }
     },
+
     async cadastrarCategoria(request, response) {
         try {
             const {
@@ -58,6 +60,7 @@ module.exports = {
             });
         }
     },
+
     async editarCategoria(request, response) {
         try {
             const {
@@ -93,6 +96,7 @@ module.exports = {
             });
         }
     },
+
     async excluirCategoria(request, response) {
         try {
             const { cat_id } = request.params;

@@ -69,7 +69,6 @@ module.exports = {
         try {
             const { cat_id, mar_id } = request.params;
 
-            // Armazenando os IDs na constante values
             const values = [mar_id, cat_id];
 
             const sql = `

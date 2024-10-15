@@ -1,6 +1,7 @@
 const db = require('../database/connection');
 
 module.exports = {
+
     async listarCategorias(request, response) {
         try {
             const sql = `SELECT 
@@ -79,6 +80,7 @@ module.exports = {
             });
         }
     },
+
     async editarCategoria(request, response) {
         try {
             const { cat_serv_nome } = request.body;
@@ -105,6 +107,7 @@ module.exports = {
             });
         }
     },
+
     async excluirCategoria(request, response) {
         try {
             const { cat_serv_id } = request.params;
@@ -127,6 +130,7 @@ module.exports = {
             });
         }
     },
+
     async alterarVisibilidadeCategoria(request, response) {
         try {
             const { cat_serv_id } = request.params;

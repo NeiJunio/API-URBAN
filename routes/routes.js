@@ -18,73 +18,80 @@ const agendamentoController = require('../controllers/agendamentos');
 
 
 router.get('/usuarios', usuariosController.listarUsuarios);
+router.get('/usuarios/dadosUsuario/:usu_id', usuariosController.listarDadosUsuario);
 router.post('/usuarios', usuariosController.cadastrarUsuarios);
 // router.post('/usuarios/dados', usuariosController.listarDados);
-router.get('/usuarios/dadosUsuario/:usu_id', usuariosController.listarDadosUsuario);
-router.post('/usuarios/cpf', usuariosController.listarUsuarioPorCpf);
-router.patch('/usuarios/:usu_id', usuariosController.editarUsuarios);
-router.delete('/usuarios/:usu_id', usuariosController.excluirUsuarios);
-router.patch('/usuarios/ocultar/:usu_id', usuariosController.ocultarUsuario);
 router.post('/usuarios/verificarCpf', usuariosController.verificarCpf);
 router.post('/usuarios/verificarEmail', usuariosController.verificarEmail);
+router.post('/usuarios/cpf', usuariosController.listarUsuarioPorCpf);
+router.patch('/usuarios/:usu_id', usuariosController.editarUsuarios);
+router.patch('/usuarios/ocultar/:usu_id', usuariosController.ocultarUsuario);
+router.delete('/usuarios/:usu_id', usuariosController.excluirUsuarios);
+
 
 router.post('/login', usuariosController.login);
 
+
 router.get('/veiculos', veiculosController.listarVeiculos);
-
-
 router.get('/veiculos/:veic_id', veiculosController.visualizarVeiculo);
 router.post('/veiculos', veiculosController.cadastrarVeiculo);
 router.post('/verificarPlaca', veiculosController.verificarPlaca);
 router.post('/veiculos/placa', veiculosController.listarVeiculoPorPlaca);
 router.patch('/veiculos/:veic_id', veiculosController.editarVeiculo);
 router.patch('/veiculos/usuario/:veic_id', veiculosController.usuarioEditandoVeiculo);
-router.delete('/veiculos/:veic_id', veiculosController.excluirVeiculo);
 router.patch('/veiculos/ocultar/:veic_id', veiculosController.ocultarVeiculo);
+router.delete('/veiculos/:veic_id', veiculosController.excluirVeiculo);
+
 
 router.get('/servicos', servicosController.listarServicos);
 router.get('/servicos/:serv_id', servicosController.visualizarServico);
 router.post('/servicos', servicosController.cadastrarServico);
 router.patch('/servicos/:serv_id', servicosController.editarServico);
-router.delete('/servicos/:serv_id', servicosController.apagarServico);
 router.patch('/servicos/ocultar/:serv_id', servicosController.ocultarServico);
+router.delete('/servicos/:serv_id', servicosController.apagarServico);
+
 
 router.get('/disponibilidade', disponibilidadeController.listarDisponibilidade);
 router.post('/disponibilidade', disponibilidadeController.cadastrarDisponibilidade);
 router.patch('/disponibilidade/:disp_id', disponibilidadeController.editarDisponibilidade);
-router.delete('/disponibilidade/:disp_id', disponibilidadeController.excluirDisponibilidade);
 router.patch('/disponibilidade/desabilitar/:disp_id', disponibilidadeController.desabilitarDisponibilidade);
+router.delete('/disponibilidade/:disp_id', disponibilidadeController.excluirDisponibilidade);
+
 
 router.get('/indisponibilidade', indisponibilidadeController.listarIndisponibilidade);
 router.post('/indisponibilidade', indisponibilidadeController.cadastrarIndisponibilidade);
 router.patch('/indisponibilidade/:indisp_id', indisponibilidadeController.editarIndisponibilidade);
-router.delete('/indisponibilidade/:indisp_id', indisponibilidadeController.excluirIndisponibilidade);
 router.patch('/indisponibilidade/desabilitar/:indisp_id', indisponibilidadeController.desabilitarIndisponibilidade);
+router.delete('/indisponibilidade/:indisp_id', indisponibilidadeController.excluirIndisponibilidade);
+
 
 router.get('/veiculoUsuario', veiculoUsuarioController.listarVeiculosUsuario);
-router.post('/veiculoUsuario', veiculoUsuarioController.cadastrarVeiculoUsuario);
 router.get('/veiculoUsuario/proprietarios/:VeiculoId', veiculoUsuarioController.listarVeiculoUsuarioPorId);
 router.get('/veiculoUsuario/usuario/:UsuarioId', veiculoUsuarioController.listarVeicUsuarioPorId);
+router.post('/veiculoUsuario', veiculoUsuarioController.cadastrarVeiculoUsuario);
 router.patch('/veiculoUsuario/:veic_usu_id', veiculoUsuarioController.editarVeiculoUsuario);
-
+router.patch('/veiculoUsuario/:veic_usu_id/data_final', veiculoUsuarioController.atualizarDataFinalVeiculoUsuario);
 router.delete('/veiculoUsuario/:veic_usu_id', veiculoUsuarioController.excluirVeiculoUsuario);
+
 
 router.get('/agendaServicos', agendaServicosController.listarAgendaServicos);
 router.post('/agendaServicos', agendaServicosController.cadastrarAgendaServico);
 router.patch('/agendaServicos/:agend_serv_id', agendaServicosController.editarAgendaServico);
 router.delete('/agendaServicos/:agend_serv_id', agendaServicosController.excluirAgendaServico);
 
+
 router.get('/agendaServicosSituacao', agendaServicosSituacaoController.listarSituacoes);
 router.post('/agendaServicosSituacao', agendaServicosSituacaoController.cadastrarSituacao);
 router.patch('/agendaServicosSituacao/:agend_serv_situ_id', agendaServicosSituacaoController.editarSituacao);
 router.delete('/agendaServicosSituacao/:agend_serv_situ_id', agendaServicosSituacaoController.excluirSituacao);
 
+
 router.get('/agendamentos', agendamentosController.listarAgendamentos);
+router.get('/agendamentos/situacao/:agend_situacao', agendamentoController.listarAgendamentosPorSituacao);
 router.post('/agendamentos', agendamentosController.cadastrarAgendamento);
 router.patch('/agendamentos/:agend_id', agendamentosController.editarAgendamento);
 router.patch('/agendamentos/situacao/:agend_id', agendamentoController.editarSituacaoAgendamento);
 router.delete('/agendamentos/:agend_id', agendamentosController.excluirAgendamento);
-router.get('/agendamentos/situacao/:agend_situacao', agendamentoController.listarAgendamentosPorSituacao);
 
 
 router.get('/categoriasServicos', categoriasServicosController.listarCategorias);
@@ -92,19 +99,22 @@ router.get('/categoriasServicosAtivas', categoriasServicosController.listarCateg
 router.get('/servicos/categoria/:cat_serv_id', servicosController.listarServicosPorCategoria);
 router.post('/categoriasServicos', categoriasServicosController.cadastrarCategoria);
 router.patch('/categoriasServicos/:cat_serv_id', categoriasServicosController.editarCategoria);
-router.delete('/categoriasServicos/:cat_serv_id', categoriasServicosController.excluirCategoria);
 router.patch('/categoriasServicos/:cat_serv_id/visibilidade', categoriasServicosController.alterarVisibilidadeCategoria);
+router.delete('/categoriasServicos/:cat_serv_id', categoriasServicosController.excluirCategoria);
+
 
 router.get('/categorias', categoriasController.listarCategorias);
 router.post('/categorias', categoriasController.cadastrarCategoria);
 router.patch('/categorias/:cat_id', categoriasController.editarCategoria);
 router.delete('/categorias/:cat_id', categoriasController.excluirCategoria);
 
+
 router.get('/marcas', marcasController.listarMarcas);
 router.get('/marcas/categorias/:cat_id', marcasController.listarMarcaPorCategoria); // ADICIONADO -> LISTAR MARCAS POR CATEGORIA
 router.post('/marcas', marcasController.cadastrarMarca);
 router.patch('/marcas/:mar_id', marcasController.editarMarca);
 router.delete('/marcas/:mar_id', marcasController.excluirMarca);
+
 
 router.get('/modelos', modelosController.listarModelos);
 router.get('/modelos/marca/:mar_id', modelosController.listarModelosPorMarca);

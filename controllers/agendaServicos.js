@@ -1,7 +1,6 @@
 const db = require('../database/connection');
 
 module.exports = {
-    // Função para listar todos os serviços agendados
     async listarAgendaServicos(request, response) {
         try {
             const sql = `SELECT 
@@ -29,7 +28,6 @@ module.exports = {
         }
     },
 
-    // Função para cadastrar um novo serviço agendado
     async cadastrarAgendaServico(request, response) {
         try {
             const {
@@ -65,7 +63,6 @@ module.exports = {
         }
     },
 
-    // Função para editar um serviço agendado específico
     async editarAgendaServico(request, response) {
         try {
             const {
@@ -105,7 +102,6 @@ module.exports = {
         }
     },
 
-    // Função para excluir um serviço agendado específico
     async excluirAgendaServico(request, response) {
         try {
             const { agend_serv_id } = request.params;

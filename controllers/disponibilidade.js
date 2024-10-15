@@ -1,6 +1,7 @@
 const db = require('../database/connection');
 
 module.exports = {
+
     async listarDisponibilidade(request, response) {
         try {
             const sql = `SELECT 
@@ -29,6 +30,7 @@ module.exports = {
             });
         }
     },
+
     async cadastrarDisponibilidade(request, response) {
         try {
             const {
@@ -67,6 +69,7 @@ module.exports = {
             });
         }
     },
+
     async editarDisponibilidade(request, response) {
         try {
             const {
@@ -111,6 +114,7 @@ module.exports = {
             });
         }
     },
+
     async excluirDisponibilidade(request, response) {
         try {
             const { disp_id } = request.params;
@@ -132,13 +136,14 @@ module.exports = {
             });
         }
     },
+
     async desabilitarDisponibilidade(request, response) {
         try {
             const {
                 disp_situacao
-            } = request.body; // Obtém disp_situacao do corpo da requisição
+            } = request.body;
 
-            const { disp_id } = request.params; // Obtém o disp_id da URL
+            const { disp_id } = request.params;
 
             const sql = `UPDATE disponibilidade SET disp_situacao = ? WHERE disp_id = ?`;
             const values = [disp_situacao, disp_id];
