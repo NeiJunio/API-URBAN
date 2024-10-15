@@ -91,6 +91,7 @@ module.exports = {
                             m.mod_id AS mod_id,
                             m.mod_nome AS mod_nome,
                             ma.mar_nome AS mar_nome,
+                            c.cat_id AS cat_id,
                             c.cat_nome AS cat_nome
                          FROM veiculo_usuario vu
                          JOIN veiculos v ON vu.veic_id = v.veic_id
