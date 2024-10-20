@@ -174,18 +174,20 @@ module.exports = {
 
     async editarVeiculoUsuario(request, response) {
         const { veic_usu_id } = request.params;
-        const { data_inicial, data_final, ehproprietario } = request.body;
+        const { data_inicial,
+            //  data_final,
+             ehproprietario } = request.body;
 
         try {
             const sql = `UPDATE veiculo_usuario SET 
                             data_inicial = ?, 
-                            data_final = ?,
+                            
                             ehproprietario = ?
                         WHERE veic_usu_id = ?`;
 
                         const values = [
                             data_inicial,
-                            data_final,
+                            // data_final,
                             ehproprietario,
                             veic_usu_id
                         ];
