@@ -125,6 +125,40 @@ module.exports = {
         }
     },
 
+
+    async verificarVeiculoAssociado(request, response) {
+        try {
+            const { veic_id, usu_id } = request.params;
+
+            const sql = `SELECT veic_usu_id FROM veiculo_usuario WHERE veic_id = ? AND usu_id = ?`;
+            const [resultado] = await db.query(sql, [veic_id, usu_id]);
+
+
+            if (resultado.length > 0) {
+                return response.status(200).json({
+                    sucesso: true,
+                    mensagem: 'O veículo já está associado ao usuário.',
+                    associado: true
+                });
+            } else {
+                return response.status(200).json({
+                    sucesso: true,
+                    mensagem: 'O veículo não está associado ao usuário.',
+                    associado: false
+                });
+            }
+        } catch (error) {
+            return response.status(500).json({
+                sucesso: false,
+                mensagem: 'Erro ao verificar a associação do veículo.',
+                dados: error.message
+            });
+        }
+    },
+
+
+    
+
     async cadastrarVeiculoUsuario(request, response) {
         try {
             const {
