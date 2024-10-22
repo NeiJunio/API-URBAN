@@ -126,71 +126,67 @@ module.exports = {
     },
 
 
-    async verificarVeiculoAssociado(request, response) {
-        try {
-            const { veic_id, usu_id } = request.params;
+    // async verificarVeiculoAssociado(request, response) {
+    //     try {
+    //         const { veic_id, usu_id } = request.params;
 
-            const sql = `SELECT veic_usu_id FROM veiculo_usuario WHERE veic_id = ? AND usu_id = ?`;
-            const [resultado] = await db.query(sql, [veic_id, usu_id]);
-
-
-            if (resultado.length > 0) {
-                return response.status(200).json({
-                    sucesso: true,
-                    mensagem: 'O veículo já está associado ao usuário.',
-                    associado: true
-                });
-            } else {
-                return response.status(200).json({
-                    sucesso: true,
-                    mensagem: 'O veículo não está associado ao usuário.',
-                    associado: false
-                });
-            }
-        } catch (error) {
-            return response.status(500).json({
-                sucesso: false,
-                mensagem: 'Erro ao verificar a associação do veículo.',
-                dados: error.message
-            });
-        }
-    },
+    //         const sql = `SELECT veic_usu_id FROM veiculo_usuario WHERE veic_id = ? AND usu_id = ?`;
+    //         const [resultado] = await db.query(sql, [veic_id, usu_id]);
 
 
-    
+    //         if (resultado.length > 0) {
+    //             return response.status(200).json({
+    //                 sucesso: true,
+    //                 mensagem: 'O veículo já está associado ao usuário.',
+    //                 associado: true
+    //             });
+    //         } else {
+    //             return response.status(200).json({
+    //                 sucesso: true,
+    //                 mensagem: 'O veículo não está associado ao usuário.',
+    //                 associado: false
+    //             });
+    //         }
+    //     } catch (error) {
+    //         return response.status(500).json({
+    //             sucesso: false,
+    //             mensagem: 'Erro ao verificar a associação do veículo.',
+    //             dados: error.message
+    //         });
+    //     }
+    // },
 
     async cadastrarVeiculoUsuario(request, response) {
         try {
-            const {
-                veic_id,
-                usu_id,
-                ehproprietario,
-                data_inicial
-            } = request.body;
-
+            const { veic_id, usu_id, ehproprietario, data_inicial } = request.body;
+    
             if (!veic_id || !usu_id || !data_inicial) {
                 return response.status(400).json({
                     sucesso: false,
                     mensagem: 'Veículo ID, Usuário ID e Data Inicial são obrigatórios.'
                 });
             }
-
-            // const ehproprietario = 1;
-
+    
+            // Verificar se o veículo já está associado ao usuário
+            const sqlVerificar = `SELECT veic_usu_id FROM veiculo_usuario WHERE veic_id = ? AND usu_id = ?`;
+            const [resultado] = await db.query(sqlVerificar, [veic_id, usu_id]);
+    
+            if (resultado.length > 0) {
+                return response.status(400).json({
+                    sucesso: false,
+                    mensagem: 'Este veículo já está associado a este usuário.'
+                });
+            }
+    
+            // Inserir nova associação entre veículo e usuário
             const sql = `INSERT INTO veiculo_usuario 
                 (veic_id, usu_id, ehproprietario, data_inicial) 
                 VALUES (?, ?, ?, ?)`;
-
-            const values = [
-                veic_id,
-                usu_id,
-                ehproprietario,
-                data_inicial
-            ];
-
+    
+            const values = [veic_id, usu_id, ehproprietario, data_inicial];
             const [execSql] = await db.query(sql, values);
             const veic_usu_id = execSql.insertId;
-
+    
             return response.status(201).json({
                 sucesso: true,
                 mensagem: 'Cadastro de veículo e usuário efetuado com sucesso.',
@@ -205,6 +201,56 @@ module.exports = {
             });
         }
     },
+    
+
+    
+
+    // async cadastrarVeiculoUsuario(request, response) {
+    //     try {
+    //         const {
+    //             veic_id,
+    //             usu_id,
+    //             ehproprietario,
+    //             data_inicial
+    //         } = request.body;
+
+    //         if (!veic_id || !usu_id || !data_inicial) {
+    //             return response.status(400).json({
+    //                 sucesso: false,
+    //                 mensagem: 'Veículo ID, Usuário ID e Data Inicial são obrigatórios.'
+    //             });
+    //         }
+
+    //         // const ehproprietario = 1;
+
+    //         const sql = `INSERT INTO veiculo_usuario 
+    //             (veic_id, usu_id, ehproprietario, data_inicial) 
+    //             VALUES (?, ?, ?, ?)`;
+
+    //         const values = [
+    //             veic_id,
+    //             usu_id,
+    //             ehproprietario,
+    //             data_inicial
+    //         ];
+
+    //         const [execSql] = await db.query(sql, values);
+    //         const veic_usu_id = execSql.insertId;
+
+    //         return response.status(201).json({
+    //             sucesso: true,
+    //             mensagem: 'Cadastro de veículo e usuário efetuado com sucesso.',
+    //             dados: veic_usu_id
+    //         });
+    //     } catch (error) {
+    //         console.error("Erro ao cadastrar veículo e usuário:", error);
+    //         return response.status(500).json({
+    //             sucesso: false,
+    //             mensagem: 'Erro na requisição.',
+    //             dados: error.message
+    //         });
+    //     }
+    // },
 
     async editarVeiculoUsuario(request, response) {
         const { veic_usu_id } = request.params;
