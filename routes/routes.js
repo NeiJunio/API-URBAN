@@ -87,7 +87,9 @@ router.patch('/agendaServicosSituacao/:agend_serv_situ_id', agendaServicosSituac
 router.delete('/agendaServicosSituacao/:agend_serv_situ_id', agendaServicosSituacaoController.excluirSituacao);
 
 
-router.get('/agendamentos', agendamentosController.listarAgendamentos);
+// router.get('/agendamentos', agendamentosController.listarAgendamentos);
+router.get('/agendamentos/usuarios/:UsuarioId', agendamentosController.listarAgendamentos);
+
 router.get('/agendamentos/situacao/:agend_situacao', agendamentoController.listarAgendamentosPorSituacao);
 router.post('/agendamentos', agendamentosController.cadastrarAgendamento);
 router.patch('/agendamentos/:agend_id', agendamentosController.editarAgendamento);

@@ -3,23 +3,67 @@ const db = require('../database/connection');
 module.exports = {
     async listarAgendamentos(request, response) {
         try {
-            const sql = `SELECT 
-                agend_id,
-                veic_usu_id,
-                agend_data,
-                agend_horario,
-                agend_situacao,
-                agend_observ
-                FROM agendamentos`;
+            const { UsuarioId } = request.params;
 
-            const [agendamentos] = await db.query(sql);
-            const nItens = agendamentos.length;
+            // Consulta para os agendamentos do usuário específico
+            const sqlUsuario = `SELECT 
+                a.agend_id,
+                a.veic_usu_id,
+                a.agend_data,
+                a.agend_horario,
+                a.agend_situacao,
+                a.agend_observ,
+                u.usu_id,
+                u.usu_nome
+            FROM agendamentos a
+            JOIN veiculo_usuario vu ON a.veic_usu_id = vu.veic_usu_id
+            JOIN usuarios u ON vu.usu_id = u.usu_id
+            WHERE u.usu_id = ?`; // Filtro pelo ID do usuário
+
+            const [agendamentosUsuario] = await db.query(sqlUsuario, [UsuarioId]); // Passa o usu_id como parâmetro para a query
+            const nItensUsuario = agendamentosUsuario.length;
+
+            // Consulta para todos os agendamentos com a data formatada
+            const sqlTodos = `SELECT 
+            a.agend_id,
+            a.veic_usu_id,
+            DATE_FORMAT(a.agend_data, '%Y-%m-%d') AS agend_data_formatada,
+            a.agend_horario,
+            a.agend_situacao,
+            a.agend_observ,
+            u.usu_id,
+            vu.usu_id -- Adicionando o usu_id
+            FROM agendamentos a
+            JOIN veiculo_usuario vu ON a.veic_usu_id = vu.veic_usu_id`;
+
+
+            const [todosAgendamentos] = await db.query(sqlTodos);
+            const nItensTodos = todosAgendamentos.length;
+
+            // Mapeando os resultados para o formato esperado pelo FullCalendar
+            const Resultado = todosAgendamentos.map((e) => ({
+                agend_id: e.agend_id,
+                usu_id: e.usu_id,
+                veic_usu_id: e.veic_usu_id,
+                agend_data: e.agend_data_formatada,
+                agend_horario: e.agend_horario,
+                agend_situacao: e.agend_situacao,
+                agend_observ: e.agend_observ,
+                title: `Agendamento #${e.agend_id}`,
+                start: `${e.agend_data_formatada}T${e.agend_horario}`,
+                end: `${e.agend_data_formatada}T${e.agend_horario}`,
+                overlap: false,
+                backgroundColor: (e.usu_id == UsuarioId) ? "#333338" : "#FF0000", // Muda a cor baseado no usuário
+            }));
+
 
             return response.status(200).json({
                 sucesso: true,
-                mensagem: 'Lista de agendamentos.',
-                dados: agendamentos,
-                nItens
+                mensagem: `Lista de agendamentos do usuário ID ${UsuarioId} e todos os agendamentos.`,
+                dadosUsuario: agendamentosUsuario,
+                nItensUsuario,
+                dadosTodos: Resultado,  // Enviar o array formatado para o frontend
+                nItensTodos
             });
         } catch (error) {
             return response.status(500).json({
@@ -29,6 +73,8 @@ module.exports = {
             });
         }
     },
+
+
 
     async listarAgendamentosPorSituacao(request, response) {
         try {
