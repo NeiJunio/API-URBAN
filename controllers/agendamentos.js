@@ -31,7 +31,6 @@ module.exports = {
             a.agend_horario,
             a.agend_situacao,
             a.agend_observ,
-            u.usu_id,
             vu.usu_id -- Adicionando o usu_id
             FROM agendamentos a
             JOIN veiculo_usuario vu ON a.veic_usu_id = vu.veic_usu_id`;
