@@ -115,19 +115,23 @@ module.exports = {
                 agend_data,
                 agend_horario,
                 agend_situacao,
-                agend_observ
+                agend_observ,
+                serv_id,
+                agend_serv_situ_id
             } = request.body;
 
             const sql = `INSERT INTO agendamentos 
-                (veic_usu_id, agend_data, agend_horario, agend_situacao, agend_observ) 
-                VALUES (?, ?, ?, ?, ?)`;
+                (veic_usu_id, agend_data, agend_horario, agend_situacao, agend_observ, serv_id, agend_serv_situ_id) 
+                VALUES (?, ?, ?, ?, ?, ?, ?)`;
 
             const values = [
                 veic_usu_id,
                 agend_data,
                 agend_horario,
                 agend_situacao,
-                agend_observ
+                agend_observ,
+                serv_id,
+                agend_serv_situ_id
             ];
 
             const [execSql] = await db.query(sql, values);
