@@ -52,7 +52,7 @@ module.exports = {
                 start: `${e.agend_data_formatada}T${e.agend_horario}`,
                 end: `${e.agend_data_formatada}T${e.agend_horario}`,
                 overlap: false,
-                backgroundColor: (e.usu_id == UsuarioId) ? "#333338" : "#FF0000", // Muda a cor baseado no usuário
+                backgroundColor: (e.usu_id == UsuarioId) ? "#FF9D00" : "#33338", // Muda a cor baseado no usuário
             }));
 
 

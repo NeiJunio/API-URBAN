@@ -45,6 +45,7 @@ router.delete('/veiculos/:veic_id', veiculosController.excluirVeiculo);
 
 router.get('/servicos', servicosController.listarServicos);
 router.get('/servicos/:serv_id', servicosController.visualizarServico);
+router.get('/servicos/categoria/:cat_serv_id', servicosController.listarServicosPorCategoria);
 router.post('/servicos', servicosController.cadastrarServico);
 router.patch('/servicos/:serv_id', servicosController.editarServico);
 router.patch('/servicos/ocultar/:serv_id', servicosController.ocultarServico);
@@ -99,7 +100,6 @@ router.delete('/agendamentos/:agend_id', agendamentosController.excluirAgendamen
 
 router.get('/categoriasServicos', categoriasServicosController.listarCategorias);
 router.get('/categoriasServicosAtivas', categoriasServicosController.listarCategoriasAtivas);
-router.get('/servicos/categoria/:cat_serv_id', servicosController.listarServicosPorCategoria);
 router.post('/categoriasServicos', categoriasServicosController.cadastrarCategoria);
 router.patch('/categoriasServicos/:cat_serv_id', categoriasServicosController.editarCategoria);
 router.patch('/categoriasServicos/:cat_serv_id/visibilidade', categoriasServicosController.alterarVisibilidadeCategoria);
