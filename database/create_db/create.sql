@@ -189,11 +189,6 @@ ALTER TABLE `agendamentos` ADD `serv_id` INTEGER NULL;
 ALTER TABLE `agendamentos` ADD `agend_serv_situ_id` INTEGER DEFAULT 1;
 
 
-
-ALTER TABLE `agendamentos`
-ADD CONSTRAINT `fk_agendamentos_veiculos`
-FOREIGN KEY (`veic_usu_id`) REFERENCES `veiculos` (`veic_usu_id`);
-
 ALTER TABLE `agendamentos`
 ADD CONSTRAINT `fk_agendamentos_servicos`
 FOREIGN KEY (`serv_id`) REFERENCES `servicos` (`serv_id`);
@@ -201,3 +196,8 @@ FOREIGN KEY (`serv_id`) REFERENCES `servicos` (`serv_id`);
 ALTER TABLE `agendamentos`
 ADD CONSTRAINT `fk_agendamentos_agenda_servicos_situacao`
 FOREIGN KEY (`agend_serv_situ_id`) REFERENCES `agenda_servicos_situacao` (`agend_serv_situ_id`);
+
+
+-- ALTER TABLE `agendamentos`
+-- ADD CONSTRAINT `fk_agendamentos_veiculos`
+-- FOREIGN KEY (`veic_usu_id`) REFERENCES `veiculos` (`veic_usu_id`);
