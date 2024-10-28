@@ -200,7 +200,7 @@ module.exports = {
                 });
             }
         } catch (error) {
-            console.error('Erro em verificarEmail:', error);
+            console.error('Erro em verificarEmail: ', error);
             return response.status(500).json({
                 sucesso: false,
                 mensagem: 'Erro na verificação do email.',
@@ -227,7 +227,7 @@ module.exports = {
             if (!usu_cpf) {
                 return response.status(400).json({
                     sucesso: false,
-                    mensagem: 'CPF é obrigatório.',
+                    mensagem: 'CPF é obrigatório.', 
                     dados: null
                 });
             }
@@ -235,7 +235,7 @@ module.exports = {
             if (!usu_email) {
                 return response.status(400).json({
                     sucesso: false,
-                    mensagem: 'Email é obrigatório.',
+                    mensagem: 'Email é cuucucucucu obrigatório.', // <---- esta retornando esse erro, porem no campo do front o valor esta inserido corretamente; e essa mensagem esta sendo  mostrada abaixo do campo do cpf
                     dados: null
                 });
             }
