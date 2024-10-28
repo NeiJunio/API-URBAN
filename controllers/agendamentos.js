@@ -75,11 +75,16 @@ module.exports = {
 
     async listarTodosAgendamentos(request, response) {
         try {
-            const sql = `SELECT * FROM agendamentos`;
-
+            const sql = `
+                SELECT ag.agend_id, ag.veic_usu_id, ag.agend_data, ag.agend_horario, ag.agend_observ, 
+                       ag.agend_situacao, ag.serv_id, ag.agend_serv_situ_id, ve.veic_placa
+                FROM agendamentos ag
+                INNER JOIN veiculos ve ON ag.veic_usu_id = ve.veic_id
+            `;
+    
             const [agendamentos] = await db.query(sql);
             const nItens = agendamentos.length;
-
+    
             return response.status(200).json({
                 sucesso: true,
                 mensagem: `Lista de agendamentos`,

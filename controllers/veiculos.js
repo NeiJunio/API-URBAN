@@ -13,7 +13,6 @@ module.exports = {
             const sql = `
                 SELECT 
                     v.veic_id, 
-                     
                     mo.mod_nome AS modelo,  -- Puxando o nome do modelo
                     v.veic_placa, 
                     v.veic_ano, 
