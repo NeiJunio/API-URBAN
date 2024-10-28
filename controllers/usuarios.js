@@ -50,7 +50,7 @@ module.exports = {
     async listarDadosUsuario(request, response) {
         try {
             const { usu_id } = request.params;
-    
+
             const sql = `
                 SELECT 
                     usu_id, 
@@ -67,9 +67,9 @@ module.exports = {
                 FROM usuarios
                 WHERE usu_id = ?
             `;
-    
+
             const [usuarios] = await db.query(sql, [usu_id]);
-    
+
             if (usuarios.length > 0) {
                 return response.status(200).json({
                     sucesso: true,
@@ -91,7 +91,7 @@ module.exports = {
             });
         }
     },
-    
+
     async listarUsuarioPorCpf(request, response) {
         try {
             const { usu_cpf } = request.body;
@@ -102,7 +102,7 @@ module.exports = {
                     mensagem: 'CPF do usuário é obrigatório.',
                 });
             }
-    
+
             const sql = `
                 SELECT 
                     u.usu_id,
@@ -112,12 +112,12 @@ module.exports = {
                 FROM usuarios u
                 WHERE u.usu_cpf LIKE ?
             `;
-    
+
             const values = [`%${usu_cpf}%`];
-    
+
             const [usuarios] = await db.query(sql, values);
             const nItens = usuarios.length;
-    
+
             return response.status(200).json({
                 sucesso: true,
                 mensagem: 'Lista de usuários.',
@@ -145,22 +145,26 @@ module.exports = {
                 });
             }
 
+            console.log("CPF recebido:", usu_cpf);
             const sql = `SELECT usu_id FROM usuarios WHERE usu_cpf = ?`;
             const [result] = await db.query(sql, [usu_cpf]);
 
+
             if (result.length > 0) {
                 return response.status(200).json({
-                    sucesso: true,
+                    sucesso: true, // Confirme que a chave está correta
                     mensagem: 'CPF já cadastrado.',
-                    dados: result[0]
+                    exists: true, // Certifique-se de que essa chave está sendo enviada
+                    existsUserId: result[0].usu_id
                 });
             } else {
                 return response.status(200).json({
-                    sucesso: false,
-                    mensagem: 'CPF Válido',
-                    dados: null
+                    sucesso: true, // Confirmando sucesso mesmo para CPF válido
+                    mensagem: 'CPF válido.',
+                    exists: false
                 });
             }
+            
         } catch (error) {
             console.error('Erro em verificarCpf:', error);
             return response.status(500).json({
@@ -227,7 +231,7 @@ module.exports = {
             if (!usu_cpf) {
                 return response.status(400).json({
                     sucesso: false,
-                    mensagem: 'CPF é obrigatório.', 
+                    mensagem: 'CPF é obrigatório.',
                     dados: null
                 });
             }
@@ -235,7 +239,7 @@ module.exports = {
             if (!usu_email) {
                 return response.status(400).json({
                     sucesso: false,
-                    mensagem: 'Email é cuucucucucu obrigatório.', // <---- esta retornando esse erro, porem no campo do front o valor esta inserido corretamente; e essa mensagem esta sendo  mostrada abaixo do campo do cpf
+                    mensagem: 'Email é muito obrigatório.', // <---- esta retornando esse erro, porem no campo do front o valor esta inserido corretamente; e essa mensagem esta sendo  mostrada abaixo do campo do cpf
                     dados: null
                 });
             }
@@ -309,7 +313,7 @@ module.exports = {
                 usu_acesso,
                 usu_situacao
             } = request.body;
-    
+
             const { usu_id } = request.params;
 
             if (!usu_nome || !usu_cpf || !usu_data_nasc || usu_sexo === undefined || !usu_telefone || !usu_email) {
@@ -318,27 +322,27 @@ module.exports = {
                     mensagem: 'Campos obrigatórios não preenchidos.',
                 });
             }
-    
+
             const sqlVerificaCpf = `SELECT usu_id FROM usuarios WHERE usu_cpf = ? AND usu_id != ?`;
             const [cpfExistente] = await db.query(sqlVerificaCpf, [usu_cpf, usu_id]);
-    
+
             if (cpfExistente.length > 0) {
                 return response.status(400).json({
                     sucesso: false,
                     mensagem: 'CPF já cadastrado por outro usuário.',
                 });
             }
-    
+
             const sqlVerificaEmail = `SELECT usu_id FROM usuarios WHERE usu_email = ? AND usu_id != ?`;
             const [emailExistente] = await db.query(sqlVerificaEmail, [usu_email, usu_id]);
-    
+
             if (emailExistente.length > 0) {
                 return response.status(400).json({
                     sucesso: false,
                     mensagem: 'Email já cadastrado por outro usuário.',
                 });
             }
-    
+
             const sql = `UPDATE usuarios SET 
                 usu_nome = ?, 
                 usu_cpf = ?, 
@@ -350,7 +354,7 @@ module.exports = {
                 usu_acesso = ?,
                 usu_situacao = ?                
                 WHERE usu_id = ?;`;
-    
+
             const values = [
                 usu_nome,
                 usu_cpf,
@@ -363,9 +367,9 @@ module.exports = {
                 usu_situacao,
                 usu_id
             ];
-    
+
             const [atualizaDados] = await db.query(sql, values);
-    
+
             return response.status(200).json({
                 sucesso: true,
                 mensagem: `Usuário ${usu_id} atualizado com sucesso!`,
