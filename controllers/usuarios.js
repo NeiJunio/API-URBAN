@@ -177,8 +177,8 @@ module.exports = {
 
     async verificarEmail(request, response) {
         try {
-            const { usu_email } = request.body;
-
+            const { usu_email, usu_id } = request.body;
+    
             if (!usu_email) {
                 return response.status(400).json({
                     sucesso: false,
@@ -186,20 +186,22 @@ module.exports = {
                     dados: null
                 });
             }
-
+    
             const sql = `SELECT usu_id FROM usuarios WHERE usu_email = ?`;
             const [result] = await db.query(sql, [usu_email]);
-
-            if (result.length > 0) {
+    
+            if (result.length > 0 && result[0].usu_id !== usu_id) {
+                // Email já está em uso por outro usuário
                 return response.status(200).json({
                     sucesso: true,
-                    mensagem: 'Email já cadastrado.',
+                    mensagem: 'Email já cadastrado por outro usuário.',
                     dados: result[0]
                 });
             } else {
+                // Email disponível ou pertence ao próprio usuário
                 return response.status(200).json({
                     sucesso: false,
-                    mensagem: 'Email disponível.',
+                    mensagem: 'Email disponível ou pertence ao usuário atual.',
                     dados: null
                 });
             }
@@ -212,6 +214,44 @@ module.exports = {
             });
         }
     },
+
+    // async verificarEmail(request, response) {
+    //     try {
+    //         const { usu_email } = request.body;
+
+    //         if (!usu_email) {
+    //             return response.status(400).json({
+    //                 sucesso: false,
+    //                 mensagem: 'Email é obrigatório.',
+    //                 dados: null
+    //             });
+    //         }
+
+    //         const sql = `SELECT usu_id FROM usuarios WHERE usu_email = ?`;
+    //         const [result] = await db.query(sql, [usu_email]);
+
+    //         if (result.length > 0) {
+    //             return response.status(200).json({
+    //                 sucesso: true,
+    //                 mensagem: 'Email já cadastrado.',
+    //                 dados: result[0]
+    //             });
+    //         } else {
+    //             return response.status(200).json({
+    //                 sucesso: false,
+    //                 mensagem: 'Email disponível.',
+    //                 dados: null
+    //             });
+    //         }
+    //     } catch (error) {
+    //         console.error('Erro em verificarEmail: ', error);
+    //         return response.status(500).json({
+    //             sucesso: false,
+    //             mensagem: 'Erro na verificação do email.',
+    //             dados: error.message
+    //         });
+    //     }
+    // },
 
     async cadastrarUsuarios(request, response) {
         try {
@@ -311,12 +351,13 @@ module.exports = {
                 usu_email,
                 usu_observ,
                 usu_acesso,
+                usu_senha,
                 usu_situacao
             } = request.body;
 
             const { usu_id } = request.params;
 
-            if (!usu_nome || !usu_cpf || !usu_data_nasc || usu_sexo === undefined || !usu_telefone || !usu_email) {
+            if (!usu_nome || !usu_cpf || !usu_data_nasc || usu_sexo === undefined || !usu_telefone || !usu_email || !usu_senha) {
                 return response.status(400).json({
                     sucesso: false,
                     mensagem: 'Campos obrigatórios não preenchidos.',
@@ -352,6 +393,7 @@ module.exports = {
                 usu_email = ?, 
                 usu_observ = ?, 
                 usu_acesso = ?,
+                usu_senha = ?,
                 usu_situacao = ?                
                 WHERE usu_id = ?;`;
 
@@ -364,6 +406,7 @@ module.exports = {
                 usu_email,
                 usu_observ || null,
                 usu_acesso,
+                usu_senha,
                 usu_situacao,
                 usu_id
             ];
