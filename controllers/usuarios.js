@@ -152,14 +152,14 @@ module.exports = {
 
             if (result.length > 0) {
                 return response.status(200).json({
-                    sucesso: true, // Confirme que a chave está correta
+                    sucesso: true, 
                     mensagem: 'CPF já cadastrado.',
-                    exists: true, // Certifique-se de que essa chave está sendo enviada
+                    exists: true, 
                     existsUserId: result[0].usu_id
                 });
             } else {
                 return response.status(200).json({
-                    sucesso: true, // Confirmando sucesso mesmo para CPF válido
+                    sucesso: true, 
                     mensagem: 'CPF válido.',
                     exists: false
                 });
@@ -191,14 +191,12 @@ module.exports = {
             const [result] = await db.query(sql, [usu_email]);
     
             if (result.length > 0 && result[0].usu_id !== usu_id) {
-                // Email já está em uso por outro usuário
                 return response.status(200).json({
                     sucesso: true,
                     mensagem: 'Email já cadastrado por outro usuário.',
                     dados: result[0]
                 });
             } else {
-                // Email disponível ou pertence ao próprio usuário
                 return response.status(200).json({
                     sucesso: false,
                     mensagem: 'Email disponível ou pertence ao usuário atual.',
@@ -214,44 +212,6 @@ module.exports = {
             });
         }
     },
-
-    // async verificarEmail(request, response) {
-    //     try {
-    //         const { usu_email } = request.body;
-
-    //         if (!usu_email) {
-    //             return response.status(400).json({
-    //                 sucesso: false,
-    //                 mensagem: 'Email é obrigatório.',
-    //                 dados: null
-    //             });
-    //         }
-
-    //         const sql = `SELECT usu_id FROM usuarios WHERE usu_email = ?`;
-    //         const [result] = await db.query(sql, [usu_email]);
-
-    //         if (result.length > 0) {
-    //             return response.status(200).json({
-    //                 sucesso: true,
-    //                 mensagem: 'Email já cadastrado.',
-    //                 dados: result[0]
-    //             });
-    //         } else {
-    //             return response.status(200).json({
-    //                 sucesso: false,
-    //                 mensagem: 'Email disponível.',
-    //                 dados: null
-    //             });
-    //         }
-    //     } catch (error) {
-    //         console.error('Erro em verificarEmail: ', error);
-    //         return response.status(500).json({
-    //             sucesso: false,
-    //             mensagem: 'Erro na verificação do email.',
-    //             dados: error.message
-    //         });
-    //     }
-    // },
 
     async cadastrarUsuarios(request, response) {
         try {
@@ -279,7 +239,7 @@ module.exports = {
             if (!usu_email) {
                 return response.status(400).json({
                     sucesso: false,
-                    mensagem: 'Email é muito obrigatório.', // <---- esta retornando esse erro, porem no campo do front o valor esta inserido corretamente; e essa mensagem esta sendo  mostrada abaixo do campo do cpf
+                    mensagem: 'Email é muito obrigatório.', 
                     dados: null
                 });
             }

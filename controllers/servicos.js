@@ -89,53 +89,6 @@ module.exports = {
         }
     },
 
-    // async listarServicosPorCategoria(request, response) {
-    //     try {
-    //         const { cat_serv_id } = request.params;
-
-    //         const sql = `
-    //             SELECT 
-    //                 servicos.serv_id, 
-    //                 servicos.cat_serv_id, 
-    //                 categorias_servicos.cat_serv_nome AS cat_serv_nome, 
-    //                 servicos.serv_nome, 
-    //                 servicos.serv_duracao, 
-    //                 servicos.serv_preco, 
-    //                 servicos.serv_descricao, 
-    //                 CASE 
-    //                     WHEN servicos.serv_situacao = 1 THEN 'Ativo' 
-    //                     ELSE 'Inativo' 
-    //                 END AS serv_situacao
-    //             FROM servicos
-    //             JOIN categorias_servicos 
-    //             ON servicos.cat_serv_id = categorias_servicos.cat_serv_id
-    //             WHERE servicos.cat_serv_id = ?`;
-
-    //         const [servicos] = await db.query(sql, [cat_serv_id]);
-    //         const nItens = servicos.length;
-
-    //         if (nItens === 0) {
-    //             return response.status(404).json({
-    //                 sucesso: false,
-    //                 mensagem: 'Nenhum serviço encontrado para essa categoria.',
-    //             });
-    //         }
-
-    //         return response.status(200).json({
-    //             sucesso: true,
-    //             mensagem: 'Lista de serviços por categoria.',
-    //             dados: servicos,
-    //             nItens
-    //         });
-    //     } catch (error) {
-    //         return response.status(500).json({
-    //             sucesso: false,
-    //             mensagem: 'Erro na requisição.',
-    //             dados: error.message
-    //         });
-    //     }
-    // },
-
     async visualizarServico(request, response) {
         try {
             const { serv_id } = request.params;
