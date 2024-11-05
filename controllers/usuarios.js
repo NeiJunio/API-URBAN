@@ -94,7 +94,7 @@ module.exports = {
 
     async listarUsuarioPorCpf(request, response) {
         try {
-            const { usu_cpf } = request.body;
+            const { usu_cpf } = request.params;
 
             if (!usu_cpf) {
                 return response.status(400).json({
@@ -105,12 +105,12 @@ module.exports = {
 
             const sql = `
                 SELECT 
-                    u.usu_id,
-                    u.usu_nome,
-                    u.usu_cpf,
-                    u.usu_email
-                FROM usuarios u
-                WHERE u.usu_cpf LIKE ?
+                    usu_id,
+                    usu_nome,
+                    usu_cpf,
+                    usu_email
+                FROM usuarios 
+                WHERE usu_cpf LIKE ?
             `;
 
             const values = [`%${usu_cpf}%`];
@@ -121,7 +121,7 @@ module.exports = {
             return response.status(200).json({
                 sucesso: true,
                 mensagem: 'Lista de usuários.',
-                dados: usuarios,
+                dados: usuarios[0],
                 nItens
             });
         } catch (error) {
