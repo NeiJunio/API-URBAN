@@ -23,7 +23,7 @@ router.post('/usuarios', usuariosController.cadastrarUsuarios);
 // router.post('/usuarios/dados', usuariosController.listarDados);
 router.post('/usuarios/verificarCpf', usuariosController.verificarCpf);
 router.post('/usuarios/verificarEmail', usuariosController.verificarEmail);
-router.get('/usuarios/cpf/:usu_cpf', usuariosController.listarUsuarioPorCpf);
+router.post('/usuarios/cpf', usuariosController.listarUsuarioPorCpf);
 router.patch('/usuarios/:usu_id', usuariosController.editarUsuarios);
 router.patch('/usuarios/ocultar/:usu_id', usuariosController.ocultarUsuario);
 router.delete('/usuarios/:usu_id', usuariosController.excluirUsuarios);

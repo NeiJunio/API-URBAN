@@ -94,15 +94,15 @@ module.exports = {
 
     async listarUsuarioPorCpf(request, response) {
         try {
-            const { usu_cpf } = request.params;
-
+            const { usu_cpf } = request.body;
+    
             if (!usu_cpf) {
                 return response.status(400).json({
                     sucesso: false,
                     mensagem: 'CPF do usuário é obrigatório.',
                 });
             }
-
+    
             const sql = `
                 SELECT 
                     usu_id,
@@ -112,12 +112,12 @@ module.exports = {
                 FROM usuarios 
                 WHERE usu_cpf LIKE ?
             `;
-
+    
             const values = [`%${usu_cpf}%`];
-
+    
             const [usuarios] = await db.query(sql, values);
             const nItens = usuarios.length;
-
+    
             return response.status(200).json({
                 sucesso: true,
                 mensagem: 'Lista de usuários.',
@@ -131,7 +131,7 @@ module.exports = {
                 dados: error.message
             });
         }
-    },
+    },   
 
     async verificarCpf(request, response) {
         try {
