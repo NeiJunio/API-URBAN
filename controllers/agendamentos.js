@@ -72,7 +72,7 @@ module.exports = {
     async listarAgendamentos(request, response) {
         try {
             const { UsuarioId } = request.params;
-    
+
             const sqlUsuario = `SELECT 
                 a.agend_id,
                 a.veic_usu_id,
@@ -89,11 +89,11 @@ module.exports = {
             JOIN veiculo_usuario vu ON a.veic_usu_id = vu.veic_usu_id
             JOIN usuarios u ON vu.usu_id = u.usu_id
             JOIN veiculos v ON vu.veic_id = v.veic_id
-            WHERE u.usu_id = ?`; 
-    
-            const [agendamentosUsuario] = await db.query(sqlUsuario, [UsuarioId]); 
+            WHERE u.usu_id = ?`;
+
+            const [agendamentosUsuario] = await db.query(sqlUsuario, [UsuarioId]);
             const nItensUsuario = agendamentosUsuario.length;
-    
+
             const sqlTodos = `SELECT 
                 a.agend_id,
                 a.veic_usu_id,
@@ -108,10 +108,10 @@ module.exports = {
             FROM agendamentos a
             JOIN veiculo_usuario vu ON a.veic_usu_id = vu.veic_usu_id
             JOIN veiculos v ON vu.veic_id = v.veic_id`;
-    
+
             const [todosAgendamentos] = await db.query(sqlTodos);
             const nItensTodos = todosAgendamentos.length;
-    
+
             const Resultado = todosAgendamentos.map((e) => ({
                 agend_id: e.agend_id,
                 usu_id: e.usu_id,
@@ -127,15 +127,15 @@ module.exports = {
                 start: `${e.agend_data_formatada}T${e.agend_horario}`,
                 end: `${e.agend_data_formatada}T${e.agend_horario}`,
                 overlap: false,
-                backgroundColor: (e.usu_id == UsuarioId) ? "#FF9D00" : "#33338", 
+                backgroundColor: (e.usu_id == UsuarioId) ? "#FF9D00" : "#33338",
             }));
-    
+
             return response.status(200).json({
                 sucesso: true,
                 mensagem: `Lista de agendamentos do usuário ID ${UsuarioId} e todos os agendamentos.`,
                 dadosUsuario: agendamentosUsuario,
                 nItensUsuario,
-                dadosTodos: Resultado, 
+                dadosTodos: Resultado,
                 nItensTodos
             });
         } catch (error) {
@@ -145,7 +145,7 @@ module.exports = {
                 dados: error.message
             });
         }
-    },    
+    },
 
     async listarTodosAgendamentos(request, response) {
         try {
@@ -173,10 +173,10 @@ module.exports = {
                 LEFT JOIN 
                     servicos se ON ag.serv_id = se.serv_id;
             `;
-    
+
             const [agendamentos] = await db.query(sql);
             const nItens = agendamentos.length;
-    
+
             return response.status(200).json({
                 sucesso: true,
                 mensagem: `Lista de agendamentos`,
@@ -216,6 +216,57 @@ module.exports = {
                 dados: agendamentos,
                 nItens
             });
+        } catch (error) {
+            return response.status(500).json({
+                sucesso: false,
+                mensagem: 'Erro na requisição.',
+                dados: error.message
+            });
+        }
+    },
+
+    async listarAgendamentosPorUsuario(request, response) {
+        try {
+            const { UsuarioId } = request.params;
+    
+            const sql = `
+                SELECT 
+                    a.agend_id,
+                    a.veic_usu_id,
+                    a.agend_data,
+                    a.agend_horario,
+                    a.agend_serv_situ_id,
+                    a.agend_observ,
+                    u.usu_id,
+                    u.usu_nome,
+                    v.veic_placa,
+                    v.veic_ano,
+                    v.veic_cor,
+                    s.serv_nome -- Adiciona o nome do serviço
+                FROM agendamentos a
+                JOIN veiculo_usuario vu ON a.veic_usu_id = vu.veic_usu_id
+                JOIN usuarios u ON vu.usu_id = u.usu_id
+                JOIN veiculos v ON vu.veic_id = v.veic_id
+                JOIN servicos s ON a.agend_serv_situ_id = s.serv_id -- Join com a tabela servicos para obter o nome do serviço
+                WHERE u.usu_id = ?
+            `;
+    
+            const values = [UsuarioId];
+            const [agendamentosPorUsuario] = await db.query(sql, values);
+    
+            if (agendamentosPorUsuario.length > 0) {
+                return response.status(200).json({
+                    sucesso: true,
+                    mensagem: 'Agendamentos do usuário.',
+                    dados: agendamentosPorUsuario
+                });
+            } else {
+                return response.status(404).json({
+                    sucesso: false,
+                    mensagem: 'Nenhum agendamento encontrado para o usuário.',
+                    dados: null
+                });
+            }
         } catch (error) {
             return response.status(500).json({
                 sucesso: false,
