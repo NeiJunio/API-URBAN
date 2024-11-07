@@ -247,7 +247,7 @@ module.exports = {
                 JOIN veiculo_usuario vu ON a.veic_usu_id = vu.veic_usu_id
                 JOIN usuarios u ON vu.usu_id = u.usu_id
                 JOIN veiculos v ON vu.veic_id = v.veic_id
-                JOIN servicos s ON a.agend_serv_situ_id = s.serv_id -- Join com a tabela servicos para obter o nome do serviço
+                JOIN servicos s ON a.serv_id = s.serv_id -- Join com a tabela servicos para obter o nome do serviço
                 WHERE u.usu_id = ?
             `;
     
