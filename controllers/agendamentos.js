@@ -84,11 +84,13 @@ module.exports = {
                 u.usu_nome,
                 v.veic_placa,
                 v.veic_ano,
-                v.veic_cor
+                v.veic_cor,
+                s.serv_nome -- Adicione aqui o nome do serviço
             FROM agendamentos a
             JOIN veiculo_usuario vu ON a.veic_usu_id = vu.veic_usu_id
             JOIN usuarios u ON vu.usu_id = u.usu_id
             JOIN veiculos v ON vu.veic_id = v.veic_id
+            JOIN servicos s ON a.serv_id = s.serv_id
             WHERE u.usu_id = ?`;
 
             const [agendamentosUsuario] = await db.query(sqlUsuario, [UsuarioId]);
@@ -104,10 +106,12 @@ module.exports = {
                 vu.usu_id,
                 v.veic_placa,
                 v.veic_ano,
-                v.veic_cor
+                v.veic_cor,
+                s.serv_nome -- Adicione aqui o nome do serviço
             FROM agendamentos a
             JOIN veiculo_usuario vu ON a.veic_usu_id = vu.veic_usu_id
-            JOIN veiculos v ON vu.veic_id = v.veic_id`;
+            JOIN veiculos v ON vu.veic_id = v.veic_id
+            JOIN servicos s ON a.serv_id = s.serv_id`;
 
             const [todosAgendamentos] = await db.query(sqlTodos);
             const nItensTodos = todosAgendamentos.length;
@@ -123,6 +127,7 @@ module.exports = {
                 agend_horario: e.agend_horario,
                 agend_serv_situ_id: e.agend_serv_situ_id,
                 agend_observ: e.agend_observ,
+                serv_nome: e.serv_nome,
                 title: `Agendamento #${e.agend_id}`,
                 start: `${e.agend_data_formatada}T${e.agend_horario}`,
                 end: `${e.agend_data_formatada}T${e.agend_horario}`,
@@ -228,7 +233,7 @@ module.exports = {
     async listarAgendamentosPorUsuario(request, response) {
         try {
             const { UsuarioId } = request.params;
-    
+
             const sql = `
                 SELECT 
                     a.agend_id,
@@ -250,10 +255,10 @@ module.exports = {
                 JOIN servicos s ON a.serv_id = s.serv_id -- Join com a tabela servicos para obter o nome do serviço
                 WHERE u.usu_id = ?
             `;
-    
+
             const values = [UsuarioId];
             const [agendamentosPorUsuario] = await db.query(sql, values);
-    
+
             if (agendamentosPorUsuario.length > 0) {
                 return response.status(200).json({
                     sucesso: true,

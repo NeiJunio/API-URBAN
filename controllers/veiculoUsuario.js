@@ -9,14 +9,14 @@ const dataInput = (data) => {
 module.exports = {
     async listarVeiculosUsuario(request, response) {
         try {
-            const sql = `SELECT 
-                veic_usu_id, 
-                veic_id, 
-                usu_id, 
-                ehproprietario, 
-                data_inicial, 
-                data_final
-                FROM veiculo_usuario`;
+            const sql = `
+            SELECT veic_usu_id, 
+                   veic_id, 
+                   usu_id, 
+                   ehproprietario, 
+                   data_inicial, 
+                   data_final
+              FROM veiculo_usuario`;
 
             const [veiculosUsuarios] = await db.query(sql);
             const nItens = veiculosUsuarios.length;
@@ -40,8 +40,8 @@ module.exports = {
         try {
             const { VeiculoId } = request.params;
 
-            const sql = `SELECT 
-                        vu.veic_usu_id, 
+            const sql = `
+                 SELECT vu.veic_usu_id, 
                         vu.veic_id, 
                         vu.usu_id, 
                         vu.ehproprietario = 1 AS ehproprietario, 
@@ -49,9 +49,9 @@ module.exports = {
                         vu.data_final, 
                         u.usu_nome,
                         u.usu_cpf   
-                     FROM veiculo_usuario vu
-                     JOIN usuarios u ON vu.usu_id = u.usu_id
-                     WHERE vu.veic_id = ?`;
+                   FROM veiculo_usuario vu
+                   JOIN usuarios u ON vu.usu_id = u.usu_id
+                  WHERE vu.veic_id = ?`;
 
             const [veiculosUsuariosPorId] = await db.query(sql, [VeiculoId]);
             const nItens = veiculosUsuariosPorId.length;
@@ -76,8 +76,8 @@ module.exports = {
         try {
             const { UsuarioId } = request.params;
 
-            const sql = `SELECT 
-                            vu.veic_usu_id, 
+            const sql = `
+                     SELECT vu.veic_usu_id, 
                             vu.veic_id, 
                             vu.usu_id, 
                             vu.ehproprietario = 1 AS ehproprietario, 
@@ -93,12 +93,12 @@ module.exports = {
                             ma.mar_nome AS mar_nome,
                             c.cat_id AS cat_id,
                             c.cat_nome AS cat_nome
-                         FROM veiculo_usuario vu
-                         JOIN veiculos v ON vu.veic_id = v.veic_id
-                         JOIN modelos m ON v.mod_id = m.mod_id
-                         JOIN marcas ma ON m.mar_id = ma.mar_id
-                         LEFT JOIN categorias c ON ma.cat_id = c.cat_id
-                         WHERE vu.usu_id = ? AND vu.data_final IS NULL`;
+                       FROM veiculo_usuario vu
+                       JOIN veiculos v     ON vu.veic_id = v.veic_id
+                       JOIN modelos m      ON v.mod_id = m.mod_id
+                       JOIN marcas ma      ON m.mar_id = ma.mar_id
+                  LEFT JOIN categorias c   ON ma.cat_id = c.cat_id
+                      WHERE vu.usu_id = ? AND vu.data_final IS NULL`;
 
             const [veiculosPorUsuarioId] = await db.query(sql, [UsuarioId]);
             const nItens = veiculosPorUsuarioId.length;
@@ -128,7 +128,7 @@ module.exports = {
     async cadastrarVeiculoUsuario(request, response) {
         try {
             const { veic_id, usu_id, ehproprietario, data_inicial } = request.body;
-    
+
             if (!veic_id || !usu_id || !data_inicial) {
                 return response.status(400).json({
                     sucesso: false,
@@ -138,7 +138,7 @@ module.exports = {
 
             const sqlVerificar = `SELECT veic_usu_id FROM veiculo_usuario WHERE veic_id = ? AND usu_id = ?`;
             const [resultado] = await db.query(sqlVerificar, [veic_id, usu_id]);
-    
+
             if (resultado.length > 0) {
                 return response.status(400).json({
                     sucesso: false,
@@ -149,11 +149,11 @@ module.exports = {
             const sql = `INSERT INTO veiculo_usuario 
                 (veic_id, usu_id, ehproprietario, data_inicial) 
                 VALUES (?, ?, ?, ?)`;
-    
+
             const values = [veic_id, usu_id, ehproprietario, data_inicial];
             const [execSql] = await db.query(sql, values);
             const veic_usu_id = execSql.insertId;
-    
+
             return response.status(201).json({
                 sucesso: true,
                 mensagem: 'Cadastro de veículo e usuário efetuado com sucesso.',
@@ -168,36 +168,36 @@ module.exports = {
             });
         }
     },
-    
+
     async editarVeiculoUsuario(request, response) {
         const { veic_usu_id } = request.params;
         const { data_inicial,
-             ehproprietario } = request.body;
+            data_final } = request.body;
 
         try {
-            const sql = `UPDATE veiculo_usuario SET 
-                            data_inicial = ?, 
-                            
-                            ehproprietario = ?
-                        WHERE veic_usu_id = ?`;
+            const sql = `
+            UPDATE veiculo_usuario SET 
+                   data_inicial = ?, 
+                   data_final = ?
+             WHERE veic_usu_id = ?`;
 
-                        const values = [
-                            data_inicial,
-                            ehproprietario,
-                            veic_usu_id
-                        ];
+            const values = [
+                data_inicial,
+                data_final,
+                veic_usu_id
+            ];
 
             const [result] = await db.query(sql, values);
 
             if (result.affectedRows > 0) {
                 return response.status(200).json({
                     sucesso: true,
-                    mensagem: 'Veículo-usuário atualizado com sucesso.'
+                    mensagem: 'Dados atualizados com sucesso.'
                 });
             } else {
                 return response.status(404).json({
                     sucesso: false,
-                    mensagem: 'Veículo-usuário não encontrado.'
+                    mensagem: 'Dados não encontrado.'
                 });
             }
         } catch (error) {
@@ -212,19 +212,19 @@ module.exports = {
     async atualizarDataFinalVeiculoUsuario(request, response) {
         const { veic_usu_id } = request.params;
         const { data_final } = request.body;
-    
+
         try {
             const sql = `UPDATE veiculo_usuario SET 
                             data_final = ?
                         WHERE veic_usu_id = ?`;
-    
+
             const values = [
                 data_final,
                 veic_usu_id
             ];
-    
+
             const [result] = await db.query(sql, values);
-    
+
             if (result.affectedRows > 0) {
                 return response.status(200).json({
                     sucesso: true,
