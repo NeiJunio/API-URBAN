@@ -72,7 +72,7 @@ module.exports = {
     async listarAgendamentos(request, response) {
         try {
             const { UsuarioId } = request.params;
-
+    
             const sqlUsuario = `SELECT 
                 a.agend_id,
                 a.veic_usu_id,
@@ -92,10 +92,10 @@ module.exports = {
             JOIN veiculos v ON vu.veic_id = v.veic_id
             JOIN servicos s ON a.serv_id = s.serv_id
             WHERE u.usu_id = ?`;
-
+    
             const [agendamentosUsuario] = await db.query(sqlUsuario, [UsuarioId]);
             const nItensUsuario = agendamentosUsuario.length;
-
+    
             const sqlTodos = `SELECT 
                 a.agend_id,
                 a.veic_usu_id,
@@ -112,10 +112,17 @@ module.exports = {
             JOIN veiculo_usuario vu ON a.veic_usu_id = vu.veic_usu_id
             JOIN veiculos v ON vu.veic_id = v.veic_id
             JOIN servicos s ON a.serv_id = s.serv_id`;
-
+    
             const [todosAgendamentos] = await db.query(sqlTodos);
             const nItensTodos = todosAgendamentos.length;
-
+    
+            const colorMap = {
+                1: '#e69500f3',  // Pendente - Dourado
+                2: '#1b77d4',    // Em andamento - Azul
+                3: '#26a426',    // Concluído - Verde
+                4: '#c3290e'     // Cancelado - Vermelho
+            };
+    
             const Resultado = todosAgendamentos.map((e) => ({
                 agend_id: e.agend_id,
                 usu_id: e.usu_id,
@@ -132,9 +139,9 @@ module.exports = {
                 start: `${e.agend_data_formatada}T${e.agend_horario}`,
                 end: `${e.agend_data_formatada}T${e.agend_horario}`,
                 overlap: false,
-                backgroundColor: (e.usu_id == UsuarioId) ? "#FF9D00" : "#33338",
+                backgroundColor: colorMap[e.agend_serv_situ_id] || '#33338',  // Atribui a cor conforme o status
             }));
-
+    
             return response.status(200).json({
                 sucesso: true,
                 mensagem: `Lista de agendamentos do usuário ID ${UsuarioId} e todos os agendamentos.`,
@@ -151,6 +158,90 @@ module.exports = {
             });
         }
     },
+    
+
+    // async listarAgendamentos(request, response) {
+    //     try {
+    //         const { UsuarioId } = request.params;
+
+    //         const sqlUsuario = `SELECT 
+    //             a.agend_id,
+    //             a.veic_usu_id,
+    //             a.agend_data,
+    //             a.agend_horario,
+    //             a.agend_serv_situ_id,
+    //             a.agend_observ,
+    //             u.usu_id,
+    //             u.usu_nome,
+    //             v.veic_placa,
+    //             v.veic_ano,
+    //             v.veic_cor,
+    //             s.serv_nome -- Adicione aqui o nome do serviço
+    //         FROM agendamentos a
+    //         JOIN veiculo_usuario vu ON a.veic_usu_id = vu.veic_usu_id
+    //         JOIN usuarios u ON vu.usu_id = u.usu_id
+    //         JOIN veiculos v ON vu.veic_id = v.veic_id
+    //         JOIN servicos s ON a.serv_id = s.serv_id
+    //         WHERE u.usu_id = ?`;
+
+    //         const [agendamentosUsuario] = await db.query(sqlUsuario, [UsuarioId]);
+    //         const nItensUsuario = agendamentosUsuario.length;
+
+    //         const sqlTodos = `SELECT 
+    //             a.agend_id,
+    //             a.veic_usu_id,
+    //             DATE_FORMAT(a.agend_data, '%Y-%m-%d') AS agend_data_formatada,
+    //             a.agend_horario,
+    //             a.agend_serv_situ_id,
+    //             a.agend_observ,
+    //             vu.usu_id,
+    //             v.veic_placa,
+    //             v.veic_ano,
+    //             v.veic_cor,
+    //             s.serv_nome -- Adicione aqui o nome do serviço
+    //         FROM agendamentos a
+    //         JOIN veiculo_usuario vu ON a.veic_usu_id = vu.veic_usu_id
+    //         JOIN veiculos v ON vu.veic_id = v.veic_id
+    //         JOIN servicos s ON a.serv_id = s.serv_id`;
+
+    //         const [todosAgendamentos] = await db.query(sqlTodos);
+    //         const nItensTodos = todosAgendamentos.length;
+
+    //         const Resultado = todosAgendamentos.map((e) => ({
+    //             agend_id: e.agend_id,
+    //             usu_id: e.usu_id,
+    //             veic_usu_id: e.veic_usu_id,
+    //             veic_placa: e.veic_placa,
+    //             veic_ano: e.veic_ano,
+    //             veic_cor: e.veic_cor,
+    //             agend_data: e.agend_data_formatada,
+    //             agend_horario: e.agend_horario,
+    //             agend_serv_situ_id: e.agend_serv_situ_id,
+    //             agend_observ: e.agend_observ,
+    //             serv_nome: e.serv_nome,
+    //             title: `Agendamento #${e.agend_id}`,
+    //             start: `${e.agend_data_formatada}T${e.agend_horario}`,
+    //             end: `${e.agend_data_formatada}T${e.agend_horario}`,
+    //             overlap: false,
+    //             backgroundColor: (e.usu_id == UsuarioId) ? "#FF9D00" : "#33338",
+    //         }));
+
+    //         return response.status(200).json({
+    //             sucesso: true,
+    //             mensagem: `Lista de agendamentos do usuário ID ${UsuarioId} e todos os agendamentos.`,
+    //             dadosUsuario: agendamentosUsuario,
+    //             nItensUsuario,
+    //             dadosTodos: Resultado,
+    //             nItensTodos
+    //         });
+    //     } catch (error) {
+    //         return response.status(500).json({
+    //             sucesso: false,
+    //             mensagem: 'Erro na requisição.',
+    //             dados: error.message
+    //         });
+    //     }
+    // },
 
     async listarTodosAgendamentos(request, response) {
         try {
