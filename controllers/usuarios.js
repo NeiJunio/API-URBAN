@@ -145,10 +145,8 @@ module.exports = {
                 });
             }
 
-            console.log("CPF recebido:", usu_cpf);
             const sql = `SELECT usu_id FROM usuarios WHERE usu_cpf = ?`;
             const [result] = await db.query(sql, [usu_cpf]);
-
 
             if (result.length > 0) {
                 return response.status(200).json({
@@ -437,42 +435,47 @@ module.exports = {
     async login(request, response) {
         try {
             const { usu_email, usu_senha } = request.body;
-
+    
             const sql = `SELECT usu_id, usu_nome, usu_acesso, usu_situacao FROM usuarios 
-                WHERE usu_email = ? AND usu_senha = ?`;
-
+                         WHERE usu_email = ? AND usu_senha = ?`;
             const values = [usu_email, usu_senha];
+            
             const [usuarios] = await db.query(sql, values);
-
-            if (usuarios.length < 1) {
-                
+    
+            if (!usuarios || usuarios.length < 1) {
                 return response.status(403).json({
                     sucesso: false,
                     mensagem: 'Login e/ou senha inválido.',
-                    dados: null,
-                });
-            } else if (usuarios.usu_situacao == 0) {
-                console.log('entrou')
-                return response.status(403).json({
-                    sucesso: false,
-                    mensagem: 'Usuário desativado.',
-                    situacao: usuarios.usu_situacao,
+                    tipoErro: 'credenciais',
                     dados: null,
                 });
             }
-
+    
+            const usuario = usuarios[0];
+    
+            if (usuario.usu_situacao === 0) {
+                return response.status(403).json({
+                    sucesso: false,
+                    mensagem: 'Acesso não permitido. Usuário inativo.',
+                    tipoErro: 'inativo',
+                    dados: null,
+                });
+            }
+    
             return response.status(200).json({
                 sucesso: true,
                 mensagem: 'Login efetuado com sucesso',
-                dados: usuarios[0]
+                dados: usuario
             });
         } catch (error) {
             console.error('Erro em login:', error);
             return response.status(500).json({
                 sucesso: false,
                 mensagem: 'Erro na requisição.',
+                tipoErro: 'conexao',
                 dados: error.message
             });
         }
-    },
+    }
+    
 };
