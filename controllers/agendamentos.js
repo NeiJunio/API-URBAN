@@ -107,7 +107,8 @@ module.exports = {
                 v.veic_placa,
                 v.veic_ano,
                 v.veic_cor,
-                s.serv_nome -- Adicione aqui o nome do serviço
+                s.serv_nome, 
+                s.serv_duracao
             FROM agendamentos a
             JOIN veiculo_usuario vu ON a.veic_usu_id = vu.veic_usu_id
             JOIN veiculos v ON vu.veic_id = v.veic_id
@@ -123,6 +124,30 @@ module.exports = {
                 4: '#c3290e'     // Cancelado - Vermelho
             };
     
+            // const Resultado = todosAgendamentos.map((e) => {
+            //     // const startDateTime = new Date(`${e.agend_data_formatada}T${e.agend_horario}`);
+            //     // const endDateTime = new Date(startDateTime.getTime() + e.serv_duracao * 60 * 1000); // Adiciona duração em minutos
+            
+            //     return {
+            //         agend_id: e.agend_id,
+            //         usu_id: e.usu_id,
+            //         veic_usu_id: e.veic_usu_id,
+            //         veic_placa: e.veic_placa,
+            //         veic_ano: e.veic_ano,
+            //         veic_cor: e.veic_cor,
+            //         agend_data: e.agend_data_formatada,
+            //         agend_horario: e.agend_horario,
+            //         agend_serv_situ_id: e.agend_serv_situ_id,
+            //         agend_observ: e.agend_observ,
+            //         serv_nome: e.serv_nome,
+            //         title: `Agendamento #${e.agend_id}`,
+            //         start: startDateTime.toISOString(),
+            //         end: endDateTime.toISOString(), // Define o fim do evento com base na duração
+            //         overlap: false,
+            //         backgroundColor: colorMap[e.agend_serv_situ_id] || '#33338', 
+            //     };
+            // });
+
             const Resultado = todosAgendamentos.map((e) => ({
                 agend_id: e.agend_id,
                 usu_id: e.usu_id,
@@ -135,6 +160,7 @@ module.exports = {
                 agend_serv_situ_id: e.agend_serv_situ_id,
                 agend_observ: e.agend_observ,
                 serv_nome: e.serv_nome,
+                serv_duracao: e.serv_duracao,
                 title: `Agendamento #${e.agend_id}`,
                 start: `${e.agend_data_formatada}T${e.agend_horario}`,
                 end: `${e.agend_data_formatada}T${e.agend_horario}`,
@@ -142,6 +168,38 @@ module.exports = {
                 backgroundColor: colorMap[e.agend_serv_situ_id] || '#33338',  // Atribui a cor conforme o status
             }));
     
+            // const Resultado = todosAgendamentos.map((e) => {
+            //     // Convertendo o horário de agendamento para Date
+            //     const [hora, minuto] = e.agend_horario.split(':').map(Number);  // Supondo que agend_horario seja "HH:MM"
+            //     const agendData = new Date(`${e.agend_data_formatada}T${e.agend_horario}:00`); // A data completa com o horário
+            
+            //     // Adicionando a duração do serviço ao horário (serv_duracao é em minutos)
+            //     agendData.setMinutes(agendData.getMinutes() + e.serv_duracao);
+            
+            //     // Calculando o novo horário de término
+            //     const end = agendData.toISOString();  // Formato ISO 8601 para o campo 'end'
+            
+            //     return {
+            //         agend_id: e.agend_id,
+            //         usu_id: e.usu_id,
+            //         veic_usu_id: e.veic_usu_id,
+            //         veic_placa: e.veic_placa,
+            //         veic_ano: e.veic_ano,
+            //         veic_cor: e.veic_cor,
+            //         agend_data: e.agend_data_formatada,
+            //         agend_horario: e.agend_horario,
+            //         agend_serv_situ_id: e.agend_serv_situ_id,
+            //         agend_observ: e.agend_observ,
+            //         serv_nome: e.serv_nome,
+            //         title: `Agendamento #${e.agend_id}`,
+            //         start: `${e.agend_data_formatada}T${e.agend_horario}:00`,  // Inclui a hora
+            //         end: end,  // Novo valor de 'end' com a duração do serviço
+            //         overlap: false,
+            //         backgroundColor: colorMap[e.agend_serv_situ_id] || '#33338',
+            //     };
+            // });
+
+
             return response.status(200).json({
                 sucesso: true,
                 mensagem: `Lista de agendamentos do usuário ID ${UsuarioId} e todos os agendamentos.`,
