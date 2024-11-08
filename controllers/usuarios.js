@@ -121,7 +121,7 @@ module.exports = {
             return response.status(200).json({
                 sucesso: true,
                 mensagem: 'Lista de usuários.',
-                dados: usuarios,
+                dados: usuarios[0],
                 nItens
             });
         } catch (error) {
@@ -438,16 +438,25 @@ module.exports = {
         try {
             const { usu_email, usu_senha } = request.body;
 
-            const sql = `SELECT usu_id, usu_nome, usu_acesso FROM usuarios 
-                WHERE usu_email = ? AND usu_senha = ? AND usu_situacao = 1;`;
+            const sql = `SELECT usu_id, usu_nome, usu_acesso, usu_situacao FROM usuarios 
+                WHERE usu_email = ? AND usu_senha = ?`;
 
             const values = [usu_email, usu_senha];
             const [usuarios] = await db.query(sql, values);
 
             if (usuarios.length < 1) {
+                
                 return response.status(403).json({
                     sucesso: false,
                     mensagem: 'Login e/ou senha inválido.',
+                    dados: null,
+                });
+            } else if (usuarios.usu_situacao == 0) {
+                console.log('entrou')
+                return response.status(403).json({
+                    sucesso: false,
+                    mensagem: 'Usuário desativado.',
+                    situacao: usuarios.usu_situacao,
                     dados: null,
                 });
             }

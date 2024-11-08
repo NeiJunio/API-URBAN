@@ -68,6 +68,7 @@ router.delete('/indisponibilidade/:indisp_id', indisponibilidadeController.exclu
 
 router.get('/veiculoUsuario', veiculoUsuarioController.listarVeiculosUsuario);
 router.get('/veiculoUsuario/proprietarios/:VeiculoId', veiculoUsuarioController.listarVeiculoUsuarioPorId);
+
 router.get('/veiculoUsuario/usuario/:UsuarioId', veiculoUsuarioController.listarVeicUsuarioPorId);
 // router.get('/veiculoUsuario/verificar/:veic_id/:usu_id', veiculoUsuarioController.verificarVeiculoAssociado);
 router.post('/veiculoUsuario', veiculoUsuarioController.cadastrarVeiculoUsuario);
