@@ -5,21 +5,19 @@ module.exports = {
     async listarServicos(request, response) {
         try {
             const sql = `
-                SELECT 
-                    servicos.serv_id, 
-                    servicos.cat_serv_id, 
-                    categorias_servicos.cat_serv_nome AS cat_serv_nome, 
-                    servicos.serv_nome, 
-                    servicos.serv_duracao, 
-                    servicos.serv_preco, 
-                    servicos.serv_descricao, 
-                    CASE 
-                        WHEN servicos.serv_situacao = 1 THEN 'Ativo' 
-                        ELSE 'Inativo' 
-                    END AS serv_situacao
-                FROM servicos
-                JOIN categorias_servicos 
-                ON servicos.cat_serv_id = categorias_servicos.cat_serv_id`;
+                SELECT servicos.serv_id, 
+                       servicos.cat_serv_id, 
+                       categorias_servicos.cat_serv_nome AS cat_serv_nome, 
+                       servicos.serv_nome, 
+                       servicos.serv_duracao, 
+                       servicos.serv_preco, 
+                       servicos.serv_descricao, 
+                       CASE 
+                           WHEN servicos.serv_situacao = 1 THEN 'Ativo' 
+                           ELSE 'Inativo' 
+                       END AS serv_situacao
+                  FROM servicos
+                  JOIN categorias_servicos ON servicos.cat_serv_id = categorias_servicos.cat_serv_id`;
     
             const [servicos] = await db.query(sql);
             const nItens = servicos.length;
@@ -44,24 +42,20 @@ module.exports = {
             const { cat_serv_id } = request.params;
 
             const sql = `
-                SELECT 
-                    s.serv_id,
-                    s.cat_serv_id,
-                    cs.cat_serv_nome AS cat_serv_nome,
-                    s.serv_nome,
-                    s.serv_duracao,
-                    s.serv_preco,
-                    s.serv_descricao,
-                    CASE 
-                        WHEN s.serv_situacao = 1 THEN 'Ativo'
-                        ELSE 'Inativo'
-                    END AS serv_situacao
-                FROM 
-                    servicos s
-                JOIN 
-                    categorias_servicos cs ON s.cat_serv_id = cs.cat_serv_id
-                WHERE 
-                    s.cat_serv_id = ?;`;
+                SELECT s.serv_id,
+                       s.cat_serv_id,
+                       cs.cat_serv_nome AS cat_serv_nome,
+                       s.serv_nome,
+                       s.serv_duracao,
+                       s.serv_preco,
+                       s.serv_descricao,
+                       CASE 
+                           WHEN s.serv_situacao = 1 THEN 'Ativo'
+                           ELSE 'Inativo'
+                       END AS serv_situacao
+                  FROM servicos s
+                  JOIN categorias_servicos cs ON s.cat_serv_id = cs.cat_serv_id
+                 WHERE s.cat_serv_id = ?;`;
 
             const [servicos] = await db.query(sql, [cat_serv_id]);
 
@@ -93,21 +87,17 @@ module.exports = {
         try {
             const { serv_id } = request.params;
             const sql = `
-                SELECT 
-                    s.serv_id,
-                    s.cat_serv_id, 
-                    cs.cat_serv_nome AS cat_serv_nome, -- Altere aqui para referenciar a tabela correta
-                    s.serv_nome,
-                    s.serv_duracao,
-                    s.serv_preco,
-                    s.serv_descricao,
-                    s.serv_situacao = 1 AS serv_situacao -- Lógica para serv_situacao (1 = Ativo, 0 = Inativo)
-                FROM 
-                    servicos s
-                JOIN 
-                    categorias_servicos cs ON s.cat_serv_id = cs.cat_serv_id -- Adicione o join com categorias_servicos
-                WHERE 
-                    s.serv_id = ? 
+                SELECT s.serv_id,
+                       s.cat_serv_id, 
+                       cs.cat_serv_nome AS cat_serv_nome,
+                       s.serv_nome,
+                       s.serv_duracao,
+                       s.serv_preco,
+                       s.serv_descricao,
+                       s.serv_situacao = 1 AS serv_situacao
+                  FROM servicos s
+                  JOIN categorias_servicos cs ON s.cat_serv_id = cs.cat_serv_id 
+                 WHERE s.serv_id = ? 
             `;
     
             const [servico] = await db.query(sql, [serv_id]);
@@ -187,15 +177,16 @@ module.exports = {
 
             const { serv_id } = request.params;
 
-            const sql = `UPDATE servicos SET 
-                cat_serv_id = ?, 
-                serv_nome = ?, 
-                serv_duracao = ?, 
-                serv_preco = ?, 
-                serv_descricao = ?, 
-                serv_situacao = ? 
-                WHERE serv_id = ?;`;
-
+            const sql = `
+                UPDATE servicos
+                   SET cat_serv_id = ?, 
+                       serv_nome = ?, 
+                       serv_duracao = ?, 
+                       serv_preco = ?, 
+                       serv_descricao = ?, 
+                       serv_situacao = ? 
+                 WHERE serv_id = ?;`;
+   
             const values = [
                 cat_serv_id,
                 serv_nome,
@@ -225,7 +216,12 @@ module.exports = {
     async apagarServico(request, response) {
         try {
             const { serv_id } = request.params;
-            const sql = `DELETE FROM servicos WHERE serv_id = ?`;
+
+            const sql = `
+                DELETE *
+                  FROM servicos
+                 WHERE serv_id = ?`;
+
             const values = [serv_id];
             const [excluir] = await db.query(sql, values);
 
@@ -250,7 +246,12 @@ module.exports = {
             } = request.body;
 
             const { serv_id } = request.params;
-            const sql = `UPDATE servicos SET serv_situacao = ? WHERE serv_id = ?;`;
+
+            const sql = `
+                UPDATE servicos
+                   SET serv_situacao = ?
+                 WHERE serv_id = ?;`;
+                 
             const values = [serv_situacao, serv_id];
             const [atualizacao] = await db.query(sql, values);
 

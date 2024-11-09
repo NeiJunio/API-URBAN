@@ -9,19 +9,19 @@ const dataInput = (data) => {
 module.exports = {
     async listarUsuarios(request, response) {
         try {
-            const sql = `SELECT 
-                usu_id, 
-                usu_nome, 
-                usu_cpf, 
-                usu_data_nasc, 
-                usu_sexo, 
-                usu_telefone, 
-                usu_email, 
-                usu_observ, 
-                usu_acesso,
-                usu_senha,
-                usu_situacao = 1 AS usu_situacao
-                FROM usuarios`;
+            const sql = `
+            SELECT usu_id, 
+                   usu_nome, 
+                   usu_cpf, 
+                   usu_data_nasc, 
+                   usu_sexo, 
+                   usu_telefone, 
+                   usu_email, 
+                   usu_observ, 
+                   usu_acesso,
+                   usu_senha,
+                   usu_situacao = 1 AS usu_situacao
+              FROM usuarios`;
 
             const [usuarios] = await db.query(sql);
             const nItens = usuarios.length;
@@ -52,20 +52,19 @@ module.exports = {
             const { usu_id } = request.params;
 
             const sql = `
-                SELECT 
-                    usu_id, 
-                    usu_nome, 
-                    usu_cpf, 
-                    usu_data_nasc, 
-                    usu_sexo, 
-                    usu_telefone, 
-                    usu_email, 
-                    usu_acesso, 
-                    usu_observ, 
-                    usu_senha,
-                    usu_situacao = 1 AS usu_situacao
-                FROM usuarios
-                WHERE usu_id = ?
+                SELECT usu_id, 
+                       usu_nome, 
+                       usu_cpf, 
+                       usu_data_nasc, 
+                       usu_sexo, 
+                       usu_telefone, 
+                       usu_email, 
+                       usu_acesso, 
+                       usu_observ, 
+                       usu_senha,
+                       usu_situacao = 1 AS usu_situacao
+                  FROM usuarios
+                 WHERE usu_id = ?
             `;
 
             const [usuarios] = await db.query(sql, [usu_id]);
@@ -95,29 +94,28 @@ module.exports = {
     async listarUsuarioPorCpf(request, response) {
         try {
             const { usu_cpf } = request.body;
-    
+
             if (!usu_cpf) {
                 return response.status(400).json({
                     sucesso: false,
                     mensagem: 'CPF do usuário é obrigatório.',
                 });
             }
-    
+
             const sql = `
-                SELECT 
-                    usu_id,
-                    usu_nome,
-                    usu_cpf,
-                    usu_email
-                FROM usuarios 
-                WHERE usu_cpf LIKE ?
+                SELECT usu_id,
+                       usu_nome,
+                       usu_cpf,
+                       usu_email
+                  FROM usuarios 
+                 WHERE usu_cpf LIKE ?
             `;
-    
+
             const values = [`%${usu_cpf}%`];
-    
+
             const [usuarios] = await db.query(sql, values);
             const nItens = usuarios.length;
-    
+
             return response.status(200).json({
                 sucesso: true,
                 mensagem: 'Lista de usuários.',
@@ -131,7 +129,7 @@ module.exports = {
                 dados: error.message
             });
         }
-    },   
+    },
 
     async verificarCpf(request, response) {
         try {
@@ -145,24 +143,28 @@ module.exports = {
                 });
             }
 
-            const sql = `SELECT usu_id FROM usuarios WHERE usu_cpf = ?`;
+            const sql = `
+                SELECT usu_id 
+                  FROM usuarios 
+                 WHERE usu_cpf = ?`;
+
             const [result] = await db.query(sql, [usu_cpf]);
 
             if (result.length > 0) {
                 return response.status(200).json({
-                    sucesso: true, 
+                    sucesso: true,
                     mensagem: 'CPF já cadastrado.',
-                    exists: true, 
+                    exists: true,
                     existsUserId: result[0].usu_id
                 });
             } else {
                 return response.status(200).json({
-                    sucesso: true, 
+                    sucesso: true,
                     mensagem: 'CPF válido.',
                     exists: false
                 });
             }
-            
+
         } catch (error) {
             console.error('Erro em verificarCpf:', error);
             return response.status(500).json({
@@ -176,7 +178,7 @@ module.exports = {
     async verificarEmail(request, response) {
         try {
             const { usu_email, usu_id } = request.body;
-    
+
             if (!usu_email) {
                 return response.status(400).json({
                     sucesso: false,
@@ -184,10 +186,14 @@ module.exports = {
                     dados: null
                 });
             }
-    
-            const sql = `SELECT usu_id FROM usuarios WHERE usu_email = ?`;
+
+            const sql = `
+                SELECT usu_id
+                  FROM usuarios
+                 WHERE usu_email = ?`;
+
             const [result] = await db.query(sql, [usu_email]);
-    
+
             if (result.length > 0 && result[0].usu_id !== usu_id) {
                 return response.status(200).json({
                     sucesso: true,
@@ -237,12 +243,16 @@ module.exports = {
             if (!usu_email) {
                 return response.status(400).json({
                     sucesso: false,
-                    mensagem: 'Email é muito obrigatório.', 
+                    mensagem: 'Email é muito obrigatório.',
                     dados: null
                 });
             }
 
-            const sqlVerificaCpf = `SELECT usu_id FROM usuarios WHERE usu_cpf = ?`;
+            const sqlVerificaCpf = `
+                SELECT usu_id
+                  FROM usuarios
+                 WHERE usu_cpf = ?`;
+ 
             const [cpfExistente] = await db.query(sqlVerificaCpf, [usu_cpf]);
 
             if (cpfExistente.length > 0) {
@@ -322,7 +332,11 @@ module.exports = {
                 });
             }
 
-            const sqlVerificaCpf = `SELECT usu_id FROM usuarios WHERE usu_cpf = ? AND usu_id != ?`;
+            const sqlVerificaCpf = `
+                SELECT usu_id
+                  FROM usuarios
+                 WHERE usu_cpf = ? AND usu_id != ?`;
+
             const [cpfExistente] = await db.query(sqlVerificaCpf, [usu_cpf, usu_id]);
 
             if (cpfExistente.length > 0) {
@@ -342,18 +356,19 @@ module.exports = {
                 });
             }
 
-            const sql = `UPDATE usuarios SET 
-                usu_nome = ?, 
-                usu_cpf = ?, 
-                usu_data_nasc = ?, 
-                usu_sexo = ?, 
-                usu_telefone = ?, 
-                usu_email = ?, 
-                usu_observ = ?, 
-                usu_acesso = ?,
-                usu_senha = ?,
-                usu_situacao = ?                
-                WHERE usu_id = ?;`;
+            const sql = `
+                UPDATE usuarios 
+                   SET usu_nome = ?, 
+                       usu_cpf = ?, 
+                       usu_data_nasc = ?, 
+                       usu_sexo = ?, 
+                       usu_telefone = ?, 
+                       usu_email = ?, 
+                       usu_observ = ?, 
+                       usu_acesso = ?,
+                       usu_senha = ?,
+                       usu_situacao = ?                
+                 WHERE usu_id = ?;`;
 
             const values = [
                 usu_nome,
@@ -389,7 +404,11 @@ module.exports = {
     async excluirUsuarios(request, response) {
         try {
             const { usu_id } = request.params;
-            const sql = `DELETE FROM usuarios WHERE usu_id = ?`;
+            const sql = `
+                DELETE * 
+                  FROM usuarios
+                 WHERE usu_id = ?`;
+            
             const values = [usu_id];
             const [excluir] = await db.query(sql, values);
 
@@ -413,7 +432,11 @@ module.exports = {
             const { usu_situacao } = request.body;
             const { usu_id } = request.params;
 
-            const sql = `UPDATE usuarios SET usu_situacao = ? WHERE usu_id = ?;`;
+            const sql = `
+                UPDATE usuarios
+                   SET usu_situacao = ?
+                 WHERE usu_id = ?;`;
+            
             const values = [usu_situacao, usu_id];
             const [atualizacao] = await db.query(sql, values);
 
@@ -435,13 +458,19 @@ module.exports = {
     async login(request, response) {
         try {
             const { usu_email, usu_senha } = request.body;
-    
-            const sql = `SELECT usu_id, usu_nome, usu_acesso, usu_situacao FROM usuarios 
-                         WHERE usu_email = ? AND usu_senha = ?`;
+
+            const sql = `
+                SELECT usu_id, 
+                       usu_nome,
+                       usu_acesso,
+                       usu_situacao
+                  FROM usuarios 
+                 WHERE usu_email = ? AND usu_senha = ?`;
+                 
             const values = [usu_email, usu_senha];
-            
+
             const [usuarios] = await db.query(sql, values);
-    
+
             if (!usuarios || usuarios.length < 1) {
                 return response.status(403).json({
                     sucesso: false,
@@ -450,9 +479,9 @@ module.exports = {
                     dados: null,
                 });
             }
-    
+
             const usuario = usuarios[0];
-    
+
             if (usuario.usu_situacao === 0) {
                 return response.status(403).json({
                     sucesso: false,
@@ -461,7 +490,7 @@ module.exports = {
                     dados: null,
                 });
             }
-    
+
             return response.status(200).json({
                 sucesso: true,
                 mensagem: 'Login efetuado com sucesso',
@@ -477,5 +506,5 @@ module.exports = {
             });
         }
     }
-    
+
 };

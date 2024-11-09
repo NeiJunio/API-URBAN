@@ -4,14 +4,14 @@ module.exports = {
 
     async listarDisponibilidade(request, response) {
         try {
-            const sql = `SELECT 
-                disp_id, 
-                disp_dia, 
-                disp_periodo, 
-                disp_hr_ini, 
-                disp_hr_fin, 
-                disp_situacao
-                FROM disponibilidade`;
+            const sql = `
+            SELECT disp_id, 
+                   disp_dia, 
+                   disp_periodo, 
+                   disp_hr_ini, 
+                   disp_hr_fin, 
+                   disp_situacao
+              FROM disponibilidade`;
 
             const [disponibilidades] = await db.query(sql);
             const nItens = disponibilidades.length;
@@ -82,13 +82,14 @@ module.exports = {
 
             const { disp_id } = request.params;
 
-            const sql = `UPDATE disponibilidade SET 
-                disp_dia = ?, 
-                disp_periodo = ?, 
-                disp_hr_ini = ?, 
-                disp_hr_fin = ?, 
-                disp_situacao = ?
-                WHERE disp_id = ?;`;
+            const sql = `
+                UPDATE disponibilidade
+                   SET disp_dia = ?, 
+                       disp_periodo = ?, 
+                       disp_hr_ini = ?, 
+                       disp_hr_fin = ?, 
+                       disp_situacao = ?
+                 WHERE disp_id = ?;`;
 
             const values = [
                 disp_dia,
@@ -119,7 +120,11 @@ module.exports = {
         try {
             const { disp_id } = request.params;
 
-            const sql = `DELETE FROM disponibilidade WHERE disp_id = ?`;
+            const sql = `
+                DELETE * 
+                  FROM disponibilidade
+                 WHERE disp_id = ?`;
+
             const values = [disp_id];
             const [excluir] = await db.query(sql, values);
 
@@ -145,7 +150,11 @@ module.exports = {
 
             const { disp_id } = request.params;
 
-            const sql = `UPDATE disponibilidade SET disp_situacao = ? WHERE disp_id = ?`;
+            const sql = `
+                UPDATE disponibilidade
+                   SET disp_situacao = ?
+                 WHERE disp_id = ?`;
+                 
             const values = [disp_situacao, disp_id];
             const [atualizaDados] = await db.query(sql, values);
 

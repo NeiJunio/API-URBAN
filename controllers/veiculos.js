@@ -11,30 +11,23 @@ module.exports = {
     async listarVeiculos(request, response) {
         try {
             const sql = `
-                SELECT 
-                    v.veic_id, 
-                    mo.mod_nome AS modelo,  -- Puxando o nome do modelo
-                    v.veic_placa, 
-                    v.veic_ano, 
-                    v.veic_cor, 
-                    v.veic_combustivel, 
-                    v.veic_observ, 
-                    v.veic_situacao = 1 AS veic_situacao,
-                    m.mar_nome AS marca,
-                    GROUP_CONCAT(DISTINCT u.usu_nome SEPARATOR ', ') AS proprietarios,
-                    COUNT(DISTINCT vu.usu_id) AS num_proprietarios
-                FROM 
-                    veiculos v
-                JOIN 
-                    modelos mo ON v.mod_id = mo.mod_id
-                JOIN 
-                    marcas m ON mo.mar_id = m.mar_id
-                LEFT JOIN 
-                    veiculo_usuario vu ON v.veic_id = vu.veic_id
-                LEFT JOIN 
-                    usuarios u ON vu.usu_id = u.usu_id
-                GROUP BY 
-                    v.veic_id, mo.mod_nome, m.mar_nome, v.veic_placa, v.veic_ano, v.veic_cor, v.veic_combustivel, v.veic_observ, v.veic_situacao
+                SELECT v.veic_id, 
+                       mo.mod_nome AS modelo,  -- Puxando o nome do modelo
+                       v.veic_placa, 
+                       v.veic_ano, 
+                       v.veic_cor, 
+                       v.veic_combustivel, 
+                       v.veic_observ, 
+                       v.veic_situacao = 1 AS veic_situacao,
+                       m.mar_nome AS marca,
+                       GROUP_CONCAT(DISTINCT u.usu_nome SEPARATOR ', ') AS proprietarios,
+                       COUNT(DISTINCT vu.usu_id) AS num_proprietarios
+                  FROM veiculos v
+                  JOIN modelos mo         ON v.mod_id = mo.mod_id
+                  JOIN marcas m           ON mo.mar_id = m.mar_id
+             LEFT JOIN veiculo_usuario vu ON v.veic_id = vu.veic_id
+             LEFT JOIN usuarios u         ON vu.usu_id = u.usu_id
+              GROUP BY v.veic_id, mo.mod_nome, m.mar_nome, v.veic_placa, v.veic_ano, v.veic_cor, v.veic_combustivel, v.veic_observ, v.veic_situacao
             `;
 
             const [veiculos] = await db.query(sql);
@@ -67,13 +60,12 @@ module.exports = {
             }
     
             const sql = `
-                SELECT 
-                    v.veic_id,
-                    m.mod_nome,
-                    v.veic_placa
-                FROM veiculos v
-                JOIN modelos m ON v.mod_id = m.mod_id
-                WHERE v.veic_placa LIKE ?
+                SELECT v.veic_id,
+                       m.mod_nome,
+                       v.veic_placa
+                  FROM veiculos v
+                  JOIN modelos m ON v.mod_id = m.mod_id
+                 WHERE v.veic_placa LIKE ?
             `;
     
             const values = [`%${veic_placa}%`];
@@ -108,7 +100,12 @@ module.exports = {
                 veic_situacao
             } = request.body;
     
-            const verificarSql = `SELECT veic_id FROM veiculos WHERE veic_placa = ? LIMIT 1`;
+            const verificarSql = `
+                SELECT veic_id
+                  FROM veiculos
+                 WHERE veic_placa = ?
+                 LIMIT 1`;
+            
             const verificarValues = [veic_placa.toUpperCase()];
             const [verificarResult] = await db.query(verificarSql, verificarValues);
     
@@ -164,15 +161,16 @@ module.exports = {
 
             const { veic_id } = request.params;
 
-            const sql = `UPDATE veiculos SET 
-                mod_id = ?, 
-                veic_placa = ?, 
-                veic_ano = ?, 
-                veic_cor = ?, 
-                veic_combustivel = ?, 
-                veic_observ = ?,
-                veic_situacao = ?
-                WHERE veic_id = ?;`;
+            const sql = `
+                UPDATE veiculos
+                   SET mod_id = ?, 
+                       veic_placa = ?, 
+                       veic_ano = ?, 
+                       veic_cor = ?, 
+                       veic_combustivel = ?, 
+                       veic_observ = ?,
+                       veic_situacao = ?
+                 WHERE veic_id = ?;`;
 
             const values = [
                 mod_id,
@@ -214,14 +212,15 @@ module.exports = {
 
             const { veic_id } = request.params;
 
-            const sql = `UPDATE veiculos SET 
-                mod_id = ?, 
-                veic_placa = ?, 
-                veic_ano = ?, 
-                veic_cor = ?, 
-                veic_combustivel = ?, 
-                veic_observ = ?
-                WHERE veic_id = ?;`;
+            const sql = `
+                UPDATE veiculos
+                   SET mod_id = ?, 
+                       veic_placa = ?, 
+                       veic_ano = ?, 
+                       veic_cor = ?, 
+                       veic_combustivel = ?, 
+                       veic_observ = ?
+                 WHERE veic_id = ?;`;
 
             const values = [
                 mod_id,
@@ -252,7 +251,12 @@ module.exports = {
     async excluirVeiculo(request, response) {
         try {
             const { veic_id } = request.params;
-            const sql = `DELETE FROM veiculos WHERE veic_id = ?`;
+            
+            const sql = `
+                DELETE *
+                  FROM veiculos
+                 WHERE veic_id = ?`;
+            
             const values = [veic_id];
             const [excluir] = await db.query(sql, values);
 
@@ -278,7 +282,12 @@ module.exports = {
             } = request.body;
 
             const { veic_id } = request.params;
-            const sql = `UPDATE veiculos SET veic_situacao = ? WHERE veic_id = ?;`;
+
+            const sql = `
+                UPDATE veiculos
+                   SET veic_situacao = ?
+                 WHERE veic_id = ?;`;
+            
             const values = [veic_situacao, veic_id];
             const [atualizacao] = await db.query(sql, values);
 
@@ -299,38 +308,29 @@ module.exports = {
     async visualizarVeiculo(request, response) {
         try {
             const { veic_id } = request.params;
+            
             const sql = `
-                SELECT 
-                    v.veic_id, 
-                    mo.mod_id AS mod_id,
-                    mo.mod_nome AS mod_nome, 
-                    v.veic_placa, 
-                    v.veic_ano, 
-                    v.veic_cor, 
-                    v.veic_combustivel, 
-                    v.veic_observ, 
-                    v.veic_situacao = 1 AS veic_situacao, -- Lógica para veic_situacao
-                    m.mar_nome AS mar_nome,
-                    c.cat_nome AS cat_nome,
-                    GROUP_CONCAT(DISTINCT u.usu_nome SEPARATOR ', ') AS proprietarios,
-                    COUNT(DISTINCT vu.usu_id) AS num_proprietarios
-                    
-                FROM 
-                    veiculos v
-                JOIN 
-                    modelos mo ON v.mod_id = mo.mod_id
-                JOIN 
-                    marcas m ON mo.mar_id = m.mar_id
-                LEFT JOIN 
-                    veiculo_usuario vu ON v.veic_id = vu.veic_id
-                LEFT JOIN 
-                    usuarios u ON vu.usu_id = u.usu_id
-                LEFT JOIN 
-                    categorias c ON m.cat_id = c.cat_id
-                WHERE 
-                    v.veic_id = ? 
-                GROUP BY 
-                    v.veic_id
+                SELECT v.veic_id, 
+                       mo.mod_id AS mod_id,
+                       mo.mod_nome AS mod_nome, 
+                       v.veic_placa, 
+                       v.veic_ano, 
+                       v.veic_cor, 
+                       v.veic_combustivel, 
+                       v.veic_observ, 
+                       v.veic_situacao = 1 AS veic_situacao, -- Lógica para veic_situacao
+                       m.mar_nome AS mar_nome,
+                       c.cat_nome AS cat_nome,
+                       GROUP_CONCAT(DISTINCT u.usu_nome SEPARATOR ', ') AS proprietarios,
+                       COUNT(DISTINCT vu.usu_id) AS num_proprietarios
+                  FROM veiculos v
+                  JOIN modelos mo         ON v.mod_id = mo.mod_id
+                  JOIN marcas m           ON mo.mar_id = m.mar_id
+             LEFT JOIN veiculo_usuario vu ON v.veic_id = vu.veic_id
+             LEFT JOIN usuarios u         ON vu.usu_id = u.usu_id
+             LEFT JOIN categorias c       ON m.cat_id = c.cat_id
+                 WHERE v.veic_id = ? 
+              GROUP BY v.veic_id
             `;
 
             const [veiculo] = await db.query(sql, [veic_id]);
@@ -367,7 +367,12 @@ module.exports = {
                 });
             }
     
-            const sql = `SELECT veic_id FROM veiculos WHERE veic_placa = ? LIMIT 1`;
+            const sql = `
+                SELECT veic_id
+                  FROM veiculos
+                 WHERE veic_placa = ?
+                 LIMIT 1`;
+            
             const values = [veic_placa];
     
             const [result] = await db.query(sql, values);

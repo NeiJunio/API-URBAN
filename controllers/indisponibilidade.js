@@ -3,11 +3,11 @@ const db = require('../database/connection');
 module.exports = {
     async listarIndisponibilidade(request, response) {
         try {
-            const sql = `SELECT 
-                indisp_id, 
-                indisp_data, 
-                indisp_situacao
-                FROM indisponibilidade`;
+            const sql = `
+            SELECT indisp_id, 
+                   indisp_data, 
+                   indisp_situacao
+              FROM indisponibilidade`;
 
             const [indisponibilidades] = await db.query(sql);
             const nItens = indisponibilidades.length;
@@ -57,12 +57,12 @@ module.exports = {
     async editarIndisponibilidade(request, response) {
         try {
             const { indisp_data } = request.body;
-
             const { indisp_id } = request.params;
 
-            const sql = `UPDATE indisponibilidade SET 
-                indisp_data = ?
-                WHERE indisp_id = ?`;
+            const sql = `
+                UPDATE indisponibilidade
+                   SET indisp_data = ?
+                 WHERE indisp_id = ?`;
 
             const values = [indisp_data, indisp_id];
 
@@ -85,7 +85,12 @@ module.exports = {
     async excluirIndisponibilidade(request, response) {
         try {
             const { indisp_id } = request.params;
-            const sql = `DELETE FROM indisponibilidade WHERE indisp_id = ?`;
+
+            const sql = `
+                DELETE *
+                  FROM indisponibilidade
+                 WHERE indisp_id = ?`;
+
             const values = [indisp_id];
             const [excluir] = await db.query(sql, values);
 
@@ -111,7 +116,11 @@ module.exports = {
 
             const { indisp_id } = request.params;
 
-            const sql = `UPDATE indisponibilidade SET indisp_situacao = ? WHERE indisp_id = ?`;
+            const sql = `
+                UPDATE indisponibilidade
+                   SET indisp_situacao = ?
+                 WHERE indisp_id = ?`;
+                 
             const values = [indisp_situacao, indisp_id];
             const [atualizaDados] = await db.query(sql, values);
 

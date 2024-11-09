@@ -4,12 +4,11 @@ module.exports = {
 
     async listarCategorias(request, response) {
         try {
-            const sql = `SELECT 
-                cat_serv_id, 
-                cat_serv_nome,
-                cat_serv_visibilidade
-                FROM categorias_servicos
-                 `;
+            const sql = `
+                SELECT cat_serv_id, 
+                       cat_serv_nome,
+                       cat_serv_visibilidade
+                  FROM categorias_servicos`;
 
             const [categorias] = await db.query(sql);
             const nItens = categorias.length;
@@ -31,13 +30,12 @@ module.exports = {
 
     async listarCategoriasAtivas(request, response) {
         try {
-            const sql = `SELECT 
-                cat_serv_id, 
-                cat_serv_nome,
-                cat_serv_visibilidade
-                FROM categorias_servicos
-                WHERE cat_serv_visibilidade = 1
-                 `;
+            const sql = `
+                SELECT cat_serv_id, 
+                       cat_serv_nome,
+                       cat_serv_visibilidade
+                  FROM categorias_servicos
+                 WHERE cat_serv_visibilidade = 1`;
 
             const [categorias] = await db.query(sql);
             const nItens = categorias.length;
@@ -86,9 +84,10 @@ module.exports = {
             const { cat_serv_nome } = request.body;
             const { cat_serv_id } = request.params;
 
-            const sql = `UPDATE categorias_servicos SET 
-                cat_serv_nome = ? 
-                WHERE cat_serv_id = ?`;
+            const sql = `
+                UPDATE categorias_servicos
+                   SET cat_serv_nome = ? 
+                 WHERE cat_serv_id = ?`;
 
             const values = [cat_serv_nome, cat_serv_id];
 
@@ -112,7 +111,11 @@ module.exports = {
         try {
             const { cat_serv_id } = request.params;
 
-            const sql = `DELETE FROM categorias_servicos WHERE cat_serv_id = ?`;
+            const sql = `
+                DELETE *
+                  FROM categorias_servicos
+                 WHERE cat_serv_id = ?`;
+
             const values = [cat_serv_id];
 
             const [excluir] = await db.query(sql, values);
@@ -136,7 +139,11 @@ module.exports = {
             const { cat_serv_id } = request.params;
             const { cat_serv_visibilidade } = request.body;
 
-            const sql = `UPDATE categorias_servicos SET cat_serv_visibilidade = ? WHERE cat_serv_id = ?`;
+            const sql = `
+                UPDATE categorias_servicos
+                   SET cat_serv_visibilidade = ?
+                 WHERE cat_serv_id = ?`;
+                 
             const values = [cat_serv_visibilidade, cat_serv_id];
 
             const [atualizaDados] = await db.query(sql, values);

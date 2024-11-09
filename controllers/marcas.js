@@ -3,13 +3,13 @@ const db = require('../database/connection');
 module.exports = {
     async listarMarcas(request, response) {
         try {
-            const sql = `SELECT 
-                mar_id, 
-                mar_nome, 
-                mar_cod, 
-                mar_icone, 
-                cat_id
-                FROM marcas`;
+            const sql = `
+            SELECT mar_id, 
+                   mar_nome, 
+                   mar_cod, 
+                   mar_icone, 
+                   cat_id
+              FROM marcas`;
 
             const [marcas] = await db.query(sql);
             const nItens = marcas.length;
@@ -33,14 +33,14 @@ module.exports = {
         try {
             const { cat_id } = request.params;
 
-            const sql = `SELECT 
-                mar_id, 
-                mar_nome, 
-                mar_cod, 
-                mar_icone, 
-                cat_id
-                FROM marcas
-                WHERE cat_id = ?`;
+            const sql = `
+                SELECT mar_id, 
+                       mar_nome, 
+                       mar_cod, 
+                       mar_icone, 
+                       cat_id
+                  FROM marcas
+                 WHERE cat_id = ?`;
 
                 const [marcas] = await db.query(sql, [cat_id]);
                 const nItens = marcas.length;
@@ -109,12 +109,13 @@ module.exports = {
 
             const { mar_id } = request.params;
 
-            const sql = `UPDATE marcas SET 
-                mar_nome = ?, 
-                mar_cod = ?, 
-                mar_icone = ?, 
-                cat_id = ? 
-                WHERE mar_id = ?;`;
+            const sql = `
+                UPDATE marcas
+                   SET mar_nome = ?, 
+                       mar_cod = ?, 
+                       mar_icone = ?, 
+                       cat_id = ? 
+                 WHERE mar_id = ?;`;
 
             const values = [
                 mar_nome,
@@ -143,7 +144,12 @@ module.exports = {
     async excluirMarca(request, response) {
         try {
             const { mar_id } = request.params;
-            const sql = `DELETE FROM marcas WHERE mar_id = ?`;
+            
+            const sql = `
+                DELETE *
+                  FROM marcas
+                 WHERE mar_id = ?`;
+                 
             const values = [mar_id];
             const [excluir] = await db.query(sql, values);
 

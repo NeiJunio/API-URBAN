@@ -3,12 +3,12 @@ const db = require('../database/connection');
 module.exports = {
     async listarAgendaServicos(request, response) {
         try {
-            const sql = `SELECT 
-                agend_serv_id, 
-                agend_id, 
-                serv_id, 
-                agend_serv_situ_id 
-                FROM agenda_servicos`;
+            const sql = `
+                SELECT agend_serv_id, 
+                       agend_id, 
+                       serv_id, 
+                       agend_serv_situ_id 
+                  FROM agenda_servicos`;
 
             const [agendaServicos] = await db.query(sql);
             const nItens = agendaServicos.length;
@@ -73,11 +73,12 @@ module.exports = {
 
             const { agend_serv_id } = request.params;
 
-            const sql = `UPDATE agenda_servicos SET 
-                agend_id = ?, 
-                serv_id = ?, 
-                agend_serv_situ_id = ? 
-                WHERE agend_serv_id = ?`;
+            const sql = `
+                UPDATE agenda_servicos
+                   SET agend_id = ?, 
+                       serv_id = ?, 
+                       agend_serv_situ_id = ? 
+                 WHERE agend_serv_id = ?`;
 
             const values = [
                 agend_id,
@@ -105,7 +106,12 @@ module.exports = {
     async excluirAgendaServico(request, response) {
         try {
             const { agend_serv_id } = request.params;
-            const sql = `DELETE FROM agenda_servicos WHERE agend_serv_id = ?`;
+
+            const sql = `
+                DELETE *
+                  FROM agenda_servicos
+                 WHERE agend_serv_id = ?`;
+                 
             const values = [agend_serv_id];
             const [excluir] = await db.query(sql, values);
 

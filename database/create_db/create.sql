@@ -181,15 +181,9 @@ ALTER TABLE `agendamentos` ADD `serv_id` INTEGER NULL;
 ALTER TABLE `agendamentos` ADD `agend_serv_situ_id` INTEGER DEFAULT 1;
 
 
-ALTER TABLE `agendamentos`
-ADD CONSTRAINT `fk_agendamentos_servicos`
-FOREIGN KEY (`serv_id`) REFERENCES `servicos` (`serv_id`);
-
-ALTER TABLE `agendamentos`
-ADD CONSTRAINT `fk_agendamentos_agenda_servicos_situacao`
-FOREIGN KEY (`agend_serv_situ_id`) REFERENCES `agenda_servicos_situacao` (`agend_serv_situ_id`);
+ALTER TABLE `agendamentos` ADD CONSTRAINT `fk_agendamentos_servicos` FOREIGN KEY (`serv_id`) REFERENCES `servicos` (`serv_id`);
+ALTER TABLE `agendamentos` ADD CONSTRAINT `fk_agendamentos_agenda_servicos_situacao` FOREIGN KEY (`agend_serv_situ_id`) REFERENCES `agenda_servicos_situacao` (`agend_serv_situ_id`);
 
 
 -- MODIFICAR PARA LOGIN
-
-ALTER TABLE usuarios MODIFY COLUMN usu_situacao TINYINT(1) DEFAULT 1;
+ALTER TABLE `usuarios` MODIFY COLUMN `usu_situacao` TINYINT(1) DEFAULT 1;

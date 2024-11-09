@@ -10,13 +10,13 @@ module.exports = {
     async listarVeiculosUsuario(request, response) {
         try {
             const sql = `
-            SELECT veic_usu_id, 
-                   veic_id, 
-                   usu_id, 
-                   ehproprietario, 
-                   data_inicial, 
-                   data_final
-              FROM veiculo_usuario`;
+                SELECT veic_usu_id, 
+                    veic_id, 
+                    usu_id, 
+                    ehproprietario, 
+                    data_inicial, 
+                    data_final
+                FROM veiculo_usuario`;
 
             const [veiculosUsuarios] = await db.query(sql);
             const nItens = veiculosUsuarios.length;
@@ -77,28 +77,28 @@ module.exports = {
             const { UsuarioId } = request.params;
 
             const sql = `
-                     SELECT vu.veic_usu_id, 
-                            vu.veic_id, 
-                            vu.usu_id, 
-                            vu.ehproprietario = 1 AS ehproprietario, 
-                            vu.data_inicial,
-                            vu.data_final,
-                            v.veic_placa,
-                            v.veic_ano,
-                            v.veic_cor,
-                            v.veic_combustivel,
-                            v.veic_observ,
-                            m.mod_id AS mod_id,
-                            m.mod_nome AS mod_nome,
-                            ma.mar_nome AS mar_nome,
-                            c.cat_id AS cat_id,
-                            c.cat_nome AS cat_nome
-                       FROM veiculo_usuario vu
-                       JOIN veiculos v     ON vu.veic_id = v.veic_id
-                       JOIN modelos m      ON v.mod_id = m.mod_id
-                       JOIN marcas ma      ON m.mar_id = ma.mar_id
-                  LEFT JOIN categorias c   ON ma.cat_id = c.cat_id
-                      WHERE vu.usu_id = ? AND vu.data_final IS NULL`;
+                 SELECT vu.veic_usu_id, 
+                        vu.veic_id, 
+                        vu.usu_id, 
+                        vu.ehproprietario = 1 AS ehproprietario, 
+                        vu.data_inicial,
+                        vu.data_final,
+                        v.veic_placa,
+                        v.veic_ano,
+                        v.veic_cor,
+                        v.veic_combustivel,
+                        v.veic_observ,
+                        m.mod_id AS mod_id,
+                        m.mod_nome AS mod_nome,
+                        ma.mar_nome AS mar_nome,
+                        c.cat_id AS cat_id,
+                        c.cat_nome AS cat_nome
+                   FROM veiculo_usuario vu
+                   JOIN veiculos v     ON vu.veic_id = v.veic_id
+                   JOIN modelos m      ON v.mod_id = m.mod_id
+                   JOIN marcas ma      ON m.mar_id = ma.mar_id
+              LEFT JOIN categorias c   ON ma.cat_id = c.cat_id
+                  WHERE vu.usu_id = ? AND vu.data_final IS NULL`;
 
             const [veiculosPorUsuarioId] = await db.query(sql, [UsuarioId]);
             const nItens = veiculosPorUsuarioId.length;
@@ -136,7 +136,11 @@ module.exports = {
                 });
             }
 
-            const sqlVerificar = `SELECT veic_usu_id FROM veiculo_usuario WHERE veic_id = ? AND usu_id = ?`;
+            const sqlVerificar = `
+                SELECT veic_usu_id
+                  FROM veiculo_usuario
+                 WHERE veic_id = ? AND usu_id = ?`;
+
             const [resultado] = await db.query(sqlVerificar, [veic_id, usu_id]);
 
             if (resultado.length > 0) {
@@ -176,10 +180,10 @@ module.exports = {
 
         try {
             const sql = `
-            UPDATE veiculo_usuario SET 
-                   data_inicial = ?, 
-                   data_final = ?
-             WHERE veic_usu_id = ?`;
+                UPDATE veiculo_usuario
+                   SET data_inicial = ?, 
+                       data_final = ?
+                 WHERE veic_usu_id = ?`;
 
             const values = [
                 data_inicial,
@@ -214,9 +218,10 @@ module.exports = {
         const { data_final } = request.body;
 
         try {
-            const sql = `UPDATE veiculo_usuario SET 
-                            data_final = ?
-                        WHERE veic_usu_id = ?`;
+            const sql = `
+                UPDATE veiculo_usuario
+                   SET data_final = ?
+                 WHERE veic_usu_id = ?`;
 
             const values = [
                 data_final,
@@ -249,7 +254,10 @@ module.exports = {
         try {
             const { veic_usu_id } = request.params;
 
-            const sql = `DELETE FROM veiculo_usuario WHERE veic_usu_id = ?`;
+            const sql = `
+                DELETE *
+                  FROM veiculo_usuario
+                 WHERE veic_usu_id = ?`;
 
             const values = [veic_usu_id];
 

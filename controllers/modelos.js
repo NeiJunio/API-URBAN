@@ -3,13 +3,13 @@ const db = require('../database/connection');
 module.exports = {
     async listarModelos(request, response) {
         try {
-            const sql = `SELECT 
-                mod_id, 
-                mod_nome, 
-                mod_cod, 
-                mar_cod, 
-                mar_id
-                FROM modelos`;
+            const sql = `
+                SELECT mod_id, 
+                       mod_nome, 
+                       mod_cod, 
+                       mar_cod, 
+                       mar_id
+                  FROM modelos`;
 
             const [modelos] = await db.query(sql);
             const nItens = modelos.length;
@@ -33,18 +33,16 @@ module.exports = {
         try {
             const { mar_id } = request.params;
 
-            const sql = `SELECT 
-                mod_id, 
-                mod_nome, 
-                mod_cod, 
-                mar_cod, 
-                mar_id
-                FROM modelos
-                WHERE mar_id = ?`;
+            const sql = `
+                SELECT mod_id, 
+                       mod_nome, 
+                       mod_cod, 
+                       mar_cod, 
+                       mar_id
+                  FROM modelos
+                 WHERE mar_id = ?`;
 
-            const values = [
-                mar_id
-            ]
+            const values = [mar_id]
 
             const [modelos] = await db.query(sql, values);
             const nItens = modelos.length;
@@ -72,13 +70,12 @@ module.exports = {
             const values = [mar_id, cat_id];
 
             const sql = `
-                SELECT 
-                    mod_id, 
-                    mod_nome, 
-                    mod_cod, 
-                    mar_id 
-                FROM modelos
-                WHERE mar_id = ? AND EXISTS (
+                SELECT mod_id, 
+                       mod_nome, 
+                       mod_cod, 
+                       mar_id 
+                  FROM modelos
+                 WHERE mar_id = ? AND EXISTS (
                     SELECT 1 
                     FROM marcas 
                     WHERE cat_id = ? AND marcas.mar_id = modelos.mar_id
@@ -151,12 +148,13 @@ module.exports = {
 
             const { mod_id } = request.params;
 
-            const sql = `UPDATE modelos SET 
-                mod_nome = ?, 
-                mod_cod = ?, 
-                mar_cod = ?, 
-                mar_id = ? 
-                WHERE mod_id = ?`;
+            const sql = `
+                UPDATE modelos
+                SET mod_nome = ?, 
+                    mod_cod = ?, 
+                    mar_cod = ?, 
+                    mar_id = ? 
+              WHERE mod_id = ?`;
 
             const values = [
                 mod_nome,
@@ -185,7 +183,12 @@ module.exports = {
     async excluirModelo(request, response) {
         try {
             const { mod_id } = request.params;
-            const sql = `DELETE FROM modelos WHERE mod_id = ?`;
+
+            const sql = `
+                DELETE *
+                  FROM modelos
+                 WHERE mod_id = ?`;
+            
             const values = [mod_id];
             const [excluir] = await db.query(sql, values);
 

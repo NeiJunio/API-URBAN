@@ -4,11 +4,11 @@ module.exports = {
 
     async listarCategorias(request, response) {
         try {
-            const sql = `SELECT 
-                cat_id, 
-                cat_nome, 
-                cat_icone
-                FROM categorias`;
+            const sql = `
+            SELECT cat_id, 
+                   cat_nome, 
+                   cat_icone
+            FROM categorias`;
 
             const [categorias] = await db.query(sql);
             const nItens = categorias.length;
@@ -70,10 +70,11 @@ module.exports = {
 
             const { cat_id } = request.params;
 
-            const sql = `UPDATE categorias SET 
-                cat_nome = ?, 
-                cat_icone = ? 
-                WHERE cat_id = ?;`;
+            const sql = `
+                UPDATE categorias
+                   SET cat_nome = ?, 
+                       cat_icone = ? 
+                 WHERE cat_id = ?;`;
 
             const values = [
                 cat_nome,
@@ -100,7 +101,12 @@ module.exports = {
     async excluirCategoria(request, response) {
         try {
             const { cat_id } = request.params;
-            const sql = `DELETE FROM categorias WHERE cat_id = ?`;
+            
+            const sql = `
+                DELETE *
+                  FROM categorias
+                 WHERE cat_id = ?`;
+                 
             const values = [cat_id];
             const [excluir] = await db.query(sql, values);
 
