@@ -56,6 +56,8 @@ module.exports = {
                 3: '#26a426',    // Concluído - Verde
                 4: '#c3290e'     // Cancelado - Vermelho
             };
+    
+
 
             // const Resultado = todosAgendamentos.map((e) => ({
             //     agend_id: e.agend_id,
