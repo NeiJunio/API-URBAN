@@ -90,7 +90,8 @@ router.delete('/agendaServicosSituacao/:agend_serv_situ_id', agendaServicosSitua
 
 
 router.get('/agendamentos', agendamentosController.listarTodosAgendamentos);
-router.get('/agendamentos/usuarios/:UsuarioId', agendamentosController.listarAgendamentos);
+router.get('/agendamentos/todos', agendamentosController.listarAgendamentos);
+// router.get('/agendamentos/usuarios/:UsuarioId/:UserAcesso', agendamentosController.listarAgendamentosDoUsuario);
 router.get('/agendamentos/situacao/:agend_situacao', agendamentoController.listarAgendamentosPorSituacao);
 router.get('/agendamentos/:UsuarioId', agendamentoController.listarAgendamentosPorUsuario);
 router.post('/agendamentos', agendamentosController.cadastrarAgendamento);
