@@ -36,19 +36,15 @@ module.exports = {
             };
 
             const Resultado = todosAgendamentos.map((e) => {
-                // Convertendo agend_horario em um objeto Date
-                const [hora, minuto, segundo] = e.agend_horario.split(':').map(Number);  // Parseia a hora, minuto e segundo
-                const agendData = new Date(`${e.agend_data_formatada}T${e.agend_horario}`); // Cria a data completa com a hora
+                const [hora, minuto, segundo] = e.agend_horario.split(':').map(Number);
+                const agendData = new Date(`${e.agend_data_formatada}T${e.agend_horario}`);
 
-                // Parseando a duração do serviço (serv_duracao) que está no formato "HH:MM:SS"
                 const [duracaoHora, duracaoMinuto, duracaoSegundo] = e.serv_duracao.split(':').map(Number);
 
-                // Adicionando a duração ao horário do agendamento
                 agendData.setHours(agendData.getHours() + duracaoHora);
                 agendData.setMinutes(agendData.getMinutes() + duracaoMinuto);
                 agendData.setSeconds(agendData.getSeconds() + duracaoSegundo);
 
-                // Formatando a data de término no formato ISO 8601
                 const end = agendData.toISOString();
 
                 return {
@@ -64,12 +60,11 @@ module.exports = {
                     agend_observ: e.agend_observ,
                     serv_nome: e.serv_nome,
                     serv_duracao: e.serv_duracao,
-                    title: `Agendamento #${e.agend_id}`,
+                    title: `Agendado`,
                     start: `${e.agend_data_formatada}T${e.agend_horario}`,
-                    end: end, // Novo valor de 'end' com a duração somada
-                    // event_time: e.agend_horario,
+                    end: end,
                     overlap: false,
-                    backgroundColor: colorMap[e.agend_serv_situ_id] || '#33338',  // Atribui a cor conforme o status
+                    backgroundColor: colorMap[e.agend_serv_situ_id] || '#33338',
                 };
             });
 
@@ -79,7 +74,7 @@ module.exports = {
                 dados: todosAgendamentos,
                 nItensTodos,
                 dadosTodos: Resultado
-                
+
             });
         } catch (error) {
             return response.status(500).json({
@@ -92,10 +87,9 @@ module.exports = {
 
     async listarAgendamentosDoUsuario(request, response) {
         try {
-            const { UsuarioId } = request.params; // ID do usuário solicitado
-            const UserAcesso = request.query.UserAcesso; // Tipo de acesso (1 para admin, 0 para usuário comum)
-            
-            // Query para listar todos os agendamentos
+            const { UsuarioId } = request.params;
+            const UserAcesso = request.query.UserAcesso;
+
             const sqlUsuario = `
                 SELECT a.agend_id,
                        a.veic_usu_id,
@@ -116,57 +110,54 @@ module.exports = {
                   JOIN veiculos v         ON vu.veic_id = v.veic_id
                   JOIN servicos s         ON a.serv_id = s.serv_id
             `;
-            
-            // Executar consulta para pegar todos os agendamentos
+
             const [agendamentosUsuario] = await db.query(sqlUsuario);
             const nItensUsuario = agendamentosUsuario.length;
-    
-            // Mapeamento de cores
+
             const colorMap = {
                 1: '#e69500f3',
                 2: '#1b77d4',
                 3: '#26a426',
                 4: '#c3290e'
             };
-    
+
             const Resultado = agendamentosUsuario.map((e) => {
                 const [hora, minuto, segundo] = e.agend_horario.split(':').map(Number);
                 const agendData = new Date(`${e.agend_data_formatada}T${e.agend_horario}`);
                 const [duracaoHora, duracaoMinuto, duracaoSegundo] = e.serv_duracao.split(':').map(Number);
-            
+
                 agendData.setHours(agendData.getHours() + duracaoHora);
                 agendData.setMinutes(agendData.getMinutes() + duracaoMinuto);
                 agendData.setSeconds(agendData.getSeconds() + duracaoSegundo);
-            
+
                 const end = agendData.toISOString();
-    
-                // Detalhes extra apenas para o admin ou para o próprio dono do agendamento
+
                 const detalhesExtras = (UserAcesso === 1 || e.usu_id === parseInt(UsuarioId)) ? {
                     veic_placa: e.veic_placa,
+                    veic_usu_id: e.veic_usu_id,
                     veic_ano: e.veic_ano,
                     veic_cor: e.veic_cor,
                     agend_observ: e.agend_observ,
                     serv_nome: e.serv_nome,
                     serv_duracao: e.serv_duracao
                 } : {};
-    
+
                 return {
                     agend_id: e.agend_id,
                     start: `${e.agend_data_formatada}T${e.agend_horario}`,
                     end: end,
-                    title: `Agendamento #${e.agend_id}`,
+                    title: `Agendado`,
                     backgroundColor: colorMap[e.agend_serv_situ_id] || '#33338',
                     agend_data: e.agend_data_formatada,
                     agend_horario: e.agend_horario,
                     agend_serv_situ_id: e.agend_serv_situ_id,
                     extendedProps: {
-                        userId: e.usu_id // Adicionando userId para controle no front-end
+                        userId: e.usu_id
                     },
                     ...detalhesExtras
                 };
             });
-    
-            // Retorna todos os agendamentos, com dados específicos para o admin ou o usuário autorizado
+
             return response.status(200).json({
                 sucesso: true,
                 mensagem: `Lista de todos os agendamentos`,
@@ -181,10 +172,6 @@ module.exports = {
             });
         }
     },
-    
-    
-    
-    
 
     async listarTodosAgendamentos(request, response) {
         try {
@@ -258,7 +245,7 @@ module.exports = {
         }
     },
 
-    async listarAgendamentosPorUsuario(request, response) {
+    async listarHistoricoDoUsuario(request, response) {
         try {
             const { UsuarioId } = request.params;
 
@@ -353,30 +340,30 @@ module.exports = {
 
     async editarAgendamento(request, response) {
         try {
+            const { agend_id } = request.params;
+
             const {
                 veic_usu_id,
                 agend_data,
                 agend_horario,
-                agend_situacao,
-                agend_observ
+                agend_serv_situ_id,
+                agend_observ, 
             } = request.body;
-
-            const { agend_id } = request.params;
 
             const sql = `
                 UPDATE agendamentos
                    SET veic_usu_id = ?, 
                        agend_data = ?, 
                        agend_horario = ?, 
-                       agend_situacao = ?, 
-                       agend_observ = ? 
+                       agend_serv_situ_id = ?, 
+                       agend_observ = ?
                  WHERE agend_id = ?`;
 
             const values = [
                 veic_usu_id,
                 agend_data,
                 agend_horario,
-                agend_situacao,
+                agend_serv_situ_id,
                 agend_observ,
                 agend_id
             ];
