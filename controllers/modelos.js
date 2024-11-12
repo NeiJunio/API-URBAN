@@ -109,9 +109,9 @@ module.exports = {
                 mar_id
             } = request.body;
 
-            const sql = `INSERT INTO modelos 
-                (mod_nome, mod_cod, mar_cod, mar_id) 
-                VALUES (?, ?, ?, ?)`;
+            const sql = `
+                INSERT INTO modelos (mod_nome, mod_cod, mar_cod, mar_id) 
+                             VALUES (?, ?, ?, ?)`;
 
             const values = [
                 mod_nome,

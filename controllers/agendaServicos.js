@@ -36,9 +36,9 @@ module.exports = {
                 agend_serv_situ_id
             } = request.body;
 
-            const sql = `INSERT INTO agenda_servicos 
-                (agend_id, serv_id, agend_serv_situ_id) 
-                VALUES (?, ?, ?)`;
+            const sql = `
+                INSERT INTO agenda_servicos (agend_id, serv_id, agend_serv_situ_id) 
+                                     VALUES (?, ?, ?)`;
 
             const values = [
                 agend_id,

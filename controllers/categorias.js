@@ -35,9 +35,9 @@ module.exports = {
                 cat_icone
             } = request.body;
 
-            const sql = `INSERT INTO categorias 
-                (cat_nome, cat_icone) 
-                VALUES (?, ?)`;
+            const sql = `
+                INSERT INTO categorias (cat_nome, cat_icone) 
+                                VALUES (?, ?)`;
 
             const values = [
                 cat_nome,

@@ -41,9 +41,9 @@ module.exports = {
                 disp_situacao
             } = request.body;
 
-            const sql = `INSERT INTO disponibilidade 
-                (disp_dia, disp_periodo, disp_hr_ini, disp_hr_fin, disp_situacao) 
-                VALUES (?, ?, ?, ?, ?)`;
+            const sql = `
+                INSERT INTO disponibilidade (disp_dia, disp_periodo, disp_hr_ini, disp_hr_fin, disp_situacao) 
+                                     VALUES (?, ?, ?, ?, ?)`;
 
             const values = [
                 disp_dia,

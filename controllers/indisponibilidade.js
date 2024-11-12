@@ -31,9 +31,9 @@ module.exports = {
         try {
             const { indisp_data, indisp_situacao } = request.body;
 
-            const sql = `INSERT INTO indisponibilidade 
-                (indisp_data, indisp_situacao) 
-                VALUES (?, ?)`;
+            const sql = `
+                INSERT INTO indisponibilidade (indisp_data, indisp_situacao) 
+                                       VALUES (?, ?)`;
 
             const values = [indisp_data, indisp_situacao];
 

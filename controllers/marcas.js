@@ -70,9 +70,9 @@ module.exports = {
                 cat_id
             } = request.body;
 
-            const sql = `INSERT INTO marcas 
-                (mar_nome, mar_cod, mar_icone, cat_id) 
-                VALUES (?, ?, ?, ?)`;
+            const sql = `
+                INSERT INTO marcas (mar_nome, mar_cod, mar_icone, cat_id) 
+                            VALUES (?, ?, ?, ?)`;
 
             const values = [
                 mar_nome,

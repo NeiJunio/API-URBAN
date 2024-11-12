@@ -134,9 +134,9 @@ module.exports = {
                 serv_situacao
             } = request.body;
 
-            const sql = `INSERT INTO servicos 
-                (cat_serv_id, serv_nome, serv_duracao, serv_preco, serv_descricao, serv_situacao) 
-                VALUES (?, ?, ?, ?, ?, ?)`;
+            const sql = `
+                INSERT INTO servicos (cat_serv_id, serv_nome, serv_duracao, serv_preco, serv_descricao, serv_situacao) 
+                              VALUES (?, ?, ?, ?, ?, ?)`;
 
             const values = [
                 cat_serv_id,

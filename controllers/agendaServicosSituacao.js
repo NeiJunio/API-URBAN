@@ -30,9 +30,9 @@ module.exports = {
         try {
             const { agend_serv_situ_nome } = request.body;
 
-            const sql = `INSERT INTO agenda_servicos_situacao 
-                (agend_serv_situ_nome) 
-                VALUES (?)`;
+            const sql = `
+                INSERT INTO agenda_servicos_situacao (agend_serv_situ_nome) 
+                                              VALUES (?)`;
 
             const values = [agend_serv_situ_nome];
 

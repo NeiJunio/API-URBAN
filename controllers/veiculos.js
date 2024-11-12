@@ -116,9 +116,9 @@ module.exports = {
                 });
             }
     
-            const sql = `INSERT INTO veiculos 
-                (mod_id, veic_placa, veic_ano, veic_cor, veic_combustivel, veic_observ, veic_situacao) 
-                VALUES (?, ?, ?, ?, ?, ?, ?)`;
+            const sql = `
+                INSERT INTO veiculos (mod_id, veic_placa, veic_ano, veic_cor, veic_combustivel, veic_observ, veic_situacao) 
+                              VALUES (?, ?, ?, ?, ?, ?, ?)`;
     
             const values = [
                 mod_id,

@@ -150,9 +150,9 @@ module.exports = {
                 });
             }
 
-            const sql = `INSERT INTO veiculo_usuario 
-                (veic_id, usu_id, ehproprietario, data_inicial) 
-                VALUES (?, ?, ?, ?)`;
+            const sql = `
+                INSERT INTO veiculo_usuario (veic_id, usu_id, ehproprietario, data_inicial) 
+                                     VALUES (?, ?, ?, ?)`;
 
             const values = [veic_id, usu_id, ehproprietario, data_inicial];
             const [execSql] = await db.query(sql, values);

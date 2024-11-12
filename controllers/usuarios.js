@@ -262,7 +262,11 @@ module.exports = {
                 });
             }
 
-            const sqlVerificaEmail = `SELECT usu_id FROM usuarios WHERE usu_email = ?`;
+            const sqlVerificaEmail = `
+                SELECT usu_id
+                  FROM usuarios
+                 WHERE usu_email = ?`;
+
             const [emailExistente] = await db.query(sqlVerificaEmail, [usu_email]);
 
             if (emailExistente.length > 0) {
@@ -272,10 +276,9 @@ module.exports = {
                 });
             }
 
-            const sql = `INSERT INTO usuarios 
-            (usu_nome, usu_cpf, usu_data_nasc, usu_sexo, usu_telefone, 
-            usu_email, usu_observ, usu_acesso, usu_senha, usu_situacao) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+            const sql = `
+                INSERT INTO usuarios (usu_nome, usu_cpf, usu_data_nasc, usu_sexo, usu_telefone, usu_email, usu_observ, usu_acesso, usu_senha, usu_situacao) 
+                              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
             const values = [
                 usu_nome,

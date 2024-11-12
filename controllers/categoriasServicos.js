@@ -59,7 +59,9 @@ module.exports = {
         try {
             const { cat_serv_nome } = request.body;
 
-            const sql = `INSERT INTO categorias_servicos (cat_serv_nome) VALUES (?)`;
+            const sql = `
+                INSERT INTO categorias_servicos (cat_serv_nome)
+                                         VALUES (?)`;
             const values = [cat_serv_nome];
 
             const [execSql] = await db.query(sql, values);
