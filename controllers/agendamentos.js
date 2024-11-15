@@ -87,8 +87,8 @@ module.exports = {
 
     async listarAgendamentosDoUsuario(request, response) {
         try {
-            const { UsuarioId } = request.params;
-            const UserAcesso = request.query.UserAcesso;
+            const { UsuarioId, UserAcesso } = request.params;
+            //const  = request.query.UserAcesso;
 
             const sqlUsuario = `
                 SELECT a.agend_id,
@@ -109,9 +109,15 @@ module.exports = {
                   JOIN usuarios u         ON vu.usu_id = u.usu_id
                   JOIN veiculos v         ON vu.veic_id = v.veic_id
                   JOIN servicos s         ON a.serv_id = s.serv_id
-            `;
-
-            const [agendamentosUsuario] = await db.query(sqlUsuario);
+                  WHERE YEAR(a.agend_data)  = 2024
+                   AND MONTH(a.agend_data) = 11
+                   
+                   `;
+                   
+                   //  WHERE ((? = 1 AND u.usu_id = u.usu_id) /*PRIMEIRO PARÂMETRO É O TIPO DO USUÁRIO*/
+                   //     OR  (? = 0 AND u.usu_id = ?))	   /*PRIMEIRO PARÂMETRO É O TIPO DO USUÁRIO, SEGUNDO PARÂMETRO É O USU_ID*/
+            const values = [UserAcesso, UserAcesso, UsuarioId];
+            const [agendamentosUsuario] = await db.query(sqlUsuario, values);
             const nItensUsuario = agendamentosUsuario.length;
 
             const colorMap = {
@@ -132,7 +138,7 @@ module.exports = {
 
                 const end = agendData.toISOString();
 
-                const detalhesExtras = (UserAcesso === 1 || e.usu_id === parseInt(UsuarioId)) ? {
+                const detalhesExtras = (UserAcesso == 1  || e.usu_id === parseInt(UsuarioId)) ? {
                     veic_placa: e.veic_placa,
                     veic_usu_id: e.veic_usu_id,
                     veic_ano: e.veic_ano,
