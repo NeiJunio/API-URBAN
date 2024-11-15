@@ -87,7 +87,8 @@ module.exports = {
 
     async listarAgendamentosDoUsuario(request, response) {
         try {
-            const { UsuarioId, UserAcesso } = request.params;
+            const { UsuarioId, UserAcesso, Month, Year } = request.params;
+            // const { Year, Month} = request.body;
             //const  = request.query.UserAcesso;
 
             const sqlUsuario = `
@@ -109,15 +110,17 @@ module.exports = {
                   JOIN usuarios u         ON vu.usu_id = u.usu_id
                   JOIN veiculos v         ON vu.veic_id = v.veic_id
                   JOIN servicos s         ON a.serv_id = s.serv_id
-                  WHERE YEAR(a.agend_data)  = 2024
-                   AND MONTH(a.agend_data) = 11
+                  WHERE YEAR(a.agend_data)  = ?
+                   AND MONTH(a.agend_data) = ?
                    
                    `;
                    
                    //  WHERE ((? = 1 AND u.usu_id = u.usu_id) /*PRIMEIRO PARÂMETRO É O TIPO DO USUÁRIO*/
                    //     OR  (? = 0 AND u.usu_id = ?))	   /*PRIMEIRO PARÂMETRO É O TIPO DO USUÁRIO, SEGUNDO PARÂMETRO É O USU_ID*/
-            const values = [UserAcesso, UserAcesso, UsuarioId];
+            const values = [Year, Month];
             const [agendamentosUsuario] = await db.query(sqlUsuario, values);
+            // const values = [UserAcesso, UserAcesso, UsuarioId];
+            // const [agendamentosUsuario] = await db.query(sqlUsuario, values);
             const nItensUsuario = agendamentosUsuario.length;
 
             const colorMap = {
