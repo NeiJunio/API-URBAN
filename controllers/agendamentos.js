@@ -104,19 +104,22 @@ module.exports = {
                        v.veic_ano,
                        v.veic_cor,
                        s.serv_nome, 
-                       s.serv_duracao
+                       s.serv_duracao,
+                       cs.cat_serv_id,
+                       cs.cat_serv_nome
                   FROM agendamentos a
-                  JOIN veiculo_usuario vu ON a.veic_usu_id = vu.veic_usu_id
-                  JOIN usuarios u         ON vu.usu_id = u.usu_id
-                  JOIN veiculos v         ON vu.veic_id = v.veic_id
-                  JOIN servicos s         ON a.serv_id = s.serv_id
-                  WHERE YEAR(a.agend_data)  = ?
+                  JOIN veiculo_usuario vu     ON a.veic_usu_id = vu.veic_usu_id
+                  JOIN usuarios u             ON vu.usu_id = u.usu_id
+                  JOIN veiculos v             ON vu.veic_id = v.veic_id
+                  JOIN servicos s             ON a.serv_id = s.serv_id
+                  JOIN categorias_servicos cs ON s.cat_serv_id = cs.cat_serv_id
+                 WHERE YEAR(a.agend_data)  = ?
                    AND MONTH(a.agend_data) = ?
-                   
-                   `;
-                   
-                   //  WHERE ((? = 1 AND u.usu_id = u.usu_id) /*PRIMEIRO PARÂMETRO É O TIPO DO USUÁRIO*/
-                   //     OR  (? = 0 AND u.usu_id = ?))	   /*PRIMEIRO PARÂMETRO É O TIPO DO USUÁRIO, SEGUNDO PARÂMETRO É O USU_ID*/
+                `;
+
+
+            //  WHERE ((? = 1 AND u.usu_id = u.usu_id) /*PRIMEIRO PARÂMETRO É O TIPO DO USUÁRIO*/
+            //     OR  (? = 0 AND u.usu_id = ?))	   /*PRIMEIRO PARÂMETRO É O TIPO DO USUÁRIO, SEGUNDO PARÂMETRO É O USU_ID*/
             const values = [Year, Month];
             const [agendamentosUsuario] = await db.query(sqlUsuario, values);
             // const values = [UserAcesso, UserAcesso, UsuarioId];
@@ -141,14 +144,16 @@ module.exports = {
 
                 const end = agendData.toISOString();
 
-                const detalhesExtras = (UserAcesso == 1  || e.usu_id === parseInt(UsuarioId)) ? {
+                const detalhesExtras = (UserAcesso == 1 || e.usu_id === parseInt(UsuarioId)) ? {
                     veic_placa: e.veic_placa,
                     veic_usu_id: e.veic_usu_id,
                     veic_ano: e.veic_ano,
                     veic_cor: e.veic_cor,
                     agend_observ: e.agend_observ,
                     serv_nome: e.serv_nome,
-                    serv_duracao: e.serv_duracao
+                    serv_duracao: e.serv_duracao,
+                    cat_serv_nome: e.cat_serv_nome,
+                    cat_serv_id: e.cat_serv_id
                 } : {};
 
                 return {
@@ -356,7 +361,7 @@ module.exports = {
                 agend_data,
                 agend_horario,
                 agend_serv_situ_id,
-                agend_observ, 
+                agend_observ,
             } = request.body;
 
             const sql = `
