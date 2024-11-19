@@ -264,24 +264,31 @@ module.exports = {
             const { UsuarioId } = request.params;
 
             const sql = `
-                SELECT a.agend_id,
-                       a.veic_usu_id,
-                       a.agend_data,
-                       a.agend_horario,
-                       a.agend_serv_situ_id,
-                       a.agend_observ,
-                       u.usu_id,
-                       u.usu_nome,
-                       v.veic_placa,
-                       v.veic_ano,
-                       v.veic_cor,
-                       s.serv_nome 
-                  FROM agendamentos a
-                  JOIN veiculo_usuario vu ON a.veic_usu_id = vu.veic_usu_id
-                  JOIN usuarios u         ON vu.usu_id = u.usu_id
-                  JOIN veiculos v         ON vu.veic_id = v.veic_id
-                  JOIN servicos s         ON a.serv_id = s.serv_id 
-                 WHERE u.usu_id = ?
+               SELECT a.agend_id,
+                      a.veic_usu_id,
+                      DATE_FORMAT(a.agend_data, '%Y-%m-%d') AS agend_data,
+                      a.agend_horario,
+                      a.agend_serv_situ_id,
+                      a.agend_observ,
+                      u.usu_id,
+                      u.usu_nome,
+                      v.veic_placa,
+                      v.veic_ano,
+                      v.veic_cor,
+                      s.serv_nome,
+                      cs.cat_serv_id,
+                      cs.cat_serv_nome,
+                      m.mod_nome AS mod_nome,
+                      ma.mar_nome AS mar_nome
+                 FROM agendamentos a
+                 JOIN veiculo_usuario vu     ON a.veic_usu_id = vu.veic_usu_id
+                 JOIN usuarios u             ON vu.usu_id = u.usu_id
+                 JOIN veiculos v             ON vu.veic_id = v.veic_id
+                 JOIN modelos m              ON v.mod_id = m.mod_id        
+                 JOIN marcas ma              ON m.mar_id = ma.mar_id       
+                 JOIN servicos s             ON a.serv_id = s.serv_id
+                 JOIN categorias_servicos cs ON s.cat_serv_id = cs.cat_serv_id
+                WHERE u.usu_id = ?
             `;
 
             const values = [UsuarioId];

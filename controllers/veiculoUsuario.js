@@ -88,6 +88,7 @@ module.exports = {
                         v.veic_cor,
                         v.veic_combustivel,
                         v.veic_observ,
+                        v.veic_situacao,
                         m.mod_id AS mod_id,
                         m.mod_nome AS mod_nome,
                         ma.mar_nome AS mar_nome,
@@ -98,7 +99,8 @@ module.exports = {
                    JOIN modelos m      ON v.mod_id = m.mod_id
                    JOIN marcas ma      ON m.mar_id = ma.mar_id
               LEFT JOIN categorias c   ON ma.cat_id = c.cat_id
-                  WHERE vu.usu_id = ? AND vu.data_final IS NULL`;
+                  WHERE vu.usu_id = ? AND vu.data_final IS NULL AND v.veic_situacao = 1`;
+              //   WHERE vu.usu_id = ? AND vu.data_final IS NULL `;
 
             const [veiculosPorUsuarioId] = await db.query(sql, [UsuarioId]);
             const nItens = veiculosPorUsuarioId.length;
