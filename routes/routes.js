@@ -97,7 +97,7 @@ router.get('/agendamentos/:UsuarioId', agendamentoController.listarHistoricoDoUs
 router.post('/agendamentos', agendamentosController.cadastrarAgendamento);
 router.patch('/agendamentos/:agend_id', agendamentosController.editarAgendamento);
 router.patch('/agendamentos/situacao/:agend_id', agendamentoController.editarSituacaoAgendamento);
-router.delete('/agendamentos/:agend_id', agendamentosController.excluirAgendamento);
+router.patch('/agendamentos/cancelar/:agend_id', agendamentosController.cancelarAgendamento);
 
 
 router.get('/categoriasServicos', categoriasServicosController.listarCategorias);

@@ -1,5 +1,12 @@
 const db = require('../database/connection');
 
+const moment = require('moment');
+
+const dataInput = (data) => {
+    const dataInput = moment(data, 'YYYY-MM-DD').format('YYYY-MM-DD');
+    return dataInput;
+}
+
 module.exports = {
     async listarAgendamentos(request, response) {
         try {
@@ -115,6 +122,7 @@ module.exports = {
                   JOIN categorias_servicos cs ON s.cat_serv_id = cs.cat_serv_id
                  WHERE YEAR(a.agend_data)  = ?
                    AND MONTH(a.agend_data) = ?
+                   AND a.agend_situacao = 1
                 `;
 
 
@@ -365,26 +373,28 @@ module.exports = {
 
             const {
                 veic_usu_id,
+                // veic_usu_id,
                 agend_data,
                 agend_horario,
-                agend_serv_situ_id,
+                // agend_serv_situ_id,
                 agend_observ,
             } = request.body;
 
             const sql = `
                 UPDATE agendamentos
-                   SET veic_usu_id = ?, 
-                       agend_data = ?, 
-                       agend_horario = ?, 
-                       agend_serv_situ_id = ?, 
-                       agend_observ = ?
+                SET    
+                veic_usu_id = ?,
+                agend_data = ?,
+                agend_horario = ?,
+                agend_observ = ?
                  WHERE agend_id = ?`;
 
             const values = [
                 veic_usu_id,
+                // veic_usu_id,
                 agend_data,
                 agend_horario,
-                agend_serv_situ_id,
+                // agend_serv_situ_id,
                 agend_observ,
                 agend_id
             ];
@@ -433,22 +443,31 @@ module.exports = {
         }
     },
 
-    async excluirAgendamento(request, response) {
+    async cancelarAgendamento(request, response) {
         try {
             const { agend_id } = request.params;
-
+            const { agend_situacao, agend_serv_situ_id } = request.body; // Valores vindos do front-end
+    
             const sql = `
-                DELETE *
-                  FROM agendamentos
+                UPDATE agendamentos
+                   SET agend_situacao = ?, 
+                       agend_serv_situ_id = ?
                  WHERE agend_id = ?`;
-
-            const values = [agend_id];
-            const [excluir] = await db.query(sql, values);
-
+    
+            const values = [agend_situacao, agend_serv_situ_id, agend_id];
+            const [resultado] = await db.query(sql, values);
+    
+            if (resultado.affectedRows === 0) {
+                return response.status(404).json({
+                    sucesso: false,
+                    mensagem: `Agendamento ${agend_id} não encontrado.`
+                });
+            }
+    
             return response.status(200).json({
                 sucesso: true,
-                mensagem: `Agendamento ${agend_id} excluído com sucesso`,
-                dados: excluir.affectedRows
+                mensagem: `Agendamento ${agend_id} atualizado com sucesso.`,
+                dados: resultado.affectedRows
             });
         } catch (error) {
             return response.status(500).json({
@@ -458,4 +477,5 @@ module.exports = {
             });
         }
     }
+    
 }
