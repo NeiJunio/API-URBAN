@@ -30,7 +30,8 @@ module.exports = {
                   JOIN veiculo_usuario vu ON a.veic_usu_id = vu.veic_usu_id
                   JOIN usuarios u         ON vu.usu_id = u.usu_id
                   JOIN veiculos v         ON vu.veic_id = v.veic_id
-                  JOIN servicos s         ON a.serv_id = s.serv_id`;
+                  JOIN servicos s         ON a.serv_id = s.serv_id
+            `;
 
             const [todosAgendamentos] = await db.query(sqlTodos);
             const nItensTodos = todosAgendamentos.length;
@@ -95,8 +96,6 @@ module.exports = {
     async listarAgendamentosDoUsuario(request, response) {
         try {
             const { UsuarioId, UserAcesso, Month, Year } = request.params;
-            // const { Year, Month} = request.body;
-            //const  = request.query.UserAcesso;
 
             const sqlUsuario = `
                 SELECT a.agend_id,
@@ -123,7 +122,7 @@ module.exports = {
                  WHERE YEAR(a.agend_data)  = ?
                    AND MONTH(a.agend_data) = ?
                    AND a.agend_situacao = 1
-                `;
+            `;
 
 
             //  WHERE ((? = 1 AND u.usu_id = u.usu_id) /*PRIMEIRO PARÂMETRO É O TIPO DO USUÁRIO*/
@@ -246,7 +245,8 @@ module.exports = {
                        agend_situacao,
                        agend_observ
                   FROM agendamentos
-                 WHERE agend_situacao = ?`;
+                 WHERE agend_situacao = ?
+            `;
 
             const values = [agend_situacao];
             const [agendamentos] = await db.query(sql, values);
@@ -283,6 +283,7 @@ module.exports = {
                       v.veic_placa,
                       v.veic_ano,
                       v.veic_cor,
+                      s.serv_id,
                       s.serv_nome,
                       cs.cat_serv_id,
                       cs.cat_serv_nome,
@@ -382,12 +383,12 @@ module.exports = {
 
             const sql = `
                 UPDATE agendamentos
-                SET    
-                veic_usu_id = ?,
-                agend_data = ?,
-                agend_horario = ?,
-                agend_observ = ?
-                 WHERE agend_id = ?`;
+                   SET veic_usu_id = ?,
+                       agend_data = ?,
+                       agend_horario = ?,
+                       agend_observ = ?
+                 WHERE agend_id = ?
+            `;
 
             const values = [
                 veic_usu_id,
@@ -446,7 +447,7 @@ module.exports = {
     async cancelarAgendamento(request, response) {
         try {
             const { agend_id } = request.params;
-            const { agend_situacao, agend_serv_situ_id } = request.body; // Valores vindos do front-end
+            const { agend_situacao, agend_serv_situ_id } = request.body;
     
             const sql = `
                 UPDATE agendamentos
@@ -477,5 +478,4 @@ module.exports = {
             });
         }
     }
-    
 }
