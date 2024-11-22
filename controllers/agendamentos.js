@@ -324,7 +324,101 @@ module.exports = {
             });
         }
     },
-
+    // async cadastrarAgendamento(request, response) {
+    //     try {
+    //         const {
+    //             veic_usu_id,
+    //             agend_data,
+    //             agend_horario,
+    //             agend_situacao,
+    //             agend_observ,
+    //             serv_id,
+    //             agend_serv_situ_id
+    //         } = request.body;
+    
+    //         const sqlVerificacao = 
+    //             `SELECT 
+    //                     1
+    //              FROM 
+    //                     agendamentos
+    //              WHERE 
+    //                     ? < (
+    //                         SELECT ADDTIME(agend_horario, serv_duracao)
+    //                         FROM agendamentos age
+    //                         INNER JOIN servicos ser ON ser.serv_id = age.serv_id
+    //                         WHERE agend_data = ?
+    //                         AND agend_horario <= ?
+    //                         ORDER BY agend_horario DESC LIMIT 1
+    //                     )
+    //                     OR (
+    //                         SELECT ADDTIME(?, serv_duracao)
+    //                         FROM servicos
+    //                         WHERE serv_id = ?
+    //                     ) > (
+    //                         SELECT agend_horario
+    //                         FROM agendamentos
+    //                         WHERE agend_data = ?
+    //                         AND agend_horario >= ?
+    //                         ORDER BY agend_horario ASC LIMIT 1
+    //                     )
+    //                     OR ? < "08:00:00"
+    //                     OR "18:00:00" < (
+    //                         SELECT ADDTIME(?, serv_duracao)
+    //                         FROM servicos
+    //                         WHERE serv_id = ?
+    //                     )
+    //             LIMIT 1;`;
+    
+    //         const valuesVerificacao = [
+    //             agend_horario, agend_data, agend_horario,
+    //             agend_horario, serv_id, agend_data, agend_horario,
+    //             agend_horario, agend_horario, serv_id
+    //         ];
+    
+    //         const [verificacao] = await db.query(sqlVerificacao, valuesVerificacao);
+    
+    //         if (verificacao.length > 0) {
+    //             return response.status(409).json({
+    //                 sucesso: false,
+    //                 mensagem: 'Conflito de horário ou duração do serviço.',
+    //                 dados: verificacao
+    //             });
+    //         }
+    
+    //         const sql = 
+    //             `INSERT INTO agendamentos (veic_usu_id, agend_data, agend_horario, agend_situacao, agend_observ, serv_id, agend_serv_situ_id) 
+    //             VALUES (?, ?, ?, ?, ?, ?, ?);`;
+    
+    //         const values = [
+    //             veic_usu_id,
+    //             agend_data,
+    //             agend_horario,
+    //             agend_situacao,
+    //             agend_observ,
+    //             serv_id,
+    //             agend_serv_situ_id
+    //         ];
+    
+    //         const [execSql] = await db.query(sql, values);
+    //         const agend_id = execSql.insertId;
+    
+    //         return response.status(201).json({
+    //             sucesso: true,
+    //             mensagem: 'Cadastro de agendamento efetuado com sucesso.',
+    //             dados: agend_id
+    //         });
+    
+    //     } catch (error) {
+    //         return response.status(500).json({
+    //             sucesso: false,
+    //             mensagem: 'Erro no servidor.',
+    //             dados: error.message
+    //         });
+    //     }
+    // },
+    
+    
+    
     async cadastrarAgendamento(request, response) {
         try {
             const {
@@ -337,28 +431,112 @@ module.exports = {
                 agend_serv_situ_id
             } = request.body;
 
-            const sql = `
-                INSERT INTO agendamentos (veic_usu_id, agend_data, agend_horario, agend_situacao, agend_observ, serv_id, agend_serv_situ_id) 
-                              VALUES (?, ?, ?, ?, ?, ?, ?)`;
-
-            const values = [
-                veic_usu_id,
+            const sqlVerificacao = `
+                SELECT 
+                        1
+                    FROM 
+                        agendamentos
+                    WHERE 
+                        ?
+                        < (
+                        	SELECT 
+                    			ADDTIME(agend_horario, serv_duracao)
+                    		FROM
+                    			agendamentos age
+                    		INNER JOIN 
+                    			servicos ser ON ser.serv_id = age.serv_id
+                    		WHERE
+                    			agend_data = ?
+                    			AND 
+                    			agend_horario <= ?
+                    		ORDER BY 
+                    			agend_horario DESC 
+                    		LIMIT 1
+                        )
+                        OR  
+                        (
+                            SELECT 
+                                ADDTIME( ?, serv_duracao )  
+                            FROM 
+                                servicos
+                            WHERE
+                            serv_id = ?
+                        )
+                        > 
+                        (
+                            SELECT 
+                            	agend_horario 
+                            FROM 
+                            	agendamentos 
+                            WHERE
+                    			agend_data = ?
+                                AND 
+                                agend_horario >= ? 
+                                ORDER BY 
+                                agend_horario ASC 
+                            LIMIT 1 
+                        ) 
+                        OR 
+                        ? < "07:59:59"
+                        OR "18:00:00"
+                        <(
+                        SELECT 
+                             ADDTIME( ?, serv_duracao )
+                         FROM 
+                             servicos
+                         WHERE
+                         serv_id =  ?)
+                LIMIT 1;
+            `
+            const valuesVerificacao = [
+                agend_horario,
                 agend_data,
                 agend_horario,
-                agend_situacao,
-                agend_observ,
+                agend_horario,
                 serv_id,
-                agend_serv_situ_id
-            ];
+                agend_data,
+                agend_horario,
+                agend_horario,
+                agend_horario,
+                serv_id
+            ]
 
-            const [execSql] = await db.query(sql, values);
-            const agend_id = execSql.insertId;
+            const [verificacao] = await db.query(sqlVerificacao, valuesVerificacao);
 
-            return response.status(200).json({
-                sucesso: true,
-                mensagem: 'Cadastro de agendamento efetuado com sucesso.',
-                dados: agend_id
-            });
+            if (verificacao.length > 0) {
+                return response.status(200).json({
+                    sucesso: true,
+                    mensagem: 'erro',
+                    dados: verificacao
+                });
+            } else {
+
+                
+                
+                const sql = `
+                INSERT INTO agendamentos (veic_usu_id, agend_data, agend_horario, agend_situacao, agend_observ, serv_id, agend_serv_situ_id) 
+                VALUES (?, ?, ?, ?, ?, ?, ?)`;
+                
+                const values = [
+                    veic_usu_id,
+                    agend_data,
+                    agend_horario,
+                    agend_situacao,
+                    agend_observ,
+                    serv_id,
+                    agend_serv_situ_id
+                ];
+                
+                const [execSql] = await db.query(sql, values);
+                const agend_id = execSql.insertId;
+                
+                return response.status(200).json({
+                    sucesso: true,
+                    mensagem: 'Cadastro de agendamento efetuado com sucesso.',
+                    dados: agend_id
+                });
+            }
+
         } catch (error) {
             return response.status(500).json({
                 sucesso: false,
@@ -367,6 +545,49 @@ module.exports = {
             });
         }
     },
+
+    // async cadastrarAgendamento(request, response) {
+    //     try {
+    //         const {
+    //             veic_usu_id,
+    //             agend_data,
+    //             agend_horario,
+    //             agend_situacao,
+    //             agend_observ,
+    //             serv_id,
+    //             agend_serv_situ_id
+    //         } = request.body;
+
+    //         const sql = `
+    //             INSERT INTO agendamentos (veic_usu_id, agend_data, agend_horario, agend_situacao, agend_observ, serv_id, agend_serv_situ_id) 
+    //                           VALUES (?, ?, ?, ?, ?, ?, ?)`;
+
+    //         const values = [
+    //             veic_usu_id,
+    //             agend_data,
+    //             agend_horario,
+    //             agend_situacao,
+    //             agend_observ,
+    //             serv_id,
+    //             agend_serv_situ_id
+    //         ];
+
+    //         const [execSql] = await db.query(sql, values);
+    //         const agend_id = execSql.insertId;
+
+    //         return response.status(200).json({
+    //             sucesso: true,
+    //             mensagem: 'Cadastro de agendamento efetuado com sucesso.',
+    //             dados: agend_id
+    //         });
+    //     } catch (error) {
+    //         return response.status(500).json({
+    //             sucesso: false,
+    //             mensagem: 'Erro na requisição.',
+    //             dados: error.message
+    //         });
+    //     }
+    // },
 
     async editarAgendamento(request, response) {
         try {
