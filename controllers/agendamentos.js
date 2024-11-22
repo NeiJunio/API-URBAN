@@ -122,8 +122,9 @@ module.exports = {
                  WHERE YEAR(a.agend_data)  = ?
                    AND MONTH(a.agend_data) = ?
                    AND a.agend_situacao = 1
-            `;
-
+                   AND a.agend_serv_situ_id <> 4
+                   `;
+                   
 
             //  WHERE ((? = 1 AND u.usu_id = u.usu_id) /*PRIMEIRO PARÂMETRO É O TIPO DO USUÁRIO*/
             //     OR  (? = 0 AND u.usu_id = ?))	   /*PRIMEIRO PARÂMETRO É O TIPO DO USUÁRIO, SEGUNDO PARÂMETRO É O USU_ID*/
@@ -335,7 +336,7 @@ module.exports = {
     //             serv_id,
     //             agend_serv_situ_id
     //         } = request.body;
-    
+
     //         const sqlVerificacao = 
     //             `SELECT 
     //                     1
@@ -368,15 +369,15 @@ module.exports = {
     //                         WHERE serv_id = ?
     //                     )
     //             LIMIT 1;`;
-    
+
     //         const valuesVerificacao = [
     //             agend_horario, agend_data, agend_horario,
     //             agend_horario, serv_id, agend_data, agend_horario,
     //             agend_horario, agend_horario, serv_id
     //         ];
-    
+
     //         const [verificacao] = await db.query(sqlVerificacao, valuesVerificacao);
-    
+
     //         if (verificacao.length > 0) {
     //             return response.status(409).json({
     //                 sucesso: false,
@@ -384,11 +385,11 @@ module.exports = {
     //                 dados: verificacao
     //             });
     //         }
-    
+
     //         const sql = 
     //             `INSERT INTO agendamentos (veic_usu_id, agend_data, agend_horario, agend_situacao, agend_observ, serv_id, agend_serv_situ_id) 
     //             VALUES (?, ?, ?, ?, ?, ?, ?);`;
-    
+
     //         const values = [
     //             veic_usu_id,
     //             agend_data,
@@ -398,16 +399,16 @@ module.exports = {
     //             serv_id,
     //             agend_serv_situ_id
     //         ];
-    
+
     //         const [execSql] = await db.query(sql, values);
     //         const agend_id = execSql.insertId;
-    
+
     //         return response.status(201).json({
     //             sucesso: true,
     //             mensagem: 'Cadastro de agendamento efetuado com sucesso.',
     //             dados: agend_id
     //         });
-    
+
     //     } catch (error) {
     //         return response.status(500).json({
     //             sucesso: false,
@@ -416,9 +417,9 @@ module.exports = {
     //         });
     //     }
     // },
-    
-    
-    
+
+
+
     async cadastrarAgendamento(request, response) {
         try {
             const {
@@ -431,62 +432,35 @@ module.exports = {
                 agend_serv_situ_id
             } = request.body;
 
-            const sqlVerificacao = `
-                SELECT 
-                        1
-                    FROM 
-                        agendamentos
-                    WHERE 
-                        ?
-                        < (
-                        	SELECT 
-                    			ADDTIME(agend_horario, serv_duracao)
-                    		FROM
-                    			agendamentos age
-                    		INNER JOIN 
-                    			servicos ser ON ser.serv_id = age.serv_id
-                    		WHERE
-                    			agend_data = ?
-                    			AND 
-                    			agend_horario <= ?
-                    		ORDER BY 
-                    			agend_horario DESC 
-                    		LIMIT 1
-                        )
-                        OR  
-                        (
-                            SELECT 
-                                ADDTIME( ?, serv_duracao )  
-                            FROM 
-                                servicos
-                            WHERE
-                            serv_id = ?
-                        )
-                        > 
-                        (
-                            SELECT 
-                            	agend_horario 
-                            FROM 
-                            	agendamentos 
-                            WHERE
-                    			agend_data = ?
-                                AND 
-                                agend_horario >= ? 
-                                ORDER BY 
-                                agend_horario ASC 
-                            LIMIT 1 
-                        ) 
-                        OR 
-                        ? < "07:59:59"
-                        OR "18:00:00"
-                        <(
-                        SELECT 
-                             ADDTIME( ?, serv_duracao )
-                         FROM 
-                             servicos
-                         WHERE
-                         serv_id =  ?)
-                LIMIT 1;
+            const sqlVerificacao = `SELECT 1
+                                    FROM agendamentos
+                                    WHERE CAST(? AS TIME) < (SELECT ADDTIME(age.agend_horario, ser.serv_duracao)
+                                                                        FROM agendamentos age
+                                                                INNER JOIN servicos     ser ON ser.serv_id = age.serv_id
+                                                                        WHERE age.agend_data = ?
+                                                                        AND age.agend_horario <= CAST(? AS TIME)
+                                                                        AND age.agend_serv_situ_id <> 4 /*CANCELADO*/
+                                                                    ORDER BY age.agend_horario DESC 
+                                                                        LIMIT 1
+                                                                    )
+                                        OR  ( SELECT ADDTIME(CAST(? AS TIME), serv_duracao)
+                                                FROM servicos
+                                            WHERE serv_id = ?
+                                            ) > ( SELECT agend_horario 
+                                                    FROM agendamentos 
+                                                WHERE agend_data = ?
+                                                    AND agend_horario >= CAST(? AS TIME)
+                                                    AND agend_serv_situ_id <> 4 /*CANCELADO*/
+                                                ORDER BY agend_horario ASC
+                                                LIMIT 1 
+                                                )
+                                        OR CAST(? AS TIME) < CAST("07:59:59" AS TIME)
+                                        OR CAST("18:00:00" AS TIME) < ( SELECT ADDTIME(CAST(? AS TIME), serv_duracao)
+                                                                        FROM servicos
+                                                                        WHERE serv_id = ?
+                                                                    )
+                                        AND agendamentos.agend_serv_situ_id <> 4 /*CANCELADO*/
+                                    LIMIT 1;
             `
             const valuesVerificacao = [
                 agend_horario,
@@ -514,7 +488,7 @@ module.exports = {
                 const sql = `
                 INSERT INTO agendamentos (veic_usu_id, agend_data, agend_horario, agend_situacao, agend_observ, serv_id, agend_serv_situ_id) 
                 VALUES (?, ?, ?, ?, ?, ?, ?)`;
-                
+
                 const values = [
                     veic_usu_id,
                     agend_data,
@@ -524,10 +498,10 @@ module.exports = {
                     serv_id,
                     agend_serv_situ_id
                 ];
-                
+
                 const [execSql] = await db.query(sql, values);
                 const agend_id = execSql.insertId;
-                
+
                 return response.status(200).json({
                     sucesso: true,
                     mensagem: 'Cadastro de agendamento efetuado com sucesso.',
@@ -669,23 +643,23 @@ module.exports = {
         try {
             const { agend_id } = request.params;
             const { agend_situacao, agend_serv_situ_id } = request.body;
-    
+
             const sql = `
                 UPDATE agendamentos
                    SET agend_situacao = ?, 
                        agend_serv_situ_id = ?
                  WHERE agend_id = ?`;
-    
+
             const values = [agend_situacao, agend_serv_situ_id, agend_id];
             const [resultado] = await db.query(sql, values);
-    
+
             if (resultado.affectedRows === 0) {
                 return response.status(404).json({
                     sucesso: false,
                     mensagem: `Agendamento ${agend_id} não encontrado.`
                 });
             }
-    
+
             return response.status(200).json({
                 sucesso: true,
                 mensagem: `Agendamento ${agend_id} atualizado com sucesso.`,
