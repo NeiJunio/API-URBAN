@@ -504,15 +504,13 @@ module.exports = {
             const [verificacao] = await db.query(sqlVerificacao, valuesVerificacao);
 
             if (verificacao.length > 0) {
-                return response.status(200).json({
-                    sucesso: true,
-                    mensagem: 'erro',
+                return response.status(400).json({
+                    sucesso: false,
+                    mensagem: 'Horário indisponível',
                     dados: verificacao
                 });
             } else {
 
-                
-                
                 const sql = `
                 INSERT INTO agendamentos (veic_usu_id, agend_data, agend_horario, agend_situacao, agend_observ, serv_id, agend_serv_situ_id) 
                 VALUES (?, ?, ?, ?, ?, ?, ?)`;
@@ -595,10 +593,10 @@ module.exports = {
 
             const {
                 veic_usu_id,
-                // veic_usu_id,
                 agend_data,
                 agend_horario,
-                // agend_serv_situ_id,
+                serv_id,
+                agend_serv_situ_id,
                 agend_observ,
             } = request.body;
 
@@ -607,16 +605,18 @@ module.exports = {
                    SET veic_usu_id = ?,
                        agend_data = ?,
                        agend_horario = ?,
+                       serv_id = ?,
+                       agend_serv_situ_id = ?,
                        agend_observ = ?
                  WHERE agend_id = ?
             `;
 
             const values = [
                 veic_usu_id,
-                // veic_usu_id,
                 agend_data,
                 agend_horario,
-                // agend_serv_situ_id,
+                serv_id,
+                agend_serv_situ_id,
                 agend_observ,
                 agend_id
             ];

@@ -40,6 +40,7 @@ module.exports = {
     async listarServicosPorCategoria(request, response) {
         try {
             const { cat_serv_id } = request.params;
+            console.log("Categoria recebida no servidor:", cat_serv_id);
 
             const sql = `
                 SELECT s.serv_id,
@@ -56,18 +57,18 @@ module.exports = {
                   FROM servicos s
                   JOIN categorias_servicos cs ON s.cat_serv_id = cs.cat_serv_id
                  WHERE s.cat_serv_id = ?;`;
-
+    
             const [servicos] = await db.query(sql, [cat_serv_id]);
-
+    
             const nItens = servicos.length;
-
+    
             if (nItens === 0) {
-                return response.status(404).json({
+                return response.status(200).json({
                     sucesso: false,
                     mensagem: 'Nenhum serviço encontrado para essa categoria.',
                 });
             }
-
+    
             return response.status(200).json({
                 sucesso: true,
                 mensagem: 'Lista de serviços por categoria.',
@@ -82,6 +83,7 @@ module.exports = {
             });
         }
     },
+    
 
     async visualizarServico(request, response) {
         try {
