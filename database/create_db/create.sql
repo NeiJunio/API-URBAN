@@ -187,3 +187,6 @@ ALTER TABLE `agendamentos` ADD CONSTRAINT `fk_agendamentos_agenda_servicos_situa
 
 -- MODIFICAR PARA LOGIN
 ALTER TABLE `usuarios` MODIFY COLUMN `usu_situacao` TINYINT(1) DEFAULT 1;
+
+-- Garantir Sensibilidade a Maiúsculas/Minúsculas no Banco
+ALTER TABLE `usuarios` MODIFY `usu_senha` VARCHAR(255) COLLATE utf8mb4_bin;
