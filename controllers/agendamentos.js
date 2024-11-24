@@ -125,13 +125,9 @@ module.exports = {
                    AND a.agend_serv_situ_id <> 4
                    `;
                    
-
-            //  WHERE ((? = 1 AND u.usu_id = u.usu_id) /*PRIMEIRO PARÂMETRO É O TIPO DO USUÁRIO*/
-            //     OR  (? = 0 AND u.usu_id = ?))	   /*PRIMEIRO PARÂMETRO É O TIPO DO USUÁRIO, SEGUNDO PARÂMETRO É O USU_ID*/
             const values = [Year, Month];
             const [agendamentosUsuario] = await db.query(sqlUsuario, values);
-            // const values = [UserAcesso, UserAcesso, UsuarioId];
-            // const [agendamentosUsuario] = await db.query(sqlUsuario, values);
+
             const nItensUsuario = agendamentosUsuario.length;
 
             const colorMap = {
@@ -198,22 +194,31 @@ module.exports = {
     async listarTodosAgendamentos(request, response) {
         try {
             const sql = `
-                SELECT ag.agend_id, 
-                       ag.veic_usu_id, 
-                       ag.agend_data, 
-                       ag.agend_horario, 
-                       ag.agend_observ, 
-                       ag.agend_situacao, 
-                       ag.serv_id,
-                       ag.agend_serv_situ_id, 
-                       ve.veic_placa,
-                       se.serv_nome AS serv_nome, 
-                       us.usu_nome AS usu_nome
-                  FROM agendamentos ag
-            INNER JOIN veiculo_usuario vu ON ag.veic_usu_id = vu.veic_usu_id
-            INNER JOIN usuarios us        ON vu.usu_id = us.usu_id
-            INNER JOIN veiculos ve        ON vu.veic_id = ve.veic_id
-             LEFT JOIN servicos se        ON ag.serv_id = se.serv_id;
+                SELECT a.agend_id,
+                       a.veic_usu_id,
+                       DATE_FORMAT(a.agend_data, '%Y-%m-%d') AS agend_data,
+                       a.agend_horario,
+                       a.agend_serv_situ_id,
+                       a.agend_observ,
+                       u.usu_id,
+                       u.usu_nome,
+                       v.veic_placa,
+                       v.veic_ano,
+                       v.veic_cor,
+                       s.serv_id,
+                       s.serv_nome,
+                       cs.cat_serv_id,
+                       cs.cat_serv_nome,
+                       m.mod_nome AS mod_nome,
+                       ma.mar_nome AS mar_nome
+                  FROM agendamentos a
+                  JOIN veiculo_usuario vu     ON a.veic_usu_id = vu.veic_usu_id
+                  JOIN usuarios u             ON vu.usu_id = u.usu_id
+                  JOIN veiculos v             ON vu.veic_id = v.veic_id
+                  JOIN modelos m              ON v.mod_id = m.mod_id        
+                  JOIN marcas ma              ON m.mar_id = ma.mar_id       
+                  JOIN servicos s             ON a.serv_id = s.serv_id
+                  JOIN categorias_servicos cs ON s.cat_serv_id = cs.cat_serv_id
             `;
 
             const [agendamentos] = await db.query(sql);
@@ -273,32 +278,32 @@ module.exports = {
             const { UsuarioId } = request.params;
 
             const sql = `
-               SELECT a.agend_id,
-                      a.veic_usu_id,
-                      DATE_FORMAT(a.agend_data, '%Y-%m-%d') AS agend_data,
-                      a.agend_horario,
-                      a.agend_serv_situ_id,
-                      a.agend_observ,
-                      u.usu_id,
-                      u.usu_nome,
-                      v.veic_placa,
-                      v.veic_ano,
-                      v.veic_cor,
-                      s.serv_id,
-                      s.serv_nome,
-                      cs.cat_serv_id,
-                      cs.cat_serv_nome,
-                      m.mod_nome AS mod_nome,
-                      ma.mar_nome AS mar_nome
-                 FROM agendamentos a
-                 JOIN veiculo_usuario vu     ON a.veic_usu_id = vu.veic_usu_id
-                 JOIN usuarios u             ON vu.usu_id = u.usu_id
-                 JOIN veiculos v             ON vu.veic_id = v.veic_id
-                 JOIN modelos m              ON v.mod_id = m.mod_id        
-                 JOIN marcas ma              ON m.mar_id = ma.mar_id       
-                 JOIN servicos s             ON a.serv_id = s.serv_id
-                 JOIN categorias_servicos cs ON s.cat_serv_id = cs.cat_serv_id
-                WHERE u.usu_id = ?
+                SELECT a.agend_id,
+                       a.veic_usu_id,
+                       DATE_FORMAT(a.agend_data, '%Y-%m-%d') AS agend_data,
+                       a.agend_horario,
+                       a.agend_serv_situ_id,
+                       a.agend_observ,
+                       u.usu_id,
+                       u.usu_nome,
+                       v.veic_placa,
+                       v.veic_ano,
+                       v.veic_cor,
+                       s.serv_id,
+                       s.serv_nome,
+                       cs.cat_serv_id,
+                       cs.cat_serv_nome,
+                       m.mod_nome AS mod_nome,
+                       ma.mar_nome AS mar_nome
+                  FROM agendamentos a
+                  JOIN veiculo_usuario vu     ON a.veic_usu_id = vu.veic_usu_id
+                  JOIN usuarios u             ON vu.usu_id = u.usu_id
+                  JOIN veiculos v             ON vu.veic_id = v.veic_id
+                  JOIN modelos m              ON v.mod_id = m.mod_id        
+                  JOIN marcas ma              ON m.mar_id = ma.mar_id       
+                  JOIN servicos s             ON a.serv_id = s.serv_id
+                  JOIN categorias_servicos cs ON s.cat_serv_id = cs.cat_serv_id
+                 WHERE u.usu_id = ?
             `;
 
             const values = [UsuarioId];
@@ -325,100 +330,6 @@ module.exports = {
             });
         }
     },
-    // async cadastrarAgendamento(request, response) {
-    //     try {
-    //         const {
-    //             veic_usu_id,
-    //             agend_data,
-    //             agend_horario,
-    //             agend_situacao,
-    //             agend_observ,
-    //             serv_id,
-    //             agend_serv_situ_id
-    //         } = request.body;
-
-    //         const sqlVerificacao = 
-    //             `SELECT 
-    //                     1
-    //              FROM 
-    //                     agendamentos
-    //              WHERE 
-    //                     ? < (
-    //                         SELECT ADDTIME(agend_horario, serv_duracao)
-    //                         FROM agendamentos age
-    //                         INNER JOIN servicos ser ON ser.serv_id = age.serv_id
-    //                         WHERE agend_data = ?
-    //                         AND agend_horario <= ?
-    //                         ORDER BY agend_horario DESC LIMIT 1
-    //                     )
-    //                     OR (
-    //                         SELECT ADDTIME(?, serv_duracao)
-    //                         FROM servicos
-    //                         WHERE serv_id = ?
-    //                     ) > (
-    //                         SELECT agend_horario
-    //                         FROM agendamentos
-    //                         WHERE agend_data = ?
-    //                         AND agend_horario >= ?
-    //                         ORDER BY agend_horario ASC LIMIT 1
-    //                     )
-    //                     OR ? < "08:00:00"
-    //                     OR "18:00:00" < (
-    //                         SELECT ADDTIME(?, serv_duracao)
-    //                         FROM servicos
-    //                         WHERE serv_id = ?
-    //                     )
-    //             LIMIT 1;`;
-
-    //         const valuesVerificacao = [
-    //             agend_horario, agend_data, agend_horario,
-    //             agend_horario, serv_id, agend_data, agend_horario,
-    //             agend_horario, agend_horario, serv_id
-    //         ];
-
-    //         const [verificacao] = await db.query(sqlVerificacao, valuesVerificacao);
-
-    //         if (verificacao.length > 0) {
-    //             return response.status(409).json({
-    //                 sucesso: false,
-    //                 mensagem: 'Conflito de horário ou duração do serviço.',
-    //                 dados: verificacao
-    //             });
-    //         }
-
-    //         const sql = 
-    //             `INSERT INTO agendamentos (veic_usu_id, agend_data, agend_horario, agend_situacao, agend_observ, serv_id, agend_serv_situ_id) 
-    //             VALUES (?, ?, ?, ?, ?, ?, ?);`;
-
-    //         const values = [
-    //             veic_usu_id,
-    //             agend_data,
-    //             agend_horario,
-    //             agend_situacao,
-    //             agend_observ,
-    //             serv_id,
-    //             agend_serv_situ_id
-    //         ];
-
-    //         const [execSql] = await db.query(sql, values);
-    //         const agend_id = execSql.insertId;
-
-    //         return response.status(201).json({
-    //             sucesso: true,
-    //             mensagem: 'Cadastro de agendamento efetuado com sucesso.',
-    //             dados: agend_id
-    //         });
-
-    //     } catch (error) {
-    //         return response.status(500).json({
-    //             sucesso: false,
-    //             mensagem: 'Erro no servidor.',
-    //             dados: error.message
-    //         });
-    //     }
-    // },
-
-
 
     async cadastrarAgendamento(request, response) {
         try {
@@ -517,49 +428,6 @@ module.exports = {
             });
         }
     },
-
-    // async cadastrarAgendamento(request, response) {
-    //     try {
-    //         const {
-    //             veic_usu_id,
-    //             agend_data,
-    //             agend_horario,
-    //             agend_situacao,
-    //             agend_observ,
-    //             serv_id,
-    //             agend_serv_situ_id
-    //         } = request.body;
-
-    //         const sql = `
-    //             INSERT INTO agendamentos (veic_usu_id, agend_data, agend_horario, agend_situacao, agend_observ, serv_id, agend_serv_situ_id) 
-    //                           VALUES (?, ?, ?, ?, ?, ?, ?)`;
-
-    //         const values = [
-    //             veic_usu_id,
-    //             agend_data,
-    //             agend_horario,
-    //             agend_situacao,
-    //             agend_observ,
-    //             serv_id,
-    //             agend_serv_situ_id
-    //         ];
-
-    //         const [execSql] = await db.query(sql, values);
-    //         const agend_id = execSql.insertId;
-
-    //         return response.status(200).json({
-    //             sucesso: true,
-    //             mensagem: 'Cadastro de agendamento efetuado com sucesso.',
-    //             dados: agend_id
-    //         });
-    //     } catch (error) {
-    //         return response.status(500).json({
-    //             sucesso: false,
-    //             mensagem: 'Erro na requisição.',
-    //             dados: error.message
-    //         });
-    //     }
-    // },
 
     async editarAgendamento(request, response) {
         try {

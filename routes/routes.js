@@ -20,7 +20,6 @@ const agendamentoController = require('../controllers/agendamentos');
 router.get('/usuarios', usuariosController.listarUsuarios);
 router.get('/usuarios/dadosUsuario/:usu_id', usuariosController.listarDadosUsuario);
 router.post('/usuarios', usuariosController.cadastrarUsuarios);
-// router.post('/usuarios/dados', usuariosController.listarDados);
 router.post('/usuarios/verificarCpf', usuariosController.verificarCpf);
 router.post('/usuarios/verificarEmail', usuariosController.verificarEmail);
 router.post('/usuarios/cpf', usuariosController.listarUsuarioPorCpf);
@@ -70,7 +69,6 @@ router.get('/veiculoUsuario', veiculoUsuarioController.listarVeiculosUsuario);
 router.get('/veiculoUsuario/proprietarios/:VeiculoId', veiculoUsuarioController.listarVeiculoUsuarioPorId);
 
 router.get('/veiculoUsuario/usuario/:UsuarioId', veiculoUsuarioController.listarVeicUsuarioPorId);
-// router.get('/veiculoUsuario/verificar/:veic_id/:usu_id', veiculoUsuarioController.verificarVeiculoAssociado);
 router.post('/veiculoUsuario', veiculoUsuarioController.cadastrarVeiculoUsuario);
 router.patch('/veiculoUsuario/:veic_usu_id', veiculoUsuarioController.editarVeiculoUsuario);
 router.patch('/veiculoUsuario/:veic_usu_id/data_final', veiculoUsuarioController.atualizarDataFinalVeiculoUsuario);
@@ -115,7 +113,7 @@ router.delete('/categorias/:cat_id', categoriasController.excluirCategoria);
 
 
 router.get('/marcas', marcasController.listarMarcas);
-router.get('/marcas/categorias/:cat_id', marcasController.listarMarcaPorCategoria); // ADICIONADO -> LISTAR MARCAS POR CATEGORIA
+router.get('/marcas/categorias/:cat_id', marcasController.listarMarcaPorCategoria);
 router.post('/marcas', marcasController.cadastrarMarca);
 router.patch('/marcas/:mar_id', marcasController.editarMarca);
 router.delete('/marcas/:mar_id', marcasController.excluirMarca);

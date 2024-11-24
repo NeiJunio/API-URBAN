@@ -1,7 +1,7 @@
 const db = require('../database/connection');
 
 module.exports = {
-    async listarSituacoes(request, response) {
+    async  listarSituacoes(request, response) {
         try {
             const sql = `
                 SELECT agend_serv_situ_id, 
