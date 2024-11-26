@@ -331,6 +331,104 @@ module.exports = {
         }
     },
 
+    // async cadastrarAgendamento(request, response) {
+    //     try {
+    //         const {
+    //             veic_usu_id,
+    //             agend_data,
+    //             agend_horario,
+    //             agend_situacao,
+    //             agend_observ,
+    //             serv_id,
+    //             agend_serv_situ_id
+    //         } = request.body;
+
+    //         const sqlVerificacao = `SELECT 1
+    //                                 FROM agendamentos
+    //                                 WHERE CAST(? AS TIME) < (SELECT ADDTIME(age.agend_horario, ser.serv_duracao)
+    //                                                                     FROM agendamentos age
+    //                                                             INNER JOIN servicos     ser ON ser.serv_id = age.serv_id
+    //                                                                     WHERE age.agend_data = ?
+    //                                                                     AND age.agend_horario <= CAST(? AS TIME)
+    //                                                                     AND age.agend_serv_situ_id <> 4 /*CANCELADO*/
+    //                                                                 ORDER BY age.agend_horario DESC 
+    //                                                                     LIMIT 1
+    //                                                                 )
+    //                                     OR  ( SELECT ADDTIME(CAST(? AS TIME), serv_duracao)
+    //                                             FROM servicos
+    //                                         WHERE serv_id = ?
+    //                                         ) > ( SELECT agend_horario 
+    //                                                 FROM agendamentos 
+    //                                             WHERE agend_data = ?
+    //                                                 AND agend_horario >= CAST(? AS TIME)
+    //                                                 AND agend_serv_situ_id <> 4 /*CANCELADO*/
+    //                                             ORDER BY agend_horario ASC
+    //                                             LIMIT 1 
+    //                                             )
+    //                                     OR CAST(? AS TIME) < CAST("07:59:59" AS TIME)
+    //                                     OR CAST("18:00:00" AS TIME) < ( SELECT ADDTIME(CAST(? AS TIME), serv_duracao)
+    //                                                                     FROM servicos
+    //                                                                     WHERE serv_id = ?
+    //                                                                 )
+    //                                     AND agendamentos.agend_serv_situ_id <> 4 /*CANCELADO*/
+    //                                 LIMIT 1;
+    //         `
+    //         const valuesVerificacao = [
+    //             agend_horario,
+    //             agend_data,
+    //             agend_horario,
+    //             agend_horario,
+    //             serv_id,
+    //             agend_data,
+    //             agend_horario,
+    //             agend_horario,
+    //             agend_horario,
+    //             serv_id
+    //         ]
+
+    //         const [verificacao] = await db.query(sqlVerificacao, valuesVerificacao);
+
+    //         if (verificacao.length > 0) {
+    //             return response.status(400).json({
+    //                 sucesso: false,
+    //                 mensagem: 'Horário indisponível',
+    //                 dados: verificacao
+    //             });
+    //         } else {
+
+    //             const sql = `
+    //             INSERT INTO agendamentos (veic_usu_id, agend_data, agend_horario, agend_situacao, agend_observ, serv_id, agend_serv_situ_id) 
+    //             VALUES (?, ?, ?, ?, ?, ?, ?)`;
+
+    //             const values = [
+    //                 veic_usu_id,
+    //                 agend_data,
+    //                 agend_horario,
+    //                 agend_situacao,
+    //                 agend_observ,
+    //                 serv_id,
+    //                 agend_serv_situ_id
+    //             ];
+
+    //             const [execSql] = await db.query(sql, values);
+    //             const agend_id = execSql.insertId;
+
+    //             return response.status(200).json({
+    //                 sucesso: true,
+    //                 mensagem: 'Cadastro de agendamento efetuado com sucesso.',
+    //                 dados: agend_id
+    //             });
+    //         }
+
+    //     } catch (error) {
+    //         return response.status(500).json({
+    //             sucesso: false,
+    //             mensagem: 'Erro na requisição.',
+    //             dados: error.message
+    //         });
+    //     }
+    // },
+
     async cadastrarAgendamento(request, response) {
         try {
             const {
@@ -342,37 +440,44 @@ module.exports = {
                 serv_id,
                 agend_serv_situ_id
             } = request.body;
-
+    
             const sqlVerificacao = `SELECT 1
                                     FROM agendamentos
-                                    WHERE CAST(? AS TIME) < (SELECT ADDTIME(age.agend_horario, ser.serv_duracao)
-                                                                        FROM agendamentos age
-                                                                INNER JOIN servicos     ser ON ser.serv_id = age.serv_id
-                                                                        WHERE age.agend_data = ?
-                                                                        AND age.agend_horario <= CAST(? AS TIME)
-                                                                        AND age.agend_serv_situ_id <> 4 /*CANCELADO*/
-                                                                    ORDER BY age.agend_horario DESC 
-                                                                        LIMIT 1
-                                                                    )
-                                        OR  ( SELECT ADDTIME(CAST(? AS TIME), serv_duracao)
-                                                FROM servicos
+                                    WHERE 
+                                        CAST(? AS TIME) < (
+                                            SELECT ADDTIME(age.agend_horario, ser.serv_duracao)
+                                            FROM agendamentos age
+                                            INNER JOIN servicos ser ON ser.serv_id = age.serv_id
+                                            WHERE age.agend_data = ?
+                                            AND age.agend_horario <= CAST(? AS TIME)
+                                            AND age.agend_serv_situ_id <> 4 /*CANCELADO*/
+                                            ORDER BY age.agend_horario DESC 
+                                            LIMIT 1
+                                        )
+                                        OR (
+                                            SELECT ADDTIME(CAST(? AS TIME), serv_duracao)
+                                            FROM servicos
                                             WHERE serv_id = ?
-                                            ) > ( SELECT agend_horario 
-                                                    FROM agendamentos 
-                                                WHERE agend_data = ?
-                                                    AND agend_horario >= CAST(? AS TIME)
-                                                    AND agend_serv_situ_id <> 4 /*CANCELADO*/
-                                                ORDER BY agend_horario ASC
-                                                LIMIT 1 
-                                                )
+                                        ) > (
+                                            SELECT agend_horario 
+                                            FROM agendamentos 
+                                            WHERE agend_data = ?
+                                            AND agend_horario >= CAST(? AS TIME)
+                                            AND agend_serv_situ_id <> 4 /*CANCELADO*/
+                                            ORDER BY agend_horario ASC
+                                            LIMIT 1 
+                                        )
                                         OR CAST(? AS TIME) < CAST("07:59:59" AS TIME)
-                                        OR CAST("18:00:00" AS TIME) < ( SELECT ADDTIME(CAST(? AS TIME), serv_duracao)
-                                                                        FROM servicos
-                                                                        WHERE serv_id = ?
-                                                                    )
+                                        OR CAST("18:00:00" AS TIME) < (
+                                            SELECT ADDTIME(CAST(? AS TIME), serv_duracao)
+                                            FROM servicos
+                                            WHERE serv_id = ?
+                                        )
+                                        OR ? < CURRENT_DATE /* Validação para evitar agendamentos retroativos */
                                         AND agendamentos.agend_serv_situ_id <> 4 /*CANCELADO*/
                                     LIMIT 1;
-            `
+            `;
+    
             const valuesVerificacao = [
                 agend_horario,
                 agend_data,
@@ -383,23 +488,23 @@ module.exports = {
                 agend_horario,
                 agend_horario,
                 agend_horario,
-                serv_id
-            ]
-
+                serv_id,
+                agend_data
+            ];
+    
             const [verificacao] = await db.query(sqlVerificacao, valuesVerificacao);
-
+    
             if (verificacao.length > 0) {
                 return response.status(400).json({
                     sucesso: false,
-                    mensagem: 'Horário indisponível',
+                    mensagem: 'Horário indisponível ou data inválida.',
                     dados: verificacao
                 });
             } else {
-
                 const sql = `
                 INSERT INTO agendamentos (veic_usu_id, agend_data, agend_horario, agend_situacao, agend_observ, serv_id, agend_serv_situ_id) 
                 VALUES (?, ?, ?, ?, ?, ?, ?)`;
-
+    
                 const values = [
                     veic_usu_id,
                     agend_data,
@@ -409,17 +514,17 @@ module.exports = {
                     serv_id,
                     agend_serv_situ_id
                 ];
-
+    
                 const [execSql] = await db.query(sql, values);
                 const agend_id = execSql.insertId;
-
+    
                 return response.status(200).json({
                     sucesso: true,
                     mensagem: 'Cadastro de agendamento efetuado com sucesso.',
                     dados: agend_id
                 });
             }
-
+    
         } catch (error) {
             return response.status(500).json({
                 sucesso: false,

@@ -243,7 +243,7 @@ module.exports = {
             if (!usu_email) {
                 return response.status(400).json({
                     sucesso: false,
-                    mensagem: 'Email é muito obrigatório.',
+                    mensagem: 'Email é obrigatório.',
                     dados: null
                 });
             }
