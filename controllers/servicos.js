@@ -40,7 +40,7 @@ module.exports = {
     async listarServicosPorCategoria(request, response) {
         try {
             const { cat_serv_id } = request.params;
-            console.log("Categoria recebida no servidor:", cat_serv_id);
+            
 
             const sql = `
                 SELECT s.serv_id,
