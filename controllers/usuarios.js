@@ -119,7 +119,8 @@ module.exports = {
             return response.status(200).json({
                 sucesso: true,
                 mensagem: 'Lista de usuários.',
-                dados: usuarios[0],
+                dados: usuarios,
+                // dados: usuarios[0],
                 nItens
             });
         } catch (error) {
