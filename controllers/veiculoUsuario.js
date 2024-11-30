@@ -51,7 +51,11 @@ module.exports = {
                         u.usu_cpf   
                    FROM veiculo_usuario vu
                    JOIN usuarios u ON vu.usu_id = u.usu_id
-                  WHERE vu.veic_id = ?`;
+                  WHERE vu.veic_id = ?
+                  ORDER BY vu.data_final IS NOT NULL, 
+                           vu.data_final DESC, 
+                           vu.data_inicial ASC;
+            `;
 
             const [veiculosUsuariosPorId] = await db.query(sql, [VeiculoId]);
             const nItens = veiculosUsuariosPorId.length;
@@ -99,7 +103,8 @@ module.exports = {
                    JOIN modelos m      ON v.mod_id = m.mod_id
                    JOIN marcas ma      ON m.mar_id = ma.mar_id
               LEFT JOIN categorias c   ON ma.cat_id = c.cat_id
-                  WHERE vu.usu_id = ? AND vu.data_final IS NULL AND v.veic_situacao = 1`;
+              WHERE vu.usu_id = ? AND vu.data_final IS NULL AND v.veic_situacao = 1`;
+            //   WHERE vu.usu_id = ? AND vu.data_final IS NULL`;
               //   WHERE vu.usu_id = ? AND vu.data_final IS NULL `;
 
             const [veiculosPorUsuarioId] = await db.query(sql, [UsuarioId]);
