@@ -48,7 +48,7 @@ router.get('/servicos/categoria/:cat_serv_id', servicosController.listarServicos
 router.post('/servicos', servicosController.cadastrarServico); // Cadastra um novo serviço
 router.patch('/servicos/:serv_id', servicosController.editarServico); // Edita os dados de um serviço
 router.patch('/servicos/ocultar/:serv_id', servicosController.ocultarServico); // Oculta um serviço
-router.delete('/servicos/:serv_id', servicosController.apagarServico); // Exclui um serviço
+router.delete('/servicos/:serv_id', servicosController.excluirServico); // Exclui um serviço
 
 // Rotas relacionadas à disponibilidade
 router.get('/disponibilidade', disponibilidadeController.listarDisponibilidade); // Lista as disponibilidades

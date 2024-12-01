@@ -215,7 +215,7 @@ module.exports = {
         }
     },
 
-    async apagarServico(request, response) {
+    async excluirServico(request, response) {
         try {
             const { serv_id } = request.params;
 
